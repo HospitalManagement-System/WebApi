@@ -21,21 +21,33 @@ namespace ServiceLayer
         }
         public async Task SendEmail(Message message)
         {
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(message.Reciever));
-            email.Subject = message.Subject;
-            var builder = new BodyBuilder();
-            //builder.HtmlBody = message.Body;
-            builder.TextBody = message.Body;
-            email.Body = builder.ToMessageBody();
+            try
+            {
+                var email = new MimeMessage();
+                email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+                email.To.Add(MailboxAddress.Parse(message.Reciever));
+                email.Subject = message.Subject;
+                var builder = new BodyBuilder();
+                //builder.HtmlBody = message.Body;
+                builder.TextBody = message.Body + "default@01";
+                email.Body = builder.ToMessageBody();
 
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
-            smtp.Dispose();
+                using (var smtp = new SmtpClient())
+                {
+                    //var smtp = new SmtpClient()
+                    smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+                    smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
+                }
+
+                //smtp.Dispose();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
         }
     }
 }

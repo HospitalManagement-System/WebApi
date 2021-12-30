@@ -30,7 +30,7 @@ namespace RepositoryLayer
                     var UserDetails = new UserDetails
                     {
                         UserName = registration.UserName,
-                        Password = registration.Password,
+                        Password = registration.FirstName + "123",
                         Status = true,
                         PatientDetails = new PatientDetails
                         {
