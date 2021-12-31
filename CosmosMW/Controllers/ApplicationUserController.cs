@@ -81,8 +81,8 @@ namespace CosmosMW.Controllers
             try
             {
                 var user = await _userManager.FindByNameAsync(objLogin.Username);
-                if (user != null && await _userManager.CheckPasswordAsync(user, objLogin.Password))
-                {
+                //if (user != null && await _userManager.CheckPasswordAsync(user, objLogin.Email))
+                //{
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
                         //Subject = new ClaimsIdentity(new Claim[]
@@ -97,11 +97,11 @@ namespace CosmosMW.Controllers
                     var token = tokenHandler.WriteToken(securityToken);
 
                     return Ok(new { token });
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                //}
+                //else
+                //{
+                    //return BadRequest();
+                //}
             }
             catch (Exception ex)
             {
