@@ -11,5 +11,6 @@ namespace ServiceLayer.Interfaces
     {
         void RegisterUserData(Registration registration);
         List<UserDetails> GetUserData();
+
     }
 }

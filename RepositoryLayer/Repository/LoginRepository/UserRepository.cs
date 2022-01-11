@@ -13,18 +13,20 @@ namespace RepositoryLayer
     public class UserRepository: IUserRepository
     {
         private ApplicationDbContext _context;
+        IInMemoryCache _memorycache;
         List<RoleMaster> lstRoleMaster;
 
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(IInMemoryCache memorycache, ApplicationDbContext context)
         {
             _context = context;
+            _memorycache = memorycache;
         }
 
         public void AddUser(Registration registration)
         {
             try
             {
-                var roleMaster = GetRole(registration.Role);
+                var roleMaster = GetOrSetRole(registration.Role);
                 if (registration.Role.ToUpper() == enumUserType.PATIENT.ToString())
                 {
                     var UserDetails = new UserDetails
@@ -70,15 +72,15 @@ namespace RepositoryLayer
             return userDetails;
         }
 
-
-        private RoleMaster GetRole(string role)
+        private RoleMaster GetOrSetRole(string role)
         {
+            List<RoleMaster> lstRoleMaster = (List<RoleMaster>) _memorycache.GetCache<RoleMaster>("Rolemaster"); 
             if(lstRoleMaster == null)
             {
-                lstRoleMaster = new List<RoleMaster>();
                 lstRoleMaster = _context.RoleMaster.ToList();
+                _memorycache.SetCache<RoleMaster>("Rolemaster", lstRoleMaster);
             }
-            RoleMaster roleMaster = lstRoleMaster.Where(x => x.UserRole.ToLower() == role.ToLower()).FirstOrDefault();
+            RoleMaster roleMaster = lstRoleMaster.Where(x => x.UserRole == role).FirstOrDefault();
             return roleMaster;
         }
     }

@@ -24,6 +24,7 @@ using DomainLayer.Models;
 using MailKit;
 using ServiceLayer.Interfaces;
 using RepositoryLayer.Interfaces;
+using RepositoryLayer.Repository;
 
 namespace CosmosMW
 {
@@ -46,6 +47,8 @@ namespace CosmosMW
             services.AddTransient<IMessageService, ServiceLayer.MessageService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IInMemoryCache, InMemoryCache>();
+            services.AddMemoryCache();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -54,9 +57,10 @@ namespace CosmosMW
             });
 
             //DB Connection
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
-                                                         b => b.MigrationsAssembly("CosmosMW"))
+            string connection = Configuration.GetConnectionString("LoginConnection");
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection
+                                                         //b => b.MigrationsAssembly("CosmosMW")
+                                                         )
             );
 
             //Identity

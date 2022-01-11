@@ -25,8 +25,9 @@ namespace DomainLayer.Models
         public bool Status { get; set; }   
         public bool IsFirstLogIn { get; set; }
         public int NoOfAttempts { get; set; }
-        [ForeignKey("RoleMaster")]
+        
         public Guid RoleId { get; set; }
+        [ForeignKey("Id")]
         public RoleMaster RoleMaster { get; set; }
 
         public PatientDetails PatientDetails { get; set; }

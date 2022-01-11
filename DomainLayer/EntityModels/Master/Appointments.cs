@@ -12,12 +12,17 @@ namespace DomainLayer.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public char AppointmentType { get; set; }
+        [MaxLength(70)]
+        public string AppointmentType { get; set; }
+        [MaxLength(50)]
         public string Diagnosis { get; set; }
-        public char AppointmentStatus { get; set; }
+        [MaxLength(50)]
+        public string AppointmentStatus { get; set; }
         public bool IsCompleted { get; set; }
         public DateTime AppointmentDateTime { get; set; }
         public DateTime ModifiedDate { get; set; }
+
+        [MaxLength(50)]
         public string ModifiedReason { get; set; }
         public Guid DeletedBy { get; set; }
         public DateTime DeletedDate { get; set; }

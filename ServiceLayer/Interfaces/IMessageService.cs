@@ -10,5 +10,6 @@ namespace ServiceLayer.Interfaces
     public interface IMessageService
     {
         Task SendEmail(Message message);
+
     }
 }

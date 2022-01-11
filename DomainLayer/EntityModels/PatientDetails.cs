@@ -17,12 +17,12 @@ namespace DomainLayer.Models
         public string LastName { get; set; }
         public double Contact { get; set; }
         public bool IsActive { get; set; }
-        [ForeignKey("PatientDemographicDetails")]
+        
         public Guid PatientDemographicId { get; set; }
+        [ForeignKey("Id")]
         public PatientDemographicDetails PatientDemographicDetails { get; set; }
-       
-        [ForeignKey("UserDetails")]
         public Guid UserId { get; set; }
+        [ForeignKey("Id")]
         public UserDetails UserDetails { get; set; }
         
 

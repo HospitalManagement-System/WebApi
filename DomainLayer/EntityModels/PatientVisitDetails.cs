@@ -13,8 +13,8 @@ namespace DomainLayer.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public decimal Height { get; set; }
-        public decimal Weight { get; set; }
+        public string Height { get; set; }
+        public string Weight { get; set; }
         public int BloodPressure { get; set; }
         public int BodyTemprature { get; set; }
         public int RespirationRate { get; set; }

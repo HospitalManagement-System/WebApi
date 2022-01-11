@@ -56,16 +56,16 @@ namespace CosmosMW.Controllers
 
             try
             {
-                var result = await _userManager.CreateAsync(applicationUser, objRegistration.Email);
-                if (result.Errors.Count() == 0)
-                {
+                //var result = await _userManager.CreateAsync(applicationUser, objRegistration.Email);
+                //if (result.Errors.Count() == 0)
+                //{
                     _userService.RegisterUserData(objRegistration);
                     return Ok(new string("Registration Success"));
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                //}
+                //else
+                //{
+                //    return Ok(result);
+                //}
             }
             catch (Exception ex)
             {
@@ -123,5 +123,7 @@ namespace CosmosMW.Controllers
         {
             _messageservice.SendEmail(message);
         }
+
+
     }
 }

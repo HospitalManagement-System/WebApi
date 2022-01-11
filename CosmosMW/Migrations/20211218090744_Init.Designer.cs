@@ -9,7 +9,7 @@ using RepositoryLayer;
 
 namespace CosmosMW.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(LoginDbContext))]
     [Migration("20211218090744_Init")]
     partial class Init
     {

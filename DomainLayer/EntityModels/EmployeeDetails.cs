@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models.Master;
+﻿using DomainLayer.EntityModels;
+using DomainLayer.Models.Master;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,8 +14,8 @@ namespace DomainLayer.Models
     {
         public EmployeeDetails()
         {
-            lstSenderNotes = new List<EmployeeDetails>();
-            lstRecieverNotes = new List<EmployeeDetails>();
+            lstSentNotes = new List<Notes>();
+            lstRecieverNotes = new List<Notes>();
         }
         [Key]
         public Guid Id { get; set; }
@@ -27,13 +28,18 @@ namespace DomainLayer.Models
         public string Email { get; set; }
         public DateTime CreatedOn { get; set; }
         public bool IsActive { get; set; }
-        [ForeignKey("UserDetails")]
+        
         public Guid UserId { get; set; }
+        [ForeignKey("Id")]
         public UserDetails UserDetails { get; set; }
+       
+        public List<Notes> lstSentNotes { get; set; }
+        public List<Notes> lstRecieverNotes { get; set; }
+
         //public List<EmployeeDetails> lstPhysicianEmployee { get; set; }
         //public List<EmployeeDetails> lstNurseEmployee { get; set; }
-        public List<EmployeeDetails> lstSenderNotes { get; set; }
-        public List<EmployeeDetails> lstRecieverNotes { get; set; }
+
+        //public List<EmployeeDetails> lstRecieverNotes { get; set; }
 
     }
 }
