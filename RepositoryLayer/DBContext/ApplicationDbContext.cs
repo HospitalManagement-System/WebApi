@@ -45,7 +45,12 @@ namespace RepositoryLayer
 
         //Dashboard
         public DbSet<AdminDashBoard> AdminDashboard { get; set; }
-        
+
+        //public DbSet<UserInfo> UserInfos { get; set; }
+
+        public DbSet<UserInfo> UserInfos { get; set; }
+
+        public DbSet<ResultStatus> Result { get; set; }
 
         //public DbSet<PatientVisitDetails> PatientVisitDetails { get; set; }
         //public DbSet<PatientDemographicDetails> PatientDemographicDetails { get; set; }
@@ -135,7 +140,8 @@ namespace RepositoryLayer
 
             //Skip Tables
             modelBuilder.Ignore<AdminDashBoard>();
-
+            //modelBuilder.Ignore<UserInfo>();
+            
             base.OnModelCreating(modelBuilder);
         }
 
