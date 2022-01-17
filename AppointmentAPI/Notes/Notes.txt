@@ -1,0 +1,16 @@
+﻿            //var slot = await (from c in _context.Appointments
+            //                  where (c.PhysicianId == PhysicianID && c.bookslot != null)
+            //                  group c.bookslot by c.PatientId into g
+            //                  select new { bookslots= g.ToArray()}).ToListAsync();
+
+
+            //var slot = await (from c in _context.Appointments
+            //           where (c.PhysicianId == Id && c.bookslot!=null)
+            //           group new { c } by new { c.Id, c.bookslot } into g
+            //           let r = g.OrderByDescending(x => x.c.Id).FirstOrDefault()
+            //           select new
+            //           {
+            //               Id = r.c.Id,
+            //               bookslot = r.c.bookslot
+
+            //            }).ToListAsync();

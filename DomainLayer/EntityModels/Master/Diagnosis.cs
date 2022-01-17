@@ -9,10 +9,10 @@ namespace DomainLayer.Models.Master
 {
     public class Diagnosis
     {
-        public Diagnosis()
-        {
-            lstPatientVisitDetails = new List<PatientVisitDetails>();
-        }
+        //public Diagnosis()
+        //{
+        //    lstPatientVisitDetails = new List<PatientVisitDetails>();
+        //}
         [Key]
         public Guid Id { get; set; }
         public string DiagnosisCode { get; set; }

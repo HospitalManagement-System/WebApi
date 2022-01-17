@@ -29,12 +29,15 @@ namespace DomainLayer.Models
         public string DeletedReason { get; set; }
         [ForeignKey("PatientDetails")]
         public Guid PatientId { get; set; }
-        public PatientDetails PatientDetails { get; set; }
+        //public PatientDetails PatientDetails { get; set; }
         [ForeignKey("EmployeeDetails")]
         public Guid PhysicianId { get; set; }
-        public EmployeeDetails PhysicianEmployee { get; set; }
+        //public EmployeeDetails PhysicianEmployee { get; set; }
         [ForeignKey("EmployeeDetails")]
         public Guid NurseId { get; set; }
-        public EmployeeDetails NurseEmployee { get; set; }
+        //public EmployeeDetails NurseEmployee { get; set; }
+
+        [MaxLength(100)]
+        public string bookslot { get; set; }
     }
 }
