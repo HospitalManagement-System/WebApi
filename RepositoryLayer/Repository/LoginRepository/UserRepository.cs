@@ -45,7 +45,7 @@ namespace RepositoryLayer
                             {
                                 FirstName = registration.FirstName,
                                 LastName = registration.LastName,
-                                Contact = registration.Contact,
+                                Contact = registration.Contact.ToString(),
                                 DateOfBirth = registration.DateOfBirth,
                                 PatientRelativeDetails = new PatientRelativeDetails
                                 {

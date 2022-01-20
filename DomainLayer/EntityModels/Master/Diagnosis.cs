@@ -18,6 +18,6 @@ namespace DomainLayer.Models.Master
         public string DiagnosisCode { get; set; }
         public string Description { get; set; }
         public bool IsDepricated { get; set; }
-        public List<PatientVisitDetails> lstPatientVisitDetails { get; set; }
+       // public List<PatientVisitDetails> lstPatientVisitDetails { get; set; }
     }
 }

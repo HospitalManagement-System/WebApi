@@ -20,24 +20,21 @@ namespace DomainLayer.Models
         public int RespirationRate { get; set; }
         public string DoctorDescription { get; set; }
         public string ProcedureDesciption { get; set; }
-        public string Medication { get; set; }
-        public string Dosage { get; set; }
+        public string DiagnosisDescription { get; set; }
 
-        [ForeignKey("Diagnosis")]
-        public Guid DiagnosisId { get; set; }
-        public Diagnosis Diagnosis { get; set; }
-
-        [ForeignKey("Procedure")]
-        public Guid ProcedureId { get; set; }
-        public Procedure Procedure { get; set; }
+        public string DrugDescription { get; set; }
+       
         [ForeignKey("Appointments")]
         public Guid AppointmentId { get; set; }
         public Appointments Appointments { get; set; }
-        //[ForeignKey("PatientDetails")]
-        //public Guid PatientId { get; set; }
-        //public PatientDetails PatientDetails { get; set; }
+        public DateTime Createddate { get; set; }
 
-        //public Guid PreviousVisitId { get; set; }
+        [NotMapped]
+        public List<string> Diagnosislist { get; set; }
+        [NotMapped]
+        public List<string> Procedureslist { get; set; }
+        [NotMapped]
+        public List<string> Druglist { get; set; }
 
     }
 }
