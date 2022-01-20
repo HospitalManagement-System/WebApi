@@ -11,14 +11,14 @@ namespace DomainLayer.Models.Master
     {
         public Procedure()
         {
-            lstPatientVisitDetails = new List<PatientVisitDetails>();
+            //lstPatientVisitDetails = new List<PatientVisitDetails>();
         }
         [Key]
         public Guid Id { get; set; }
         public string ProcedureCode { get; set; }
         public string Description { get; set; }
         public bool IsDepricated { get; set; }
-        public List<PatientVisitDetails> lstPatientVisitDetails { get; set; }
+        //public List<PatientVisitDetails> lstPatientVisitDetails { get; set; }
 
     }
 }
