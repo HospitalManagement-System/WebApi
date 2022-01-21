@@ -37,7 +37,7 @@ namespace AppointmentAPI.Controllers
         public async Task<ActionResult<IEnumerable<Appointments>>> GetAllAppointments()
         {
             var result = await (from c in _context.Appointments
-                               .Where(p => p.AppointmentStatus!=("Rejected") && p.AppointmentDateTime>=new DateTime())
+                               .Where(p => p.AppointmentStatus!=("Rejected") && p.AppointmentDateTime>=DateTime.Now )
                                 select new {
                                     publicId = c.Id,
                                     title = c.AppointmentType, 
@@ -172,6 +172,65 @@ namespace AppointmentAPI.Controllers
             }
 
             
+        }
+
+        
+        [HttpGet("GetAllPhysician")]
+        public IActionResult GetAllPhysician()
+        {
+            var Physican = (from e in _context.EmployeeDetails
+                            select new
+                            {
+                                Id=e.Id,
+                                PhysicianName = e.FirstName
+                            }
+                            ) ;
+
+            return Ok(Physican);
+
+        }
+
+        [HttpGet("GetPhysicianByDiagnosics/{Id}")]
+        public IActionResult GetPhysicianByDiagnosics(string Id)
+        {
+            var Diagnosics = new Guid(Id);
+
+            var Physican = (from e in _context.EmployeeDetails
+                            select new
+                            {
+                                Id = e.Id,
+                                PhysicianName = e.FirstName
+                            }
+                            );
+
+            return Ok(Physican);
+
+        }
+
+        [HttpGet("GetEditBookAppointmentDetails/{AppointmentId}")]
+        public IActionResult GetEditBookAppointmentDetails(string AppointmentId)
+        {
+            var appointmentID = new Guid(AppointmentId);
+
+            var BookedAppointmentData = (from a in _context.Appointments
+                            join pd in _context.PatientDetails
+                            on a.PatientId equals pd.Id into App
+                            from m in App.DefaultIfEmpty()
+                            join e in _context.EmployeeDetails 
+                            on a.PhysicianId equals e.Id into Emp
+                            from e in Emp.DefaultIfEmpty()
+                            where (a.Id==appointmentID)
+                            select new
+                            {
+                                id =a.Id,
+                                physicianName = m != null ? m.FirstName : "Ram",
+                                salotBooked = a.bookslot,
+                                appointmentDateTime = a.AppointmentDateTime
+                            }
+                            );
+
+            return Ok(BookedAppointmentData);
+
         }
 
 

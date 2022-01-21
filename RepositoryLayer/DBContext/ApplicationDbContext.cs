@@ -48,7 +48,7 @@ namespace RepositoryLayer
 
         //public DbSet<UserInfo> UserInfos { get; set; }
 
-        public DbSet<UserInfo> UserInfos { get; set; }
+      //  public DbSet<UserInfo> UserInfos { get; set; }
 
         public DbSet<ResultStatus> Result { get; set; }
 
