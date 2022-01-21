@@ -52,9 +52,9 @@ namespace RepositoryLayer
 
         public DbSet<ResultStatus> Result { get; set; }
 
-        //public DbSet<PatientVisitDetails> PatientVisitDetails { get; set; }
-        //public DbSet<PatientDemographicDetails> PatientDemographicDetails { get; set; }
-        //public DbSet<PatientRelativeDetails> PatientRelativeDetails { get; set; }
+        public DbSet<PatientVisitDetails> PatientVisitDetails { get; set; }
+        public DbSet<PatientDemographicDetails> PatientDemographicDetails { get; set; }
+        public DbSet<PatientRelativeDetails> PatientRelativeDetails { get; set; }
 
         //public DbSet<Logger> Logger { get; set; }
 

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DomainLayer.Models;
 using RepositoryLayer;
+using ServiceLayer.Interfaces.IVisitDetails;
+using Microsoft.AspNetCore.Identity;
+using DomainLayer;
 
 namespace VisitDetailsAPI.Controllers
 {
@@ -15,31 +18,29 @@ namespace VisitDetailsAPI.Controllers
     public class PatientDetailsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-        public PatientDetailsController(ApplicationDbContext context)
+        private IPatientvisitdetailsService _VisitService;
+        private UserManager<ApplicationUser> _userManager;
+        public PatientDetailsController(IPatientvisitdetailsService visitService, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _VisitService = visitService;
+            _userManager = userManager;
         }
 
-        // GET: api/PatientDetails
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PatientDetails>>> GetPatientDetails()
-        {
-            return await _context.PatientDetails.ToListAsync();
-        }
+        
 
         // GET: api/PatientDetails/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PatientDetails>> GetPatientDetails(Guid id)
+        [HttpGet]
+        public  PatientVisitDetails GetPatientDetails(string Appointmentid)
         {
-            var patientDetails = await _context.PatientDetails.FindAsync(id);
-
-            if (patientDetails == null)
+            try
             {
-                return NotFound();
+                PatientVisitDetails patientVisitDetails = _VisitService.GetVisitdetailsfromId(Appointmentid);
+                return patientVisitDetails;
             }
-
-            return patientDetails;
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
         // PUT: api/PatientDetails/5
@@ -76,12 +77,23 @@ namespace VisitDetailsAPI.Controllers
         // POST: api/PatientDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PatientDetails>> PostPatientDetails(PatientDetails patientDetails)
+        public  string PostPatientDetails(PatientVisitDetails patientDetails)
         {
-            _context.PatientDetails.Add(patientDetails);
-            await _context.SaveChangesAsync();
+            try
+            {
+                return _VisitService.Addpatientvisitdetails(patientDetails);
 
-            return CreatedAtAction("GetPatientDetails", new { id = patientDetails.Id }, patientDetails);
+                // return Ok(new string("Registration Success"));
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            //_context.PatientDetails.Add(patientDetails);
+            //await _context.SaveChangesAsync();
+
+            //return CreatedAtAction("GetPatientDetails", new { id = patientDetails.Id }, patientDetails);
         }
 
         // DELETE: api/PatientDetails/5
