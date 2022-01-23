@@ -37,16 +37,16 @@ namespace AppointmentAPI.Controllers
         public async Task<ActionResult<IEnumerable<Appointments>>> GetAllAppointments()
         {
             var result = await (from c in _context.Appointments
-                               .Where(p => p.AppointmentStatus!=("Rejected") && p.AppointmentDateTime>=DateTime.Now )
+                               .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime >= DateTime.Now)
                                 select new {
                                     publicId = c.Id,
-                                    title = c.AppointmentType, 
-                                    date=c.AppointmentDateTime,
-                                    description="Test",
-                                    color =(
-                                    c.AppointmentStatus.Equals("Pending") ? "red":
+                                    title = c.AppointmentType,
+                                    date = c.AppointmentDateTime,
+                                    description = "Test",
+                                    color = (
+                                    c.AppointmentStatus.Equals("Pending") ? "red" :
                                     c.AppointmentStatus.Equals("Approved") ? "green" :
-                                    c.AppointmentStatus.Equals("Rejected") ? "blue" :"Unknown"
+                                    c.AppointmentStatus.Equals("Rejected") ? "blue" : "Unknown"
                                     )
                                 }
                           ).ToListAsync();
@@ -106,14 +106,65 @@ namespace AppointmentAPI.Controllers
         public async Task<ActionResult> PostAppointments(Appointments appointments)
         {
 
-           
-            _context.Appointments.Add(appointments);
-           var SaveResult=  await _context.SaveChangesAsync();
+            try
+            {
+                
+                    _context.Appointments.Add(appointments);
+                    var SaveResult = await _context.SaveChangesAsync();
+                    string Result = (SaveResult == 1) ? "Success" : "Failure";
+                  
 
-            string Result = (SaveResult == 1) ? "Success" : "Failure";
+                    return Ok(Result);
+               
+            }
+            catch (Exception)
+            {
 
-            return Ok(Result);
+                throw;
+            }
+
+
         }
+
+
+        [HttpPut("UpdateAppointments/{AppointmentId}")]
+        public async Task<ActionResult> UpdateAppointments(string AppointmentId ,Appointments appointments)
+        {
+            try
+            {
+                var appointmentId = new Guid(AppointmentId);
+
+                var GetAppointment = _context.Appointments.Where(x=>x.Id==appointmentId).FirstOrDefault();
+
+                if (GetAppointment!=null)
+                {
+                    GetAppointment.AppointmentDateTime = appointments.AppointmentDateTime;
+                    GetAppointment.bookslot = appointments.bookslot;
+                    GetAppointment.PhysicianId = appointments.PhysicianId;
+
+                }
+
+                    //_context.Appointments.Update(appointments);
+                    var SaveResult = await _context.SaveChangesAsync();
+                    string Result = (SaveResult == 1) ? "Success" : "Failure";
+                    return Ok(Result);
+              
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
+
+
+
+
+
 
         // DELETE: api/Appointments/5
         [HttpDelete("{id}")]
@@ -210,28 +261,49 @@ namespace AppointmentAPI.Controllers
         [HttpGet("GetEditBookAppointmentDetails/{AppointmentId}")]
         public IActionResult GetEditBookAppointmentDetails(string AppointmentId)
         {
-            var appointmentID = new Guid(AppointmentId);
 
-            var BookedAppointmentData = (from a in _context.Appointments
-                            join pd in _context.PatientDetails
-                            on a.PatientId equals pd.Id into App
-                            from m in App.DefaultIfEmpty()
-                            join e in _context.EmployeeDetails 
-                            on a.PhysicianId equals e.Id into Emp
-                            from e in Emp.DefaultIfEmpty()
-                            where (a.Id==appointmentID)
-                            select new
-                            {
-                                id =a.Id,
-                                physicianName = m != null ? m.FirstName : "Ram",
-                                salotBooked = a.bookslot,
-                                appointmentDateTime = a.AppointmentDateTime
-                            }
-                            );
+            try
+            {
+                var appointmentID = new Guid(AppointmentId);
 
-            return Ok(BookedAppointmentData);
+                var BookedAppointmentData = (from a in _context.Appointments
+                                             join pd in _context.PatientDetails
+                                             on a.PatientId equals pd.Id into App
+                                             from m in App.DefaultIfEmpty()
+                                             join e in _context.EmployeeDetails
+                                             on a.PhysicianId equals e.Id into Emp
+                                             from e in Emp.DefaultIfEmpty()
+                                             where (a.Id == appointmentID)
+                                             select new
+                                             {
+                                                 id = a.Id,
+                                                 appointmentType = a.AppointmentType,
+                                                 slotBooked = a.bookslot,
+                                                 appointmentDateTime = a.AppointmentDateTime,
+                                                 patientName  = m != null ? m.FirstName : "Unknown",
+                                                 physicianName = e!=null ?  e.FirstName : "Unknown",
+                                                 diagnosis= a.Diagnosis,
+
+                                             }
+                                );
+
+                return Ok(BookedAppointmentData);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+            }
+
+            return NotFound();
+           
 
         }
+
+
+
+
+
 
 
     }

@@ -17,12 +17,14 @@ namespace ServiceLayer.Services.Email
         {
 
             var currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            var FilePath = $"{currentDirectory.Replace("\\CommonAPI","")}\\ServiceLayer\\EmailTemplates\\ApproveAppointment.html";
+            var FilePath = $"{currentDirectory.Replace("\\CommonAPI","")}\\ServiceLayer\\EmailTemplates\\EmployeeRegistartion.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
             //Replace Email
-            MailText = MailText.Replace("[newusername]", UserName).Replace("[username]",Email).Replace("[passsword]",Password);
+            //MailText = MailText.Replace("[newusername]", UserName).Replace("[username]",Email).Replace("[passsword]",Password);
+
+            MailText = MailText.Replace("[username]", Email).Replace("[passsword]", Password);
 
             Root root = new Root();
             root.from = "Cosmo Hospital";
@@ -33,32 +35,32 @@ namespace ServiceLayer.Services.Email
             //Serialize
             string output = JsonConvert.SerializeObject(root);
             var client = new HttpClient();
-            //var request = new HttpRequestMessage
-            //{
-            //    Method = HttpMethod.Post,
-            //    RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
-            //    Headers =
-            //    {
-            //       { "x-user-name", "test" },
-            //       { "x-rapidapi-host", "easymail.p.rapidapi.com" },
-            //       { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
-            //    },
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
+                Headers =
+                {
+                   { "x-user-name", "test" },
+                   { "x-rapidapi-host", "easymail.p.rapidapi.com" },
+                   { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
+                },
 
-            //    Content = new StringContent(output)
-            //    {
-            //        Headers =
-            //         {
-            //             ContentType = new MediaTypeHeaderValue("application/json")
-            //         }
-            //    }
-            //};
-            //using (var response = await client.SendAsync(request))
-            //{
-            //    response.EnsureSuccessStatusCode();
-            //    var body = await response.Content.ReadAsStringAsync();
-            //    return body;
+                Content = new StringContent(output)
+                {
+                    Headers =
+                     {
+                         ContentType = new MediaTypeHeaderValue("application/json")
+                     }
+                }
+            };
+            using (var response = await client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                var body = await response.Content.ReadAsStringAsync();
+                return body;
 
-            //}
+            }
 
             return "Success";
 
@@ -68,7 +70,7 @@ namespace ServiceLayer.Services.Email
         {
             //Fetching Email Body Text from EmailTemplate File.  
             var currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            var FilePath = $"{currentDirectory.Replace("\\CommonAPI", "")}\\ServiceLayer\\EmailTemplates\\EmployeeRegistartion.html";
+            var FilePath = $"{currentDirectory.Replace("\\CommonAPI", "")}\\ServiceLayer\\EmailTemplates\\ApproveAppointment.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();

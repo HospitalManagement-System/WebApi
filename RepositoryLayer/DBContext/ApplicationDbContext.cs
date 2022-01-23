@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DomainLayer;
 using DomainLayer.EntityModels;
 using DomainLayer.EntityModels.DashBoard;
+using DomainLayer.EntityModels.Master;
 using DomainLayer.EntityModels.Procedures;
 using DomainLayer.Models;
 using DomainLayer.Models.Master;
@@ -57,6 +58,8 @@ namespace RepositoryLayer
         public DbSet<PatientRelativeDetails> PatientRelativeDetails { get; set; }
 
         //public DbSet<Logger> Logger { get; set; }
+
+        public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
