@@ -98,7 +98,7 @@ namespace CommonAPI.Controllers.Admin
             var User = new UserDetails
             {
                 UserName = userDetails.EmployeeDetails.Email,
-                Password = Password,
+                Password = "Password@123",
                 Status = true,
                 IsFirstLogIn = true,
                 NoOfAttempts = 0,
@@ -129,7 +129,8 @@ namespace CommonAPI.Controllers.Admin
                 
                 var Email = userDetails.EmployeeDetails.Email;
                 var UserName = userDetails.EmployeeDetails.FirstName;
-                var Decrypt = _encryption.DecodeFrom64(Password);
+                //var Decrypt = _encryption.DecodeFrom64(Password);
+                var Decrypt = "Password@123";
                 var EmailResult = await _iEMailSender.SendLoginSMSAsync(UserName, Decrypt, Email);
 
             }
