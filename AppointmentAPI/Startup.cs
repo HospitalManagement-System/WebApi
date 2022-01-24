@@ -10,7 +10,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.IZoom;
 using ServiceLayer.Services.Email;
+using ServiceLayer.Services.Zoom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +33,7 @@ namespace AppointmentAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IZoom, Zoom>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

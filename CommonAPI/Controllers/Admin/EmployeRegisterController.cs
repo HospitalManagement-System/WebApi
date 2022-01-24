@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using ServiceLayer.Interfaces;
 using System.IO;
 using static DomainLayer.Models.Mail;
+using ServiceLayer.Interfaces.IEncription;
 //using  CommonAPI.Model.Message;
 
 namespace CommonAPI.Controllers.Admin
@@ -23,11 +24,15 @@ namespace CommonAPI.Controllers.Admin
         private readonly ApplicationDbContext _context;
 
         private readonly IEmailSender _iEMailSender;
-        
-        public EmployeRegisterController(ApplicationDbContext context, IEmailSender emailSender)
+
+
+        private readonly IEncryption _encryption;
+
+        public EmployeRegisterController(ApplicationDbContext context, IEmailSender emailSender, IEncryption encryption)
         {
             _context = context;
             _iEMailSender = emailSender;
+            _encryption = encryption;
 
         }
 
@@ -88,10 +93,12 @@ namespace CommonAPI.Controllers.Admin
         public async Task<ActionResult<UserDetails>> PostUserDetails(UserDetails userDetails)
         {
             var Role = _context.RoleMaster.Where(x => x.UserRole ==userDetails.Role).FirstOrDefault();
+            var Password = _encryption.EncodePasswordToBase64("Password@123");
+            
             var User = new UserDetails
             {
                 UserName = userDetails.EmployeeDetails.Email,
-                Password = userDetails.UserName + "123",
+                Password = Password,
                 Status = true,
                 IsFirstLogIn = true,
                 NoOfAttempts = 0,
@@ -119,10 +126,11 @@ namespace CommonAPI.Controllers.Admin
             var Result = (Save == 2 ? "Success" : "Failure");
             if (Result == "Success")
             {
+                
                 var Email = userDetails.EmployeeDetails.Email;
                 var UserName = userDetails.EmployeeDetails.FirstName;
-                var Password = userDetails.UserName + "123";
-                var EmailResult = await _iEMailSender.SendLoginSMSAsync(UserName, Password, Email);
+                var Decrypt = _encryption.DecodeFrom64(Password);
+                var EmailResult = await _iEMailSender.SendLoginSMSAsync(UserName, Decrypt, Email);
 
             }
 
