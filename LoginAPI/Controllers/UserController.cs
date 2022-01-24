@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using RepositoryLayer;
 using Microsoft.Extensions.Configuration;
 using ServiceLayer.Interfaces;
+using DomainLayer.EntityModels.Procedures;
+using DomainLayer.EntityModels.ListModels;
 
 namespace LoginAPI.Controllers
 {
@@ -111,9 +113,9 @@ namespace LoginAPI.Controllers
 
         [HttpGet]
         [Route("GetUser")]
-        public List<UserDetails> GetUser()
+        public List<UserInfoDetails> GetUser()
         {
-            List<UserDetails> lstUserDetails = _userService.GetUserData();
+            List<UserInfoDetails> lstUserDetails = _userService.GetUserData();
             return lstUserDetails;
         }
 
