@@ -9,8 +9,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer;
+using RepositoryLayer.Interfaces.INurseDashRepository;
+using RepositoryLayer.Repository.NurseDashRepository;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.INurseDashboard;
 using ServiceLayer.Services.Email;
+using ServiceLayer.Services.NurseDashBoardServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +34,8 @@ namespace CommonAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<INurseService, NurseDashService>();
+            services.AddScoped<INurseRepository, NurseDashRepository>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddControllers();
             services.AddSwaggerGen(c =>

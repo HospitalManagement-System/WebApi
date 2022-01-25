@@ -51,6 +51,8 @@ namespace RepositoryLayer
         public DbSet<UserInfo> UserInfos { get; set; }
 
         public DbSet<ResultStatus> Result { get; set; }
+        public DbSet<BarChartDetails> BarChartDetails { get; set; }
+        public DbSet<PatientDemographicDetails> PatientDemographicDetails { get; set; }
 
         //public DbSet<PatientVisitDetails> PatientVisitDetails { get; set; }
         //public DbSet<PatientDemographicDetails> PatientDemographicDetails { get; set; }
@@ -122,6 +124,11 @@ namespace RepositoryLayer
 
             modelBuilder
             .Entity<Procedure>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+            modelBuilder
+.Entity<BarChartDetails>().Property(x => x.Id);
+            modelBuilder
+            .Entity<PatientDemographicDetails>().Property(x => x.Id)
             .HasDefaultValueSql("newid()");
 
             // modelBuilder
