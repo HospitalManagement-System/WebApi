@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DomainLayer.Models;
 using RepositoryLayer;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.IZoom;
 
 namespace AppointmentAPI.Controllers
 {
@@ -19,10 +20,13 @@ namespace AppointmentAPI.Controllers
 
         private readonly IEmailSender _iEMailSender;
 
-        public AppointmentsController(ApplicationDbContext context, IEmailSender emailSender)
+        private readonly IZoom _zoom; 
+
+        public AppointmentsController(ApplicationDbContext context, IEmailSender emailSender, IZoom zoom)
         {
             _context = context;
             _iEMailSender = emailSender;
+            _zoom = zoom;
         }
 
         // GET: api/Appointments
@@ -108,8 +112,39 @@ namespace AppointmentAPI.Controllers
 
             try
             {
-                
-                    _context.Appointments.Add(appointments);
+                   Appointments appointmentsData = new Appointments();
+                   var Time = appointments.AppointmentDateTime;
+                   var Hour = appointments.bookslot;
+                   string[] timeSplit = Hour.Split("to");
+                   string[] secondSplit = timeSplit[0].Split(":");
+                    if (secondSplit[1].Contains("30"))
+                    {
+                    int Hours = Convert.ToInt32(secondSplit[0]);
+                    int Minutes = Convert.ToInt32(secondSplit[1]);
+                    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, Minutes, 0);
+                    appointmentsData.AppointmentDateTime = dt3;
+                    }
+                    else
+                    {
+                    int Hours = Convert.ToInt32(timeSplit[0]);
+                    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
+                    appointmentsData.AppointmentDateTime = dt3;
+                    }
+                    
+                    appointmentsData.Diagnosis = appointments.Diagnosis;
+                    appointmentsData.AppointmentType = appointments.AppointmentType;
+                    appointmentsData.bookslot = appointments.bookslot;
+                    appointmentsData.PatientId = appointments.PatientId;
+                    appointmentsData.PhysicianId = appointments.PhysicianId;
+                    appointmentsData.Mode = appointments.Mode;
+                    appointmentsData.AppointmentStatus = appointments.AppointmentStatus;
+                    if (appointments.Mode=="Online")
+                    {
+                    var ZoomLinks = _zoom.Zoom();
+                    appointmentsData.PhysicianMeetingLink = ZoomLinks.Item1;
+                    appointmentsData.PatientMeetingLink = ZoomLinks.Item2;
+                    }
+                   _context.Appointments.Add(appointmentsData);
                     var SaveResult = await _context.SaveChangesAsync();
                     string Result = (SaveResult == 1) ? "Success" : "Failure";
                   
@@ -117,10 +152,10 @@ namespace AppointmentAPI.Controllers
                     return Ok(Result);
                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
 
 
@@ -159,10 +194,6 @@ namespace AppointmentAPI.Controllers
 
 
         }
-
-
-
-
 
 
 
@@ -249,6 +280,11 @@ namespace AppointmentAPI.Controllers
             var Diagnosics = new Guid(Id);
 
             var Physican = (from e in _context.EmployeeDetails
+                            join u in _context.UserDetails
+                            on e.UserId equals u.Id
+                            join r in _context.RoleMaster
+                            on u.RoleId equals r.Id
+                            where(r.UserRole.ToUpper()=="PHYSICIAN")
                             select new
                             {
                                 Id = e.Id,
@@ -300,6 +336,24 @@ namespace AppointmentAPI.Controllers
             return NotFound();
            
 
+        }
+
+
+        [HttpGet("GetZoomLink/{Id}")]
+        public IActionResult GetZoomLink(string Id,string Role)
+        {
+            var appointmentID = new Guid(Id);
+            var Url = (from a in _context.Appointments
+                       where (a.Mode=="Online" && a.Id==appointmentID)
+                       select new
+                       {
+                           PatientMeetingLink= a.PatientMeetingLink,
+                           PhysicianMeetingLink=a.PhysicianMeetingLink
+                       }
+                       );
+
+
+            return Ok(Url);
         }
 
 
