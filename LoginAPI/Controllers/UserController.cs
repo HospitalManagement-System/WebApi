@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using RepositoryLayer;
 using Microsoft.Extensions.Configuration;
 using ServiceLayer.Interfaces;
+using DomainLayer.EntityModels.Procedures;
+using DomainLayer.EntityModels.ListModels;
 
 using DomainLayer.EntityModels;
 using DomainLayer.Enums;
@@ -49,19 +51,11 @@ namespace LoginAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetUsersData")]
-        public List<UserDetails> GetUsersData()
+        [Route("GetUser")]
+        public List<UserInfoDetails> GetUser()
         {
-            try
-            {
-                List<UserDetails> lstUserDetails = _userService.GetUserData();
-                return lstUserDetails;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-
+            List<UserInfoDetails> lstUserDetails = _userService.GetUserData();
+            return lstUserDetails;
         }
 
 

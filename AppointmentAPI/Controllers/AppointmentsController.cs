@@ -179,7 +179,9 @@ namespace AppointmentAPI.Controllers
         public IActionResult ApproveReject(string Id, string Status)
         {
             Guid AppointmentId = new Guid(Id);
-            var FindAppointment = _context.Appointments.Where(x => x.Id == AppointmentId).FirstOrDefault();
+
+            //var TRrsaction = _context.Transactions.Where(x => x.Value == Status).FirstOrDefault();
+            var FindAppointment = _context.Appointments.Where(x=>x.Id==AppointmentId).FirstOrDefault();
 
             if (FindAppointment != null)
             {
