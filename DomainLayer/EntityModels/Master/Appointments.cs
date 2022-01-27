@@ -44,8 +44,12 @@ namespace DomainLayer.Models
         public string Mode { get; set; }
 
 
-        [MaxLength(300)]
-        public string MeetingLink { get; set; }
+        [MaxLength(700)]
+        public string PatientMeetingLink { get; set; }
+
+
+        [MaxLength(int.MaxValue)]
+        public string PhysicianMeetingLink { get; set; }
 
 
     }
