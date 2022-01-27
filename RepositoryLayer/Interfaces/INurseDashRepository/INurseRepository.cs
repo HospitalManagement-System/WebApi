@@ -13,5 +13,7 @@ namespace RepositoryLayer.Interfaces.INurseDashRepository
         List<BarChartDetails> GetBarChartDetails();
         List<NurseAppointment> GetnurseDetails();
         List<NurseAppointment> GetUpcomingAppointments();
+       
+        string UpdateUpAppointment(string id, Appointments nurse);
     }
 }

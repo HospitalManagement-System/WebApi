@@ -142,16 +142,43 @@ namespace RepositoryLayer.Repository.NurseDashRepository
 
         }
 
+        public string UpdateUpAppointment(string id, Appointments nurse)
+        {
+            var appid = new Guid(id);
+            try {
 
-        //1)Nurse Data ->Nurse id not required
-        //2)Based on Dates Current         
-        //3)Appointment should be Approved
-        //Tables
-        //Appointmenyt
-        //EmployeeDeatils
-        //Patient Details
-        //PatientDemographic Details
+                Appointments Existingdetails = _context.Appointments.Where(x => x.Id == appid).FirstOrDefault();
+                if (Existingdetails != null)
+                {
+                    {
+                        Existingdetails.AppointmentDateTime = nurse.AppointmentDateTime;
+                        Existingdetails.PhysicianId = nurse.PhysicianId;
+                    };
+                    _context.Appointments.Update(Existingdetails);
+                    int result = _context.SaveChanges();
+                    Result = (SaveResult == 1) ? "Failure" : "Success";
+                }
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
-
+       
     }
+
+
+    //1)Nurse Data ->Nurse id not required
+    //2)Based on Dates Current         
+    //3)Appointment should be Approved
+    //Tables
+    //Appointmenyt
+    //EmployeeDeatils
+    //Patient Details
+    //PatientDemographic Details
+
+
 }
+

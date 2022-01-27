@@ -57,5 +57,11 @@ namespace NurseDashAPI.Controllers
             return Ok(getUpcomingAppointmentDetails);
 
         }
+        [HttpPut("UpdateUpcomingAppoinmets")]
+        public string UpdateUpcomingAppoinmets( string Id, Appointments nurse)
+        {
+            var updateapp = _BarChartService.UpdateUpcomingAppoinmets(Id,nurse);
+            return updateapp;
+        }
     }
 }

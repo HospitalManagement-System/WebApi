@@ -10,8 +10,8 @@ using RepositoryLayer;
 namespace LoginAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220120081243_initt")]
-    partial class initt
+    [Migration("20220127060845_initee")]
+    partial class initee
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

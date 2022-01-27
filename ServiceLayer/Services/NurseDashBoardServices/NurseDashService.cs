@@ -36,5 +36,10 @@ namespace ServiceLayer.Services.NurseDashBoardServices
             return nurseUpcomingAppointments;
         }
 
+        public string UpdateUpcomingAppoinmets(string id, Appointments nurse)
+        {
+            var updateappo = _repository.UpdateUpAppointment(id,nurse);
+            return updateappo;
+        }
     }
 }

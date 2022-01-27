@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LoginAPI.Migrations
 {
-    public partial class initt : Migration
+    public partial class initee : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

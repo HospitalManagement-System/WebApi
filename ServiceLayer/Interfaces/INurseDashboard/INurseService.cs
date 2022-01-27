@@ -13,7 +13,6 @@ namespace ServiceLayer.Interfaces.INurseDashboard
         List<BarChartDetails> GetBarChartDetails();
         List<NurseAppointment> GetnurseDetails();
         List<NurseAppointment> GetUpcomingAppointments();
-
-
+        string UpdateUpcomingAppoinmets(string id, Appointments nurse);
     }
 }
