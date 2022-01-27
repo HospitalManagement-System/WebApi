@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using RepositoryLayer;
 using Microsoft.Extensions.Configuration;
 using ServiceLayer.Interfaces;
+using DomainLayer.EntityModels.Procedures;
 
 namespace CosmosMW.Controllers
 {
@@ -109,13 +110,13 @@ namespace CosmosMW.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("GetUser")]
-        public List<UserDetails> GetUser()
-        {
-            List<UserDetails> lstUserDetails = _userService.GetUserData();
-            return lstUserDetails;
-        }
+        //[HttpGet]
+        //[Route("GetUser")]
+        //public List<UserInfo> GetUser()
+        //{
+        //    List<UserInfo> lstUserDetails = _userService.GetUserData();
+        //    return lstUserDetails;
+        //}
 
         [HttpPost]
         [Route("SendEmail")]

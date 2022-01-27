@@ -1,4 +1,6 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.EntityModels.ListModels;
+using DomainLayer.EntityModels.Procedures;
+using DomainLayer.Models;
 using RepositoryLayer;
 using RepositoryLayer.Interfaces;
 using ServiceLayer.Interfaces;
@@ -23,9 +25,10 @@ namespace ServiceLayer
             _repository.AddUser(registration);
           
         }
-        public List<UserDetails> GetUserData()
+        public List<UserInfoDetails> GetUserData()
         {
-            List<UserDetails> userDetails = _repository.GetUserData();
+            //List<UserDetails> userDetails = _repository.GetUserData();
+            List<UserInfoDetails> userDetails = _repository.GetUser();
             return userDetails;
         }
 

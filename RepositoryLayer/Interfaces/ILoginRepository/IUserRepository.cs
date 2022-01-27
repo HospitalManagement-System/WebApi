@@ -1,4 +1,6 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.EntityModels.ListModels;
+using DomainLayer.EntityModels.Procedures;
+using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,10 @@ namespace RepositoryLayer.Interfaces
     public interface IUserRepository
     {
         void AddUser(Registration registration);
-        List<UserDetails> GetUserData();
+        //List<UserDetails> GetUserData();
         EmployeeDetails GetUser(Guid id);
         void ChangePassword(Registration registration);
         //List<UserInfo> GetEmployee();
+        List<UserInfoDetails> GetUser();
     }
 }
