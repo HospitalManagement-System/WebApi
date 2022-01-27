@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.EntityModels.Procedures;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces.IInboxService;
@@ -22,35 +23,60 @@ namespace InboxAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetEmployee")]
+        //[Route("GetEmployee")]
         public IActionResult GetEmployees()
         {
-            List<EmployeeDetails> lstEmployeeDetails = _notesService.GetEmployeeDetails();
-            return Ok(lstEmployeeDetails);
+            try
+            {
+                List<EmployeeDetails> lstEmployeeDetails = _notesService.GetEmployeeDetails();
+                return Ok(lstEmployeeDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+       
         }
 
         // GET: api/<NotesController>
-        [HttpGet]
-        [Route("GetNotesById/{id}")]
-        public IActionResult GetNotesById([FromQuery] Guid id)
+        [HttpGet("{id}")]
+        ////[Route("GetNotesById/{id}")]
+        public IActionResult GetNotesById(Guid id)
         {
-            List<Notes> lstNotes = _notesService.GetNotesData(id);
-            return Ok(lstNotes);
+            List<NoteData> lstNotesData = _notesService.GetNotesData(id);
+            return Ok(lstNotesData);
         }
 
-        // POST api/<NotesController>
+        // POST api
+        // /<NotesController>
         [HttpPost]
-        public void Post([FromBody] Notes notes)
+        //[Route("PostNotes")]
+        public void PostNotes([FromBody] Notes notes)
         {
-            _notesService.SaveNote(notes);
+            try
+            {
+                _notesService.SaveNote(notes);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         // DELETE api/<NotesController>/5
-        [HttpDelete("{id}")]
-        [Route("DeleteNotes/{Id}")]
-        public void Delete([FromQuery] Guid id)
+        [HttpDelete]
+        //[Route("DeleteNotes/{Id}")]
+        public void Delete([FromBody]Guid id)
         {
-            _notesService.DeleteNote(id);
+            try
+            {
+                _notesService.DeleteNote(id);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
+
     }
 }

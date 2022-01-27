@@ -8,19 +8,18 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.EntityModels.Procedures
 {
-    [NotMapped]
     public class UserInfo
     {
-        [Key]
-        public int UserId { get; set; }
-        public int EmployeeId { get; set; }
+        [Key]   
+        public Guid UserId { get; set; }
+        public Guid EmployeeId { get; set; }
         public string FirstName { get; set; }
-        public string Contact { get; set; }
+        public double Contact { get; set; }
         public string Specialization { get; set; }
         public string Email { get; set; }
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public int isDisabled { get; set; }
+        public bool IsLocked { get; set; }
 
         public string Role { get; set; }
     }

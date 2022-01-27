@@ -30,15 +30,17 @@ namespace DomainLayer.Models
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-        [MaxLength(15)]
-        public string Contact { get; set; }
+        //[MaxLength(15)]
+        public double Contact { get; set; }
 
         [MaxLength(50)]
         public string Specialization { get; set; }
+        public string Designation { get; set; }
 
         [MaxLength(50)]
         public string Email { get; set; }
         public DateTime CreatedOn { get; set; }
+        public bool IsActive { get; set; }
 
         public Guid UserId { get; set; }
         [ForeignKey("Id")]

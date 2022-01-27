@@ -16,7 +16,7 @@ namespace LoginAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.12")
+                .HasAnnotation("ProductVersion", "5.0.13")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("DomainLayer.EntityModels.Notes", b =>
@@ -26,8 +26,8 @@ namespace LoginAPI.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
-                    b.Property<bool>("IsSent")
-                        .HasColumnType("bit");
+                    b.Property<string>("Designation")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
@@ -48,40 +48,6 @@ namespace LoginAPI.Migrations
                     b.HasIndex("SenderEmployeeId");
 
                     b.ToTable("Notes");
-                });
-
-            modelBuilder.Entity("DomainLayer.EntityModels.Procedures.NoteData", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsSent")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("NotesDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NoteData");
-                });
-
-            modelBuilder.Entity("DomainLayer.EntityModels.Procedures.ResultStatus", b =>
-                {
-                    b.Property<string>("Result")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Result");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Appointments", b =>
@@ -149,9 +115,8 @@ namespace LoginAPI.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
-                    b.Property<string>("Contact")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                    b.Property<double>("Contact")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -159,25 +124,26 @@ namespace LoginAPI.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Designation")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialization")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -444,8 +410,8 @@ namespace LoginAPI.Migrations
                     b.Property<string>("Dosage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Height")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Height")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Medication")
                         .HasColumnType("nvarchar(max)");
@@ -459,8 +425,8 @@ namespace LoginAPI.Migrations
                     b.Property<int>("RespirationRate")
                         .HasColumnType("int");
 
-                    b.Property<string>("Weight")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -480,21 +446,14 @@ namespace LoginAPI.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsFirstLogIn")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
                     b.Property<int>("NoOfAttempts")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
@@ -503,8 +462,7 @@ namespace LoginAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -752,9 +710,7 @@ namespace LoginAPI.Migrations
                 {
                     b.HasOne("DomainLayer.Models.UserDetails", "UserDetails")
                         .WithOne("EmployeeDetails")
-                        .HasForeignKey("DomainLayer.Models.EmployeeDetails", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DomainLayer.Models.EmployeeDetails", "UserId");
 
                     b.Navigation("UserDetails");
                 });
@@ -780,9 +736,7 @@ namespace LoginAPI.Migrations
 
                     b.HasOne("DomainLayer.Models.UserDetails", "UserDetails")
                         .WithOne("PatientDetails")
-                        .HasForeignKey("DomainLayer.Models.PatientDetails", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DomainLayer.Models.PatientDetails", "UserId");
 
                     b.Navigation("PatientDemographicDetails");
 

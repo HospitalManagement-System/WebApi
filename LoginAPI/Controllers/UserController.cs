@@ -17,6 +17,10 @@ using RepositoryLayer;
 using Microsoft.Extensions.Configuration;
 using ServiceLayer.Interfaces;
 
+using DomainLayer.EntityModels;
+using DomainLayer.Enums;
+using ServiceLayer.Interfaces.ICommonService;
+
 namespace LoginAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -27,24 +31,60 @@ namespace LoginAPI.Controllers
         private SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationSettings _appSettings;
         private IUserService _userService;
-        private IMessageService _messageservice;
+        //private IMessageService _messageservice;
+        private ILoggerService _loggerservice;
         public IConfiguration Configuration { get; }
 
 
-        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, IConfiguration configuration, IUserService userService, IMessageService messageservice)
+
+        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, IConfiguration configuration, IUserService userService, ILoggerService loggerservice, IMessageService messageservice)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
             _userService = userService;
             Configuration = configuration;
-            _messageservice = messageservice;
+            this._loggerservice = loggerservice;
+            //_messageservice = messageservice;
+        }
+
+        [HttpGet]
+        [Route("GetUsersData")]
+        public List<UserDetails> GetUsersData()
+        {
+            try
+            {
+                List<UserDetails> lstUserDetails = _userService.GetUserData();
+                return lstUserDetails;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+
+
+        [HttpGet]
+        [Route("GetUser")]
+        public EmployeeDetails GetUser(Guid userId)
+        {
+            try
+            {
+                EmployeeDetails emp = _userService.GetUser(userId);
+                return emp;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
 
         //PatientRegistration
         [HttpPost]
-        [Route("Patient/Register")] //POST : /api/{ApplicationUser/Patient/Register}
-        public async Task<IActionResult> PostPatientUser([FromBody] Registration objRegistration)
+        [Route("Register")] //POST : /api/{ApplicationUser/Patient/Register}
+        public async Task<IActionResult> PostUser([FromBody] Registration objRegistration)
         {
 
             var applicationUser = new ApplicationUser()
@@ -60,6 +100,13 @@ namespace LoginAPI.Controllers
                 //if (result.Errors.Count() == 0)
                 //{
                 _userService.RegisterUserData(objRegistration);
+                await _loggerservice.WriteLog(new Logger
+                {
+                    ComponentName = "User/RegistrationAction",
+                    Message = "Registration done for" + objRegistration.FirstName + ", Email : " + objRegistration.Email,
+                    LogDateTime = DateTime.Now,
+                    //Logtype = enumLogType.SUCCESS.ToString()
+                });
                 return Ok(new string("Registration Success"));
                 //}
                 //else
@@ -69,10 +116,16 @@ namespace LoginAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                await _loggerservice.WriteLog(new Logger
+                {
+                    ComponentName = "User/RegistrationAction",
+                    Message = "Registration failed for" + objRegistration.FirstName + ", Email : " + objRegistration.Email,
+                    LogDateTime = DateTime.Now,
+                    //Logtype = enumLogType.FAILURE.ToString()
+                });
+                return BadRequest(ex.ToString());
             }
         }
-
 
         [HttpPost]
         [Route("Login")]
@@ -105,25 +158,58 @@ namespace LoginAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.ToString());
             }
         }
 
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] Registration registration)
+        {
+
+            try
+            {
+                var applicationUser = new ApplicationUser()
+                {
+                    UserName = registration.UserName,
+                    Email = registration.Email,
+                    fullName = registration.FirstName + registration.LastName
+                };
+
+                var result = await _userManager.CreateAsync(applicationUser, registration.Password);
+                _userService.UpdatePassword(registration);
+                await _loggerservice.WriteLog(new Logger
+                {
+                    ComponentName = "User/ChangePassword",
+                    Message = "Password changed for" + registration.UserName,
+                    LogDateTime = DateTime.Now,
+                    //Logtype = enumLogType.SUCCESS.ToString()
+                });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                await _loggerservice.WriteLog(new Logger
+                {
+                    ComponentName = "User/ChangePassword",
+                    Message = "Password change failed for" + registration.UserName,
+                    LogDateTime = DateTime.Now,
+                    //Logtype = enumLogType.SUCCESS.ToString()
+                });
+                return StatusCode(500);
+            }
+        }
+
+        //[HttpPost("ForgotPassword")]
+        //public IActionResult ForgotPassword()
+        //{
+
+        //}
+
         [HttpGet]
-        [Route("GetUser")]
-        public List<UserDetails> GetUser()
+        public IActionResult GetEmployeeUser()
         {
-            List<UserDetails> lstUserDetails = _userService.GetUserData();
-            return lstUserDetails;
+            //_userService.GetEmployee();
+            return Ok();
         }
-
-        [HttpPost]
-        [Route("SendEmail")]
-        public void SendEmail(Message message)
-        {
-            _messageservice.SendEmail(message);
-        }
-
-
     }
 }

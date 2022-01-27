@@ -9,6 +9,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer;
+using RepositoryLayer.Interfaces;
+using RepositoryLayer.Interfaces.IInboxRepository;
+using RepositoryLayer.Repository.InboxRepository;
+using ServiceLayer;
+using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.IInboxService;
+using ServiceLayer.Services.InboxService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +35,8 @@ namespace InboxAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddScoped<INotesService, NotesService>();
+            services.AddScoped<INotesRepository, NotesRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -42,6 +50,7 @@ namespace InboxAPI
             );
 
             services.AddCors();
+            services.AddControllers().AddNewtonsoftJson();
 
         }
 

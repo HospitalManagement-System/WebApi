@@ -9,63 +9,100 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using DomainLayer.EntityModels.Procedures;
 
 namespace RepositoryLayer.Repository.InboxRepository
 {
     public class NotesRepository : INotesRepository
     {
-        ApplicationDbContext _context;
+        public ApplicationDbContext _context;
         public NotesRepository(ApplicationDbContext context)
         {
             this._context = context;
         }
 
-        public void AddNotes(Notes notes)
+        public async Task AddNotes(Notes notes)
         {
-            _context.Notes.Add(notes);
-            _context.SaveChanges();
+            try
+            {
+                _context.Notes.Add(notes);
+                await _context.SaveChangesAsync();
+            }
+            catch (SqlException ex)
+            {
+
+            }
+          
         }
 
         public List<EmployeeDetails> GetEmployees()
         {
-            List<EmployeeDetails> lstEmployeeDetails = _context.EmployeeDetails.ToList();
-            return lstEmployeeDetails;
+            try
+            {
+                List<EmployeeDetails> lstEmployeeDetails = _context.EmployeeDetails.ToList();
+                return lstEmployeeDetails;
+            }
+            catch (SqlException ex)
+            {
+                return null;
+            }
+           
         }
 
-        public List<NotesData> GetNotes(Guid id)
+        public List<NoteData> GetNotes(Guid loggedinUserId)
         {
-            //List<Notes> lstNotes = null;
-            //var notes = _context.Notes
-            //               .Where(s => s.SenderEmployeeId == id &&
-            //                            s.RecieverEmployeeId == id)
-            //               .Include(s => s.RecieverEmployeeDetails)
-            //               .Include(s => s.SenderEmployeeDetails)
-            //               .ToList();
+            try
+            {
 
+                var notes = _context.Notes.Where(item => item.SenderEmployeeId == loggedinUserId
+                                                || item.RecieverEmployeeId == loggedinUserId).ToList();
 
-            var notes = from t1 in _context.Notes
-                        where t1.RecieverEmployeeId == id || t1.SenderEmployeeId == id
-                        join t2 in _context.EmployeeDetails
-                        on t1.RecieverEmployeeId equals t2.Id
-                        select new
-                        {
-                            t1.Id,
-                            t1.Message,
-                            t1.NotesDateTime,
-                            t1.IsSent,
-                            t2.FirstName,
-                            t2.LastName
-                        };
+                var users1 = notes.Select(item => item.SenderEmployeeId);
+                var users2 = notes.Select(item => item.RecieverEmployeeId);
 
-            //var notes = _context.Database.("EXEC dbo.sp_GetNotes {0}" , id);
-            return (List<NotesData>) notes;
+                var users = new List<Guid>();
+                users.AddRange(users1);
+                users.AddRange(users2);
+
+                var employees = _context.EmployeeDetails.Where(item => users.Contains(item.Id)).ToList().Distinct()
+                    .Select(data => (data.Id, Name: $"{data.FirstName} { data.LastName}")).ToDictionary(item => item.Id, item => item.Name);
+
+                var result = notes.Select(item => new NoteData
+                {
+                    Id = item.Id,
+                    Message = item.Message,
+                    NotesDateTime = item.NotesDateTime,
+                    Designation = item.Designation,
+                    RecieverName = employees[item.RecieverEmployeeId],
+                    SenderName = employees[item.SenderEmployeeId],
+                    IsSentOrRecieved = item.SenderEmployeeId == loggedinUserId ? "SENT" : "RECIEVED"
+                }).ToList();
+
+                return result;
+            }
+            catch (SqlException ex)
+            {
+                return null;
+            }
+
         }
 
-        public void RemoveNotes(Guid id)
+        public async Task RemoveNotes(Guid id)
         {
-            var notes = _context.Notes.Where(x => x.Id == id).FirstOrDefault();
-            _context.Notes.Remove(notes);
-            _context.SaveChanges();
+            try
+            {
+                var notes = new Notes
+                {
+                    Id = id
+                };
+                //var notes = _context.Notes.Where(x => x.Id == id).FirstOrDefault();
+                _context.Notes.Remove(notes);
+                await _context.SaveChangesAsync();
+            }
+            catch (SqlException ex)
+            {
+
+            }
         }
 
     }

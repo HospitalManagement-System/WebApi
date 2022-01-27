@@ -9,7 +9,9 @@ namespace DomainLayer.EntityModels
     public class Logger
     {
         public int Id { get; set; }
+        public string ComponentName { get; set; }
         public string Message { get; set; }
-        public DateTime AddedOn { get; set; }
+        public string Logtype { get; set; }
+        public DateTime LogDateTime { get; set; }
     }
 }
