@@ -55,7 +55,8 @@ namespace AppointmentAPI.Controllers
         {
             var result = await (from c in _context.Appointments
                                .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime >= DateTime.Now)
-                                select new {
+                                select new
+                                {
                                     publicId = c.Id,
                                     title = c.AppointmentType,
                                     date = c.AppointmentDateTime,
@@ -123,30 +124,17 @@ namespace AppointmentAPI.Controllers
         public async Task<ActionResult> PostAppointments(Appointments appointments)
         {
 
-           
+
             _context.Appointments.Add(appointments);
-           var SaveResult=  await _context.SaveChangesAsync();
+            var SaveResult = await _context.SaveChangesAsync();
 
-                    //_context.Appointments.Update(appointments);
-                    var SaveResult = await _context.SaveChangesAsync();
-                    string Result = (SaveResult == 1) ? "Success" : "Failure";
-                    return Ok(Result);
-              
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            //_context.Appointments.Update(appointments);
+            //var SaveResult = await _context.SaveChangesAsync();
+            string Result = (SaveResult == 1) ? "Success" : "Failure";
+            return Ok(Result);
 
 
         }
-
-
-
-
-
 
 
         // DELETE: api/Appointments/5
@@ -208,17 +196,17 @@ namespace AppointmentAPI.Controllers
 
         }
 
-        
+
         [HttpGet("GetAllPhysician")]
         public IActionResult GetAllPhysician()
         {
             var Physican = (from e in _context.EmployeeDetails
                             select new
                             {
-                                Id=e.Id,
+                                Id = e.Id,
                                 PhysicianName = e.FirstName
                             }
-                            ) ;
+                            );
 
             return Ok(Physican);
 
@@ -263,9 +251,9 @@ namespace AppointmentAPI.Controllers
                                                  appointmentType = a.AppointmentType,
                                                  slotBooked = a.bookslot,
                                                  appointmentDateTime = a.AppointmentDateTime,
-                                                 patientName  = m != null ? m.FirstName : "Unknown",
-                                                 physicianName = e!=null ?  e.FirstName : "Unknown",
-                                                 diagnosis= a.Diagnosis,
+                                                 patientName = m != null ? m.FirstName : "Unknown",
+                                                 physicianName = e != null ? e.FirstName : "Unknown",
+                                                 diagnosis = a.Diagnosis,
 
                                              }
                                 );
@@ -279,15 +267,13 @@ namespace AppointmentAPI.Controllers
             }
 
             return NotFound();
-           
+
 
         }
 
-
-
-
-
-
-
     }
 }
+
+
+
+
