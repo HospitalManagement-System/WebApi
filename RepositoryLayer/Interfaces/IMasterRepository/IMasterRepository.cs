@@ -10,6 +10,12 @@ namespace RepositoryLayer.Interfaces.IMasterRepository
     public interface IMasterRepository
     {
         List<Allergy> GetAllergydetails();
-        Allergy GetAllergyfromallergytype(string AllergyType);
+        List<Allergy> GetAllergyfromallergytype(string AllergyType);
+        Diagnosis Getdignosisdetailsfromdesc(string diagnosisisdes);
+        List<Diagnosis> Getdignosisdetails();
+        Drug Getdetailsfromdrugname(string drugname);
+        Procedure Getdetailsfromproceduredes(string diagnosisisdes);
+        List<Drug> Getdrugdetail();
+        List<Procedure> Getproceduredetails();
     }
 }

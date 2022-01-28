@@ -47,7 +47,7 @@ namespace VisitDetailsAPI.Controllers
         
         [HttpPost]
         [Route("PostPatientdemographicsdetails")]
-        public async Task<int> PostPatientdemographicsdetails([FromBody] Demographicsdetails objpatientDemographicDetails)
+        public async Task<int> PostPatientdemographicsdetails([FromBody] PatientDemographicDetails objpatientDemographicDetails)
         {
             try
             {
@@ -64,12 +64,14 @@ namespace VisitDetailsAPI.Controllers
 
 
         // PUT api/<DemographicsdetailsController>/5
-        [HttpPut]
-        public string Put(Guid patientid, [FromBody] Demographicsdetails patientDemographicDetails)
+        [HttpPut("UpdateDemographic")]
+        //[Route("Put")]
+        public IActionResult UpdateDemographic(string Demoid, PatientDemographicDetails patientDemographicDetails)
         {
             try
             {
-                return _VisitService.UpdateDemographicsUserDetails(patientid, patientDemographicDetails);
+
+                return Ok(_VisitService.UpdateDemographicsUserDetails(Demoid,patientDemographicDetails));
 
                 // return Ok(new string("Registration Success"));
 

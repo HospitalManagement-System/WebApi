@@ -33,14 +33,14 @@ namespace DomainLayer.Models
         public string Country { get; set; }
         public string State { get; set; }
         [NotMapped]
-        public string Allergylist { get; set; }
-       
+       // public string Allergylist { get; set; }
+        public List<string> Allergylist { get; set; }
         public bool IsFatal { get; set; }
         
         
         [ForeignKey("PatientDetails")]
         public Guid PatientId { get; set; }
-        public PatientDetails PatientDetails { get; set; }
+      // public PatientDetails PatientDetails { get; set; }
 
         public string AllergynameList { get; set; }
         public string AllergytypeList { get; set; }
@@ -49,5 +49,8 @@ namespace DomainLayer.Models
         public PatientRelativeDetails PatientRelativeDetails { get; set; }
 
         public DateTime Createddate { get; set; }
+
+        public string AllergyDetails { get; set; }
+        
     }
 }

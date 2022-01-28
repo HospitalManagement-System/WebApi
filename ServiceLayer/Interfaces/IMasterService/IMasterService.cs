@@ -11,7 +11,12 @@ namespace ServiceLayer.Interfaces.IMasterService
     {
 
         List<Allergy> GetAllAllergydetails();
-        Allergy GetAllergyfromallergytype(string AllergyType);
-
+        List<Allergy> GetAllergyfromallergytype(string AllergyType);
+        Diagnosis Getdetailsfromdiagnosisdes(string diagnosisisdes);
+        List<Diagnosis> Getdiagnosisdetails();
+        Procedure Getdetailsfromproceduredes(string diagnosisisdes);
+        List<Procedure> Getproceduredetails();
+        Drug Getdetailsfromdrugname(string drugname);
+        List<Drug> Getdrugdetails();
     }
 }

@@ -39,11 +39,12 @@ namespace VisitDetailsAPI.Controllers
 
         // GET api/<MasterController>/5
         [HttpGet]
-        public Allergy GetdetailsfromAllergytype(string AllergyType)
+        [Route("GetdetailsfromAllergytype")]
+        public List<Allergy> GetdetailsfromAllergytype(string AllergyType)
         {
             try
             {
-                Allergy allergy = _MasterService.GetAllergyfromallergytype(AllergyType);
+                List<Allergy> allergy = _MasterService.GetAllergyfromallergytype(AllergyType);
                 return allergy;
             }
             catch(Exception ex)
@@ -52,23 +53,97 @@ namespace VisitDetailsAPI.Controllers
             }
            
         }
-
-        // POST api/<MasterController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet]
+        [Route("Getdetailsfromdiagnosisdes")]
+        public Diagnosis Getdetailsfromdiagnosisdes(string Diagnosisisdes)
         {
+            try
+            {
+                Diagnosis diagnosis = _MasterService.Getdetailsfromdiagnosisdes(Diagnosisisdes);
+                return diagnosis;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+        [HttpGet]
+        [Route("Getdiagnosisdetails")]
+        public List<Diagnosis> Getdiagnosisdetails()
+        {
+            try
+            {
+                List<Diagnosis> procedure = _MasterService.Getdiagnosisdetails();
+                return procedure;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+        [HttpGet]
+        [Route("Getdetailsfromproceduredes")]
+        public Procedure Getdetailsfromproceduredes(string Proceduredes)
+        {
+            try
+            {
+                Procedure procedure = _MasterService.Getdetailsfromproceduredes(Proceduredes);
+                return procedure;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+        [HttpGet]
+        [Route("Getproceduredetails")]
+        public List<Procedure> Getproceduredetails()
+        {
+            try
+            {
+                List<Procedure> procedure = _MasterService.Getproceduredetails();
+                return procedure;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+        [HttpGet]
+        [Route("Getdetailsfromdrug")]
+        public Drug Getdetailsfromdrug(string drugname)
+        {
+            try
+            {
+                Drug drug = _MasterService.Getdetailsfromdrugname(drugname);
+                return drug;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+        [HttpGet]
+        [Route("Getdrugdetails")]
+        public List<Drug> Getdrugdetails()
+        {
+            try
+            {
+                List<Drug> drug = _MasterService.Getdrugdetails();
+                return drug;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
 
-        // PUT api/<MasterController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/<MasterController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
