@@ -19,7 +19,7 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
         public VisitRepository(ApplicationDbContext context)
         {
             _context = context;
-          
+
         }
 
         public int SaveResult { get; private set; }
