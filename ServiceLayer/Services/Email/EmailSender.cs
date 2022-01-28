@@ -17,22 +17,24 @@ namespace ServiceLayer.Services.Email
         {
 
             var currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            var FilePath = $"{currentDirectory.Replace("\\CommonAPI","")}\\ServiceLayer\\EmailTemplates\\ApproveAppointment.html";
+            var FilePath = $"{currentDirectory.Replace("\\CommonAPI","")}\\ServiceLayer\\EmailTemplates\\EmployeeRegistartion.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
             //Replace Email
-            MailText = MailText.Replace("[newusername]", UserName).Replace("[username]",Email).Replace("[passsword]",Password);
+            //MailText = MailText.Replace("[newusername]", UserName).Replace("[username]",Email).Replace("[passsword]",Password);
 
-            Root root = new Root();
-            root.from = "Cosmo Hospital";
-            root.to = Email;
-            root.subject = "Login Details";
-            //root.message = $"<p>Welcome To Cosmos Hospital</p> <p>Dear {UserName} </p> <p>Your Temporary Email and Password Has been Created</p> <p>UserName:{Email}</p> <p>UserName:{Password}</p>";
-            root.message = MailText;
-            //Serialize
-            string output = JsonConvert.SerializeObject(root);
-            var client = new HttpClient();
+            MailText = MailText.Replace("[username]", Email).Replace("[passsword]", Password);
+
+            //Root root = new Root();
+            //root.from = "Cosmo Hospital";
+            //root.to = Email;
+            //root.subject = "Login Details";
+            ////root.message = $"<p>Welcome To Cosmos Hospital</p> <p>Dear {UserName} </p> <p>Your Temporary Email and Password Has been Created</p> <p>UserName:{Email}</p> <p>UserName:{Password}</p>";
+            //root.message = MailText;
+            ////Serialize
+            //string output = JsonConvert.SerializeObject(root);
+            //var client = new HttpClient();
             //var request = new HttpRequestMessage
             //{
             //    Method = HttpMethod.Post,
@@ -68,7 +70,7 @@ namespace ServiceLayer.Services.Email
         {
             //Fetching Email Body Text from EmailTemplate File.  
             var currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            var FilePath = $"{currentDirectory.Replace("\\CommonAPI", "")}\\ServiceLayer\\EmailTemplates\\EmployeeRegistartion.html";
+            var FilePath = $"{currentDirectory.Replace("\\CommonAPI", "")}\\ServiceLayer\\EmailTemplates\\ApproveAppointment.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();

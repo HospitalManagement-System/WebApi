@@ -1,4 +1,6 @@
-﻿using DomainLayer.Enums;
+﻿using DomainLayer.EntityModels.ListModels;
+using DomainLayer.EntityModels.Procedures;
+using DomainLayer.Enums;
 using DomainLayer.Models;
 using DomainLayer.Models.Master;
 using RepositoryLayer.Interfaces;
@@ -66,10 +68,50 @@ namespace RepositoryLayer
             }
         }
 
-        public List<UserDetails> GetUser()
+        public List<UserInfoDetails> GetUser()
         {
-            List<UserDetails> userDetails = _context.UserDetails.ToList();
-            return userDetails;
+            try
+            {
+
+
+                List<UserDetails> userDetails = _context.UserDetails.ToList();
+                List<UserInfoDetails> userInfos = new List<UserInfoDetails>();
+                var result = from user in userDetails
+                             join
+                             roles in _context.RoleMaster
+                             on
+                             user.RoleId equals roles.Id
+                             select new
+                             {
+                                 Id = user.Id,
+                                 Username = user.UserName,
+                                 Password = user.Password,
+                                 role = roles.UserRole
+                             };
+
+                foreach (var item in result)
+                {
+
+                    UserInfoDetails info = new UserInfoDetails();
+                    info.Id = item.Id;
+                    info.UserName = item.Username;
+                    info.Password = item.Password;
+                    info.Role = item.role;
+
+                    userInfos.Add(info);
+
+                }
+                
+
+                return userInfos;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+         
         }
 
         private RoleMaster GetOrSetRole(string role)
@@ -80,7 +122,7 @@ namespace RepositoryLayer
                 lstRoleMaster = _context.RoleMaster.ToList();
                 _memorycache.SetCache<RoleMaster>("Rolemaster", lstRoleMaster);
             }
-            RoleMaster roleMaster = lstRoleMaster.Where(x => x.UserRole == role).FirstOrDefault();
+            RoleMaster roleMaster = lstRoleMaster.Where(x => x.UserRole.ToUpper() == role.ToUpper()).FirstOrDefault();
             return roleMaster;
         }
     }

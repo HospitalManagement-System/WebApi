@@ -14,3 +14,26 @@
             //               bookslot = r.c.bookslot
 
             //            }).ToListAsync();
+
+2)Stored PRocedure
+//var proc = _context.UserInfos.FromSqlRaw($"Exec GetHospitalUserInfo").ToList().ToArray();
+
+            //List<UserInfo> userInfos = new List<UserInfo>();
+
+            //foreach (var item in proc)
+            //{
+            //    UserInfo userInfo = new UserInfo();
+            //    userInfo.UserId = item.UserId;
+            //    userInfo.EmployeeId = item.EmployeeId;
+            //    userInfo.FirstName = item.FirstName;
+            //    userInfo.Contact = item.Contact;
+            //    userInfo.Specialization = item.Specialization;
+            //    userInfo.Email = item.Email;
+            //    userInfo.IsActive = item.IsActive;
+            //    userInfo.isDisabled = item.isDisabled;
+            //    userInfo.Role = item.Role;
+
+            //    userInfos.Add(userInfo);
+
+
+            //}

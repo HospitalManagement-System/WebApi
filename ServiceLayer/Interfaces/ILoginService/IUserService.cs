@@ -1,4 +1,6 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.EntityModels.ListModels;
+using DomainLayer.EntityModels.Procedures;
+using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace ServiceLayer.Interfaces
     public interface IUserService
     {
         void RegisterUserData(Registration registration);
-        List<UserDetails> GetUserData();
+        List<UserInfoDetails> GetUserData();
 
     }
 }

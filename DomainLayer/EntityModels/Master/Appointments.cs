@@ -39,5 +39,18 @@ namespace DomainLayer.Models
 
         [MaxLength(100)]
         public string bookslot { get; set; }
+
+        [MaxLength(100)]
+        public string Mode { get; set; }
+
+
+        [MaxLength(700)]
+        public string PatientMeetingLink { get; set; }
+
+
+        [MaxLength(int.MaxValue)]
+        public string PhysicianMeetingLink { get; set; }
+
+
     }
 }
