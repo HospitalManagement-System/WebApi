@@ -19,7 +19,7 @@ namespace DomainLayer.Models
         public bool IsActive { get; set; }
         
         public Guid PatientDemographicId { get; set; }
-       // [ForeignKey("Id")]
+        //[ForeignKey("Id")]
         public PatientDemographicDetails PatientDemographicDetails { get; set; }
         public Guid UserId { get; set; }
         [ForeignKey("Id")]

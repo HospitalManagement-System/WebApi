@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace DomainLayer.Models
 {
     public class PatientVisitDetails
@@ -22,12 +24,16 @@ namespace DomainLayer.Models
         public string ProcedureDesciption { get; set; }
         public string DiagnosisDescription { get; set; }
 
+
+
         public string DrugDescription { get; set; }
-       
+
         [ForeignKey("Appointments")]
         public Guid AppointmentId { get; set; }
         public Appointments Appointments { get; set; }
         public DateTime Createddate { get; set; }
+
+
 
         [NotMapped]
         public List<string> Diagnosislist { get; set; }
@@ -35,6 +41,8 @@ namespace DomainLayer.Models
         public List<string> Procedureslist { get; set; }
         [NotMapped]
         public List<string> Druglist { get; set; }
+
+
 
     }
 }
