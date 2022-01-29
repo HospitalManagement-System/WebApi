@@ -236,16 +236,18 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPatch("ApproveReject/{Id}")]
-        public IActionResult ApproveReject(string Id,string Status)
+        public IActionResult ApproveReject(string Id,string Status, string DeletedReason)
         {
             Guid AppointmentId = new Guid(Id);
 
             //var TRrsaction = _context.Transactions.Where(x => x.Value == Status).FirstOrDefault();
-            var FindAppointment = _context.Appointments.Where(x=>x.Id==AppointmentId).FirstOrDefault();
+            //var FindAppointment = _context.Appointments.Where(x=>x.Id==AppointmentId).FirstOrDefault();
+            var FindAppointment = _context.Appointments.Where(x => x.Id == AppointmentId).FirstOrDefault();
 
             if (FindAppointment!=null)
             {
                 FindAppointment.AppointmentStatus = Status;
+                FindAppointment.DeletedReason = DeletedReason;
                 var Result= _context.SaveChanges();
 
                 return Ok(Result==1?"Success":"Failure");
@@ -258,7 +260,100 @@ namespace AppointmentAPI.Controllers
             
         }
 
-        
+        //Get: api/DeclineAppointments
+        [HttpGet("DeclineAppointments")]
+        public async Task<ActionResult<IEnumerable<Appointments>>> DeclineAppointments()
+        {
+
+            var User = (
+
+                 from a in _context.Appointments
+                 join e in _context.EmployeeDetails
+                 on a.PhysicianId equals e.Id
+                 join r in _context.RoleMaster
+                 on a.DeletedBy equals r.Id
+                 where (a.AppointmentStatus == "Rejected")
+                 select new
+                 {
+                     a.Id,
+                     a.AppointmentType,
+                     a.AppointmentDateTime,
+                     DoctorName = e.Title + e.FirstName + e.LastName,
+                     a.Diagnosis,
+                     a.AppointmentStatus,
+                     a.IsCompleted,
+                     a.DeletedReason,
+                     DeletedBy = r.UserRole
+
+                 }).ToList();
+
+
+
+            return Ok(User);
+        }
+        //Get: api/UpcomingAppointments
+        [HttpGet("UpcomingAppointments")]
+        public async Task<ActionResult<IEnumerable<Appointments>>> UpcomingAppointments()
+        {
+            var User = (
+              from a in _context.Appointments
+              join e in _context.EmployeeDetails
+              on a.PhysicianId equals e.Id
+              join p in _context.PatientDetails
+              on a.PatientId equals p.Id
+              join pd in _context.PatientDemographicDetails
+              on p.PatientDemographicId equals pd.Id
+              where (a.AppointmentDateTime >= DateTime.Now & a.AppointmentStatus == "Approved")
+              select new
+              {
+
+                  a.Id,
+                  a.AppointmentType,
+                  a.AppointmentDateTime,
+                  DoctorName = e.Title + e.FirstName + e.LastName,
+                  a.Diagnosis,
+                  a.AppointmentStatus,
+                  a.IsCompleted,
+                  a.DeletedReason
+
+              }).ToList();
+
+
+
+            return Ok(User);
+        }
+
+
+
+
+        //Get: api/PastAppointments
+        [HttpGet("PastAppointments")]
+        public async Task<ActionResult<IEnumerable<Appointments>>> PastAppointments()
+        {
+            var User = (
+              from a in _context.Appointments
+              join e in _context.EmployeeDetails
+              on a.PhysicianId equals e.Id
+              where (a.AppointmentDateTime < DateTime.Now & a.AppointmentStatus == "Approved")
+              select new
+              {
+                  a.Id,
+                  a.AppointmentType,
+                  a.AppointmentDateTime,
+                  DoctorName = e.Title + e.FirstName + e.LastName,
+                  a.Diagnosis,
+                  a.AppointmentStatus,
+                  a.IsCompleted,
+                  a.DeletedReason
+
+              }).ToList();
+
+
+
+            return Ok(User);
+        }
+
+
         [HttpGet("GetAllPhysician")]
         public IActionResult GetAllPhysician()
         {
