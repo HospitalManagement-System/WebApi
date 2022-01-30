@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.EntityModels.Master;
+using DomainLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer;
@@ -98,13 +99,36 @@ namespace CommonAPI.Controllers.Payment
             options.Add("amount", payment.Attributes["amount"]);
             Razorpay.Api.Payment paymentCaptured = payment.Capture(options);
             string amt = paymentCaptured.Attributes["amount"];
+            int Ammount = (Convert.ToInt32(amt)/100);
+            Subscription subscription = new Subscription();
+            subscription.PatientId = patientId;
+            subscription.paymentId = paymentId;
+            subscription.orderId = orderId;
+            subscription.Amount = Ammount;
+            if(Ammount==199)
+            {
+                subscription.Enable = 5;
+            }
+            else if(Ammount==499)
+            {
+                subscription.Enable = 10;
+            }
+            else if (Ammount == 999)
+            {
+                subscription.Enable = 100;
+            }
+            subscription.StartDate = DateTime.Now;
+            subscription.EndDate = DateTime.Now.AddYears(1);
+
+             _context.Subscription.Add(subscription);
+            var Save = _context.SaveChanges();
+            var Result = (Save == 1 ? "Success" : "Failure");
+
 
             //// Check payment made successfully
 
-            if (paymentCaptured.Attributes["status"] == "captured")
+            if (paymentCaptured.Attributes["status"] == "captured" && Result=="Success")
             {
-                
-
                 return Ok("Success");
             }
             else
@@ -112,6 +136,16 @@ namespace CommonAPI.Controllers.Payment
                 return Ok("Failed");
             }
         }
+
+
+        [HttpGet("GetSubscribedData/{PatientId}")]
+        public IActionResult GetSubscribedData(string PatientId)
+         {
+            var patientID = new Guid(PatientId);
+            var Amount = (from s in _context.Subscription.Where(x=>x.PatientId==patientID) select new { s.Amount});
+            return Ok(Amount);
+        }
+
 
 
 

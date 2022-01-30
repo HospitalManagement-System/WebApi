@@ -138,6 +138,7 @@ namespace AppointmentAPI.Controllers
                     appointmentsData.PhysicianId = appointments.PhysicianId;
                     appointmentsData.Mode = appointments.Mode;
                     appointmentsData.AppointmentStatus = appointments.AppointmentStatus;
+                    appointmentsData.QueueStatus = "Upcoming";
                     if (appointments.Mode=="Online")
                     {
                     var ZoomLinks = _zoom.Zoom();
