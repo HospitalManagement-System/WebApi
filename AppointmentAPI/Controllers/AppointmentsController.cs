@@ -9,6 +9,7 @@ using DomainLayer.Models;
 using RepositoryLayer;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Interfaces.IZoom;
+using DomainLayer.Models.Master;
 
 namespace AppointmentAPI.Controllers
 {
@@ -242,7 +243,6 @@ namespace AppointmentAPI.Controllers
             Guid AppointmentId = new Guid(Id);
 
             //var TRrsaction = _context.Transactions.Where(x => x.Value == Status).FirstOrDefault();
-            //var FindAppointment = _context.Appointments.Where(x=>x.Id==AppointmentId).FirstOrDefault();
             var FindAppointment = _context.Appointments.Where(x => x.Id == AppointmentId).FirstOrDefault();
 
             if (FindAppointment!=null)
@@ -452,7 +452,31 @@ namespace AppointmentAPI.Controllers
             return Ok(Url);
         }
 
+        //Get: api/GetPrescriptions
+        [HttpGet("GetPrescriptions/{Id}")]
+        public async Task<ActionResult<IEnumerable<Drug>>> GetPrescriptions(string Id)
+        {
+            var appointmentID = new Guid(Id);
 
+            var pvDetails = _context.PatientVisitDetails.Where(e => e.AppointmentId == appointmentID)
+                            .FirstOrDefault();
+
+            IList<Drug> drugslist = new List<Drug>();
+
+            try
+            {
+                drugslist = _context.Drug.Where(e => pvDetails.DrugDescription.Contains(
+                    e.DrugName.Trim())).ToList();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return Ok(drugslist);
+        }
 
 
 
