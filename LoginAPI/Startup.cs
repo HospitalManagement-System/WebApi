@@ -25,6 +25,13 @@ using MailKit;
 using ServiceLayer.Interfaces;
 using RepositoryLayer.Interfaces;
 using RepositoryLayer.Repository;
+using ServiceLayer.Interfaces.ICommonService;
+using RepositoryLayer.Repository.CommonRepository;
+using ServiceLayer.Services.CommonService;
+using RepositoryLayer.Interfaces.ICommonRepository;
+using ServiceLayer.Services.Encryption;
+using ServiceLayer.Interfaces.IEncription;
+using ServiceLayer.Services.Email;
 
 namespace LoginAPI
 {
@@ -44,9 +51,13 @@ namespace LoginAPI
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
 
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IEncryption, Encryption>();
             services.AddTransient<IMessageService, ServiceLayer.MessageService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ILoggerService, LoggerService>();
+            services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<IInMemoryCache, InMemoryCache>();
             services.AddMemoryCache();
 
@@ -91,7 +102,7 @@ namespace LoginAPI
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x => {
                 x.RequireHttpsMetadata = true;
-                x.SaveToken = false;
+                x.SaveToken = true;
                 x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -109,7 +120,6 @@ namespace LoginAPI
         {
             if (env.IsDevelopment())
             {
-
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CosmosMW v1"));

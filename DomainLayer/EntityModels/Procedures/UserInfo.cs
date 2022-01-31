@@ -14,7 +14,7 @@ namespace DomainLayer.EntityModels.Procedures
         public Guid UserId { get; set; }
         public Guid EmployeeId { get; set; }
         public string FirstName { get; set; }
-        public string Contact { get; set; }
+        public double Contact { get; set; }
         public string Specialization { get; set; }
         public string Email { get; set; }
         public bool IsActive { get; set; }

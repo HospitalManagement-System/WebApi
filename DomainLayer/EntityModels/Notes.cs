@@ -14,6 +14,7 @@ namespace DomainLayer.EntityModels
         [Key]
         public Guid Id { get; set; }
         public string Message { get; set; }
+        public string Designation { get; set; }
         public DateTime NotesDateTime { get; set; }
         public bool IsSent { get; set; }
 
@@ -24,19 +25,6 @@ namespace DomainLayer.EntityModels
         public Guid RecieverEmployeeId { get; set; }
         //[ForeignKey("Id")]
         public EmployeeDetails RecieverEmployeeDetails { get; set; }
-
-        //[Key]
-        //public Guid Id { get; set; }
-        //public string SentMessage { get; set; }
-        //public string RecievedMessage { get; set; }
-        //public DateTime SentDateTime { get; set; }
-        //public DateTime RecievedDateTime { get; set; }
-        //[ForeignKey("EmployeeDetails")]
-        //public Guid SenderId { get; set; }
-        //public virtual EmployeeDetails SenderEmployee { get; set; }
-        //[ForeignKey("EmployeeDetails")]
-        //public Guid RecieverId { get; set; }
-        //public EmployeeDetails RecieverEmployee { get; set; }
 
     }
 }

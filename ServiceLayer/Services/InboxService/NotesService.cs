@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.EntityModels.Procedures;
 using DomainLayer.Models;
 using RepositoryLayer.Interfaces.IInboxRepository;
 using ServiceLayer.Interfaces.IInboxService;
@@ -24,11 +25,11 @@ namespace ServiceLayer.Services.InboxService
             return lstEmployeeDetails;
         }
 
-        //public List<Notes> GetNotesData(Guid id)
-        //{
-        //    List<Notes> lstNotes =  _notesRepository.GetNotes(id);
-        //    return lstNotes;
-        //}
+        public List<NoteData> GetNotesData(Guid id)
+        {
+            List<NoteData> lstNotesData =  _notesRepository.GetNotes(id);
+            return lstNotesData;
+        }
 
         public void SaveNote(Notes note)
         {
@@ -37,12 +38,8 @@ namespace ServiceLayer.Services.InboxService
 
         public void DeleteNote(Guid id)
         {
-            //_notesRepository.RemoveNote(id);
+            _notesRepository.RemoveNotes(id);
         }
 
-        public List<Notes> GetNotesData(Guid id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
