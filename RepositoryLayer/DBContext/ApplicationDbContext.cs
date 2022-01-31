@@ -61,7 +61,7 @@ namespace RepositoryLayer
 
         //public DbSet<Logger> Logger { get; set; }
 
-        public DbSet<Transaction> Transactions { get; set; }
+        //public DbSet<Transaction> Transactions { get; set; }
 
         public DbSet<Education> Education { get; set; }
 
