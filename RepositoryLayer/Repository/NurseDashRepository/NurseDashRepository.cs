@@ -52,7 +52,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                             on a.PatientId equals p.Id
                             join pd in _context.PatientDemographicDetails
                             on p.PatientDemographicId equals pd.Id
-                            where a.AppointmentDateTime == DateTime.Today && a.Mode == "Upcoming"
+                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Upcoming"
                             select new
                             {
                                 a.Id,
@@ -185,7 +185,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                 Appointments Existingdetails = _context.Appointments.Where(x => x.Id == appid).FirstOrDefault();
                 if (Existingdetails != null)
                 {
-                    Existingdetails.Mode = "Ongoing";
+                    Existingdetails.QueueStatus = "Ongoing";
                     _context.Appointments.Update(Existingdetails);
                     int result = _context.SaveChanges();
                     Result = (SaveResult == 1) ? "Failure" : "Success";
