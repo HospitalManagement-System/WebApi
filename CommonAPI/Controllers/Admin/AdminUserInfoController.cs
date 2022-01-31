@@ -116,7 +116,7 @@ namespace CommonAPI.Controllers.Admin
                 UserInfo userInfo = new UserInfo();
                 userInfo.UserId = item.UserId;
                 userInfo.FirstName = item.firstName;
-                userInfo.Contact = item.contact;
+                userInfo.Contact = Convert.ToDouble(item.contact);
                 userInfo.Email = item.email;
                 userInfo.IsActive = item.isActive;
                 userInfo.IsLocked = item.isLocked;
