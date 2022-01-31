@@ -48,6 +48,11 @@ namespace ServiceLayer
             _repository.UpdatePassword(user);
         }
 
+        public void LockedAccount(UserDetails user)
+        {
+            _repository.LockAccount(user);
+        }
+
         //public List<UserInfo> GetEmployee()
         //{
         //    List<UserInfo> lstUserinfo = _repository.GetEmployee();

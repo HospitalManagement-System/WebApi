@@ -25,14 +25,14 @@ namespace AppointmentAPI.Controllers
 
         private readonly IEmailSender _iEMailSender;
 
-        private readonly IZoom _zoom; 
+        private readonly IZoom _zoom;
 
-        public AppointmentsController(ApplicationDbContext context, IEmailSender emailSender, IZoom zoom,  IAppointmentService service)
+        public AppointmentsController(ApplicationDbContext context, IEmailSender emailSender, IZoom zoom, IAppointmentService service)
         {
             _context = context;
             _iEMailSender = emailSender;
             _zoom = zoom;
-             _service = service;
+            _service = service;
         }
 
         // GET: api/Appointments
@@ -134,46 +134,46 @@ namespace AppointmentAPI.Controllers
 
             try
             {
-                   Appointments appointmentsData = new Appointments();
-                   var Time = appointments.AppointmentDateTime;
-                   var Hour = appointments.bookslot;
-                   string[] timeSplit = Hour.Split("to");
-                   string[] secondSplit = timeSplit[0].Split(":");
-                    if (secondSplit[1].Contains("30"))
-                    {
+                Appointments appointmentsData = new Appointments();
+                var Time = appointments.AppointmentDateTime;
+                var Hour = appointments.bookslot;
+                string[] timeSplit = Hour.Split("to");
+                string[] secondSplit = timeSplit[0].Split(":");
+                if (secondSplit[1].Contains("30"))
+                {
                     int Hours = Convert.ToInt32(secondSplit[0]);
                     int Minutes = Convert.ToInt32(secondSplit[1]);
                     DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, Minutes, 0);
                     appointmentsData.AppointmentDateTime = dt3;
-                    }
-                    else
-                    {
+                }
+                else
+                {
                     int Hours = Convert.ToInt32(timeSplit[0]);
                     DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
                     appointmentsData.AppointmentDateTime = dt3;
-                    }
-                    
-                    appointmentsData.Diagnosis = appointments.Diagnosis;
-                    appointmentsData.AppointmentType = appointments.AppointmentType;
-                    appointmentsData.bookslot = appointments.bookslot;
-                    appointmentsData.PatientId = appointments.PatientId;
-                    appointmentsData.PhysicianId = appointments.PhysicianId;
-                    appointmentsData.Mode = appointments.Mode;
-                    appointmentsData.AppointmentStatus = appointments.AppointmentStatus;
-                    appointmentsData.QueueStatus = "Upcoming";
-                    if (appointments.Mode=="Online")
-                    {
+                }
+
+                appointmentsData.Diagnosis = appointments.Diagnosis;
+                appointmentsData.AppointmentType = appointments.AppointmentType;
+                appointmentsData.bookslot = appointments.bookslot;
+                appointmentsData.PatientId = appointments.PatientId;
+                appointmentsData.PhysicianId = appointments.PhysicianId;
+                appointmentsData.Mode = appointments.Mode;
+                appointmentsData.AppointmentStatus = appointments.AppointmentStatus;
+                appointmentsData.QueueStatus = "Upcoming";
+                if (appointments.Mode == "Online")
+                {
                     var ZoomLinks = _zoom.Zoom();
                     appointmentsData.PhysicianMeetingLink = ZoomLinks.Item1;
                     appointmentsData.PatientMeetingLink = ZoomLinks.Item2;
-                    }
-                   _context.Appointments.Add(appointmentsData);
-                    var SaveResult = await _context.SaveChangesAsync();
-                    string Result = (SaveResult == 1) ? "Success" : "Failure";
-                  
+                }
+                _context.Appointments.Add(appointmentsData);
+                var SaveResult = await _context.SaveChangesAsync();
+                string Result = (SaveResult == 1) ? "Success" : "Failure";
 
-                    return Ok(Result);
-               
+
+                return Ok(Result);
+
             }
             catch (Exception ex)
             {
@@ -186,15 +186,15 @@ namespace AppointmentAPI.Controllers
 
 
         [HttpPut("UpdateAppointments/{AppointmentId}")]
-        public async Task<ActionResult> UpdateAppointments(string AppointmentId ,Appointments appointments)
+        public async Task<ActionResult> UpdateAppointments(string AppointmentId, Appointments appointments)
         {
             try
             {
                 var appointmentId = new Guid(AppointmentId);
 
-                var GetAppointment = _context.Appointments.Where(x=>x.Id==appointmentId).FirstOrDefault();
+                var GetAppointment = _context.Appointments.Where(x => x.Id == appointmentId).FirstOrDefault();
 
-                if (GetAppointment!=null)
+                if (GetAppointment != null)
                 {
                     GetAppointment.AppointmentDateTime = appointments.AppointmentDateTime;
                     GetAppointment.bookslot = appointments.bookslot;
@@ -202,23 +202,19 @@ namespace AppointmentAPI.Controllers
 
                 }
 
-                    //_context.Appointments.Update(appointments);
-                    var SaveResult = await _context.SaveChangesAsync();
-                    string Result = (SaveResult == 1) ? "Success" : "Failure";
-                    return Ok(Result);
-              
-
                 //_context.Appointments.Update(appointments);
-                //var SaveResult = await _context.SaveChangesAsync();
+                var SaveResult = await _context.SaveChangesAsync();
                 string Result = (SaveResult == 1) ? "Success" : "Failure";
                 return Ok(Result);
+
+
             }
             catch (Exception ex)
             {
 
                 throw;
             }
-        
+
 
 
         }
@@ -264,7 +260,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPatch("ApproveReject/{Id}")]
-        public IActionResult ApproveReject(string Id,string Status, string DeletedReason)
+        public IActionResult ApproveReject(string Id, string Status, string DeletedReason)
         {
             Guid AppointmentId = new Guid(Id);
 
@@ -275,7 +271,7 @@ namespace AppointmentAPI.Controllers
             {
                 FindAppointment.AppointmentStatus = Status;
                 FindAppointment.DeletedReason = DeletedReason;
-                var Result= _context.SaveChanges();
+                var Result = _context.SaveChanges();
 
                 return Ok(Result == 1 ? "Success" : "Failure");
             }
@@ -350,9 +346,6 @@ namespace AppointmentAPI.Controllers
             return Ok(User);
         }
 
-
-
-
         //Get: api/PastAppointments
         [HttpGet("PastAppointments")]
         public async Task<ActionResult<IEnumerable<Appointments>>> PastAppointments()
@@ -406,7 +399,7 @@ namespace AppointmentAPI.Controllers
                             on e.UserId equals u.Id
                             join r in _context.RoleMaster
                             on u.RoleId equals r.Id
-                            where(r.UserRole.ToUpper()=="PHYSICIAN")
+                            where (r.UserRole.ToUpper() == "PHYSICIAN")
                             select new
                             {
                                 Id = e.Id,
@@ -456,18 +449,18 @@ namespace AppointmentAPI.Controllers
             }
 
             return NotFound();
-
+        }
 
         [HttpGet("GetZoomLink/{Id}")]
-        public IActionResult GetZoomLink(string Id,string Role)
+        public IActionResult GetZoomLink(string Id, string Role)
         {
             var appointmentID = new Guid(Id);
             var Url = (from a in _context.Appointments
-                       where (a.Mode=="Online" && a.Id==appointmentID)
+                       where (a.Mode == "Online" && a.Id == appointmentID)
                        select new
                        {
-                           PatientMeetingLink= a.PatientMeetingLink,
-                           PhysicianMeetingLink=a.PhysicianMeetingLink
+                           PatientMeetingLink = a.PatientMeetingLink,
+                           PhysicianMeetingLink = a.PhysicianMeetingLink
                        }
                        );
 
@@ -503,6 +496,7 @@ namespace AppointmentAPI.Controllers
 
     }
 }
+
 
 
 
