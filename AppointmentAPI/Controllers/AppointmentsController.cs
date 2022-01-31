@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 using RepositoryLayer;
 using ServiceLayer.Interfaces.IAppointmentService;
+using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.IZoom;
+using DomainLayer.Models.Master;
 
 namespace AppointmentAPI.Controllers
 {
@@ -20,11 +23,16 @@ namespace AppointmentAPI.Controllers
         public IAppointmentService _service;
         //private readonly IEmailSender _iEMailSender;
 
-        public AppointmentsController(ApplicationDbContext context, IAppointmentService service)
+        private readonly IEmailSender _iEMailSender;
+
+        private readonly IZoom _zoom; 
+
+        public AppointmentsController(ApplicationDbContext context, IEmailSender emailSender, IZoom zoom,  IAppointmentService service)
         {
             _context = context;
-            _service = service;
-            //_iEMailSender = emailSender;
+            _iEMailSender = emailSender;
+            _zoom = zoom;
+             _service = service;
         }
 
         // GET: api/Appointments
@@ -126,8 +134,79 @@ namespace AppointmentAPI.Controllers
 
             try
             {
-                _context.Appointments.Add(appointments);
-                var SaveResult = await _context.SaveChangesAsync();
+                   Appointments appointmentsData = new Appointments();
+                   var Time = appointments.AppointmentDateTime;
+                   var Hour = appointments.bookslot;
+                   string[] timeSplit = Hour.Split("to");
+                   string[] secondSplit = timeSplit[0].Split(":");
+                    if (secondSplit[1].Contains("30"))
+                    {
+                    int Hours = Convert.ToInt32(secondSplit[0]);
+                    int Minutes = Convert.ToInt32(secondSplit[1]);
+                    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, Minutes, 0);
+                    appointmentsData.AppointmentDateTime = dt3;
+                    }
+                    else
+                    {
+                    int Hours = Convert.ToInt32(timeSplit[0]);
+                    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
+                    appointmentsData.AppointmentDateTime = dt3;
+                    }
+                    
+                    appointmentsData.Diagnosis = appointments.Diagnosis;
+                    appointmentsData.AppointmentType = appointments.AppointmentType;
+                    appointmentsData.bookslot = appointments.bookslot;
+                    appointmentsData.PatientId = appointments.PatientId;
+                    appointmentsData.PhysicianId = appointments.PhysicianId;
+                    appointmentsData.Mode = appointments.Mode;
+                    appointmentsData.AppointmentStatus = appointments.AppointmentStatus;
+                    appointmentsData.QueueStatus = "Upcoming";
+                    if (appointments.Mode=="Online")
+                    {
+                    var ZoomLinks = _zoom.Zoom();
+                    appointmentsData.PhysicianMeetingLink = ZoomLinks.Item1;
+                    appointmentsData.PatientMeetingLink = ZoomLinks.Item2;
+                    }
+                   _context.Appointments.Add(appointmentsData);
+                    var SaveResult = await _context.SaveChangesAsync();
+                    string Result = (SaveResult == 1) ? "Success" : "Failure";
+                  
+
+                    return Ok(Result);
+               
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+        }
+
+
+        [HttpPut("UpdateAppointments/{AppointmentId}")]
+        public async Task<ActionResult> UpdateAppointments(string AppointmentId ,Appointments appointments)
+        {
+            try
+            {
+                var appointmentId = new Guid(AppointmentId);
+
+                var GetAppointment = _context.Appointments.Where(x=>x.Id==appointmentId).FirstOrDefault();
+
+                if (GetAppointment!=null)
+                {
+                    GetAppointment.AppointmentDateTime = appointments.AppointmentDateTime;
+                    GetAppointment.bookslot = appointments.bookslot;
+                    GetAppointment.PhysicianId = appointments.PhysicianId;
+
+                }
+
+                    //_context.Appointments.Update(appointments);
+                    var SaveResult = await _context.SaveChangesAsync();
+                    string Result = (SaveResult == 1) ? "Success" : "Failure";
+                    return Ok(Result);
+              
 
                 //_context.Appointments.Update(appointments);
                 //var SaveResult = await _context.SaveChangesAsync();
@@ -143,6 +222,7 @@ namespace AppointmentAPI.Controllers
 
 
         }
+
 
 
         // DELETE: api/Appointments/5
@@ -184,17 +264,18 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPatch("ApproveReject/{Id}")]
-        public IActionResult ApproveReject(string Id, string Status)
+        public IActionResult ApproveReject(string Id,string Status, string DeletedReason)
         {
             Guid AppointmentId = new Guid(Id);
 
             //var TRrsaction = _context.Transactions.Where(x => x.Value == Status).FirstOrDefault();
-            var FindAppointment = _context.Appointments.Where(x=>x.Id==AppointmentId).FirstOrDefault();
+            var FindAppointment = _context.Appointments.Where(x => x.Id == AppointmentId).FirstOrDefault();
 
             if (FindAppointment != null)
             {
-                //FindAppointment.AppointmentStatus = Status;
-                var Result = _context.SaveChanges();
+                FindAppointment.AppointmentStatus = Status;
+                FindAppointment.DeletedReason = DeletedReason;
+                var Result= _context.SaveChanges();
 
                 return Ok(Result == 1 ? "Success" : "Failure");
             }
@@ -204,6 +285,99 @@ namespace AppointmentAPI.Controllers
             }
 
 
+        }
+
+        //Get: api/DeclineAppointments
+        [HttpGet("DeclineAppointments")]
+        public async Task<ActionResult<IEnumerable<Appointments>>> DeclineAppointments()
+        {
+
+            var User = (
+
+                 from a in _context.Appointments
+                 join e in _context.EmployeeDetails
+                 on a.PhysicianId equals e.Id
+                 join r in _context.RoleMaster
+                 on a.DeletedBy equals r.Id
+                 where (a.AppointmentStatus == "Rejected")
+                 select new
+                 {
+                     a.Id,
+                     a.AppointmentType,
+                     a.AppointmentDateTime,
+                     DoctorName = e.Title + e.FirstName + e.LastName,
+                     a.Diagnosis,
+                     a.AppointmentStatus,
+                     a.IsCompleted,
+                     a.DeletedReason,
+                     DeletedBy = r.UserRole
+
+                 }).ToList();
+
+
+
+            return Ok(User);
+        }
+        //Get: api/UpcomingAppointments
+        [HttpGet("UpcomingAppointments")]
+        public async Task<ActionResult<IEnumerable<Appointments>>> UpcomingAppointments()
+        {
+            var User = (
+              from a in _context.Appointments
+              join e in _context.EmployeeDetails
+              on a.PhysicianId equals e.Id
+              join p in _context.PatientDetails
+              on a.PatientId equals p.Id
+              join pd in _context.PatientDemographicDetails
+              on p.PatientDemographicId equals pd.Id
+              where (a.AppointmentDateTime >= DateTime.Now & a.AppointmentStatus == "Approved")
+              select new
+              {
+
+                  a.Id,
+                  a.AppointmentType,
+                  a.AppointmentDateTime,
+                  DoctorName = e.Title + e.FirstName + e.LastName,
+                  a.Diagnosis,
+                  a.AppointmentStatus,
+                  a.IsCompleted,
+                  a.DeletedReason
+
+              }).ToList();
+
+
+
+            return Ok(User);
+        }
+
+
+
+
+        //Get: api/PastAppointments
+        [HttpGet("PastAppointments")]
+        public async Task<ActionResult<IEnumerable<Appointments>>> PastAppointments()
+        {
+            var User = (
+              from a in _context.Appointments
+              join e in _context.EmployeeDetails
+              on a.PhysicianId equals e.Id
+              where (a.AppointmentDateTime < DateTime.Now & a.AppointmentStatus == "Approved")
+              select new
+              {
+                  a.Id,
+                  a.AppointmentType,
+                  a.AppointmentDateTime,
+                  DoctorName = e.Title + e.FirstName + e.LastName,
+                  a.Diagnosis,
+                  a.AppointmentStatus,
+                  a.IsCompleted,
+                  a.DeletedReason
+
+              }).ToList();
+
+
+
+            return Ok(User);
         }
 
 
@@ -228,6 +402,11 @@ namespace AppointmentAPI.Controllers
             var Diagnosics = new Guid(Id);
 
             var Physican = (from e in _context.EmployeeDetails
+                            join u in _context.UserDetails
+                            on e.UserId equals u.Id
+                            join r in _context.RoleMaster
+                            on u.RoleId equals r.Id
+                            where(r.UserRole.ToUpper()=="PHYSICIAN")
                             select new
                             {
                                 Id = e.Id,
@@ -279,6 +458,47 @@ namespace AppointmentAPI.Controllers
             return NotFound();
 
 
+        [HttpGet("GetZoomLink/{Id}")]
+        public IActionResult GetZoomLink(string Id,string Role)
+        {
+            var appointmentID = new Guid(Id);
+            var Url = (from a in _context.Appointments
+                       where (a.Mode=="Online" && a.Id==appointmentID)
+                       select new
+                       {
+                           PatientMeetingLink= a.PatientMeetingLink,
+                           PhysicianMeetingLink=a.PhysicianMeetingLink
+                       }
+                       );
+
+
+            return Ok(Url);
+        }
+
+        //Get: api/GetPrescriptions
+        [HttpGet("GetPrescriptions/{Id}")]
+        public async Task<ActionResult<IEnumerable<Drug>>> GetPrescriptions(string Id)
+        {
+            var appointmentID = new Guid(Id);
+
+            var pvDetails = _context.PatientVisitDetails.Where(e => e.AppointmentId == appointmentID)
+                            .FirstOrDefault();
+
+            IList<Drug> drugslist = new List<Drug>();
+
+            try
+            {
+                drugslist = _context.Drug.Where(e => pvDetails.DrugDescription.Contains(
+                    e.DrugName.Trim())).ToList();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return Ok(drugslist);
         }
 
     }
