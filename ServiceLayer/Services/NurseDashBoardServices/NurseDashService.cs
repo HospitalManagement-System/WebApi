@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Services.NurseDashBoardServices
 {
-  public  class NurseDashService:INurseService
+    public class NurseDashService : INurseService
     {
         private INurseRepository _repository;
         public NurseDashService(INurseRepository repository)
@@ -38,8 +38,13 @@ namespace ServiceLayer.Services.NurseDashBoardServices
 
         public string UpdateUpcomingAppoinmets(string id, Appointments nurse)
         {
-            var updateappo = _repository.UpdateUpAppointment(id,nurse);
+            var updateappo = _repository.UpdateUpAppointment(id, nurse);
             return updateappo;
+        }
+        public string UpdateNextPatient(string id, Appointments nurse)
+        {
+            var updateNext = _repository.UpdateNextPatient(id, nurse);
+            return updateNext;
         }
     }
 }

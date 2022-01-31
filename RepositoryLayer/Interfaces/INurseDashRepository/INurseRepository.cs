@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer.Interfaces.INurseDashRepository
 {
-   public interface INurseRepository
+    public interface INurseRepository
     {
         List<BarChartDetails> GetBarChartDetails();
         List<NurseAppointment> GetnurseDetails();
         List<NurseAppointment> GetUpcomingAppointments();
-       
+
         string UpdateUpAppointment(string id, Appointments nurse);
+        string UpdateNextPatient(string id, Appointments nurse);
     }
 }

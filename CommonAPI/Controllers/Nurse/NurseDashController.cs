@@ -18,16 +18,16 @@ namespace NurseDashAPI.Controllers
     public class NurseDashController : ControllerBase
     {
         private INurseService _BarChartService;
-        //private UserManager<ApplicationUser> _userManager;
+
         public NurseDashController(INurseService barChartService)
         {
             _BarChartService = barChartService;
-            //_userManager = userManager;
+
 
         }
         [HttpGet]
         [Route("GetallBarChartDetails")]
-        public  IActionResult GetallBarChartDetails()
+        public IActionResult GetallBarChartDetails()
         {
             List<BarChartDetails> getdetails = _BarChartService.GetBarChartDetails();
 
@@ -38,7 +38,7 @@ namespace NurseDashAPI.Controllers
 
         [HttpGet("GetNurseAppointment")]
 
-        public  ActionResult GetNurseAppointment()
+        public ActionResult GetNurseAppointment()
         {
 
 
@@ -58,9 +58,15 @@ namespace NurseDashAPI.Controllers
 
         }
         [HttpPut("UpdateUpcomingAppoinmets")]
-        public string UpdateUpcomingAppoinmets( string Id, Appointments nurse)
+        public string UpdateUpcomingAppoinmets(string Id, Appointments nurse)
         {
-            var updateapp = _BarChartService.UpdateUpcomingAppoinmets(Id,nurse);
+            var updateapp = _BarChartService.UpdateUpcomingAppoinmets(Id, nurse);
+            return updateapp;
+        }
+        [HttpPut("UpdateNextPatient")]
+        public string UpdateNextPatient(string Id, Appointments nurse)
+        {
+            var updateapp = _BarChartService.UpdateNextPatient(Id, nurse);
             return updateapp;
         }
     }
