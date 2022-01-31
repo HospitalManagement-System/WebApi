@@ -17,20 +17,27 @@ namespace RepositoryLayer.Repository.CommonRepository
         }
         public void SaveAttendance(EmployeeAvailability employeeAttendance)
         {
-            //_context.EmployeeAvailability.Add(employeeAttendance);
+            try
+            {
+                foreach (var item in employeeAttendance.arrTimeSlot)
+                {
+                    employeeAttendance.TimeSlot += item + ",";
+                }
+                _context.EmployeeAvailability.Add(employeeAttendance);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
-        public IEnumerable<EmployeeAvailability> GetAttendanceAvailability(Guid phyid)
+        public List<EmployeeAvailability> GetAttendanceAvailability()
         {
-            //List<EmployeeAvailability> result = _context.EmployeeAvailability.Where(x => x.DateTime == DateTime.Today && x.PhysicianId.ToString() == phyid.ToString()).ToList();
 
-            //foreach (var item in result)
-            //{
-            //    item.arrTimeSlot = item.TimeSlot.Split(',');
-            //}
-            //return result;  
-            var result = new EmployeeAvailability();
-            yield return result;
+            List<EmployeeAvailability> result = _context.EmployeeAvailability.ToList();
+            return result;
         }
     }
 }

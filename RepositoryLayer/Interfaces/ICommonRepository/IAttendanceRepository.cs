@@ -10,5 +10,6 @@ namespace RepositoryLayer.Interfaces.ICommonRepository
     public interface IAttendanceRepository
     {
         void SaveAttendance(EmployeeAvailability employeeAttendance);
+        public List<EmployeeAvailability> GetAttendanceAvailability();
     }
 }

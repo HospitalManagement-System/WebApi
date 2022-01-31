@@ -22,6 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ServiceLayer.Interfaces.ICommonService;
+using ServiceLayer.Services.CommonService;
+using RepositoryLayer.Interfaces.ICommonRepository;
+using RepositoryLayer.Repository.CommonRepository;
 
 namespace CommonAPI
 {
@@ -40,6 +44,8 @@ namespace CommonAPI
             services.AddScoped<INurseService, NurseDashService>();
             services.AddScoped<INurseRepository, NurseDashRepository>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<IAttendanceRepository, AttendanceRepository>();
             services.AddScoped<IEncryption, Encryption>();
             services.AddControllers();
             services.AddSwaggerGen(c =>

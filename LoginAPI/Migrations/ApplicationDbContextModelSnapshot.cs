@@ -37,6 +37,29 @@ namespace LoginAPI.Migrations
                     b.ToTable("BarChartDetails");
                 });
 
+            modelBuilder.Entity("DomainLayer.EntityModels.EmployeeAvailability", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAbsent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhysicianId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimeSlot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeeAvailability");
+                });
+
             modelBuilder.Entity("DomainLayer.EntityModels.Master.Department", b =>
                 {
                     b.Property<Guid>("Id")

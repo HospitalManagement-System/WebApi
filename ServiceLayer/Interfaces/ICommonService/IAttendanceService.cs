@@ -10,5 +10,7 @@ namespace ServiceLayer.Interfaces.ICommonService
     public interface IAttendanceService
     {
         void AddAtendance(EmployeeAvailability employeeAttendance);
+
+        List<EmployeeAvailability> GetAttendanceAvailability();
     }
 }

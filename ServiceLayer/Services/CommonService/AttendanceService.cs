@@ -20,5 +20,11 @@ namespace ServiceLayer.Services.CommonService
         {
             _repository.SaveAttendance(employeeAttendance);
         }
+
+        public List<EmployeeAvailability> GetAttendanceAvailability()
+        {
+            List<EmployeeAvailability> lstEmployeeDetails = _repository.GetAttendanceAvailability();
+            return lstEmployeeDetails;
+        }
     }
 }

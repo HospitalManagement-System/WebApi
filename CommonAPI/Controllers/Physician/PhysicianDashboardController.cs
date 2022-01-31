@@ -24,11 +24,19 @@ namespace CommonAPI.Controllers.Physician
             try
             {
                 _service.AddAtendance(employeeAttendance);
+              
             }
             catch (Exception ex)
             {
 
             }
+        }
+        [HttpGet("GetAvailablePhysicianDetails")]
+        public IActionResult GetAvailablePhysicianDetails()
+        {
+            List<EmployeeAvailability> employeeAvailabilities = _service.GetAttendanceAvailability();
+            return Ok(employeeAvailabilities);
+
         }
     }
 }
