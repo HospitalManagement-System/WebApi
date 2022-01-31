@@ -62,6 +62,15 @@ namespace RepositoryLayer
 
         public DbSet<Transaction> Transactions { get; set; }
 
+        public DbSet<Education> Education { get; set; }
+
+        public DbSet<Department> Department { get; set; }
+
+        public DbSet<Designation> Designation { get; set; }
+
+
+        public DbSet<Subscription> Subscription { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -150,7 +159,25 @@ namespace RepositoryLayer
             //Skip Tables
             modelBuilder.Ignore<AdminDashBoard>();
             //modelBuilder.Ignore<UserInfo>();
-            
+
+
+            modelBuilder
+            .Entity<Education>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+
+            modelBuilder
+            .Entity<Department>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+
+             modelBuilder
+            .Entity<Designation>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+
+
+            modelBuilder
+            .Entity<Subscription>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+
             base.OnModelCreating(modelBuilder);
         }
 
