@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\NewFolder\**" />
+    <Content Remove="Controllers\NewFolder\**" />
+    <EmbeddedResource Remove="Controllers\NewFolder\**" />
+    <None Remove="Controllers\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.12" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.12">
 		  <PrivateAssets>all</PrivateAssets>
@@ -21,10 +28,6 @@
   <ItemGroup>
     <ProjectReference Include="..\RepositoryLayer\RepositoryLayer.csproj" />
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\NewFolder\" />
   </ItemGroup>
 
 </Project>
