@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.EntityModels.Procedures;
 using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace RepositoryLayer.Interfaces.IInboxRepository
 {
     public interface INotesRepository
     {
-        List<NotesData> GetNotes(Guid id);
+        List<NoteData> GetNotes(Guid id);
         List<EmployeeDetails> GetEmployees();
-        void AddNotes(Notes notes);
-        void RemoveNotes(Guid id);
+        Task AddNotes(Notes notes);
+        Task RemoveNotes(Guid id);
     }
 }

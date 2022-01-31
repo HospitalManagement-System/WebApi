@@ -9,8 +9,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer;
+using RepositoryLayer.Interfaces.IAppointmentRepository;
+using RepositoryLayer.Repository.AppointmentRepository;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.IAppointmentService;
 using ServiceLayer.Interfaces.IZoom;
+using ServiceLayer.Services.AppointmentService;
 using ServiceLayer.Services.Email;
 using ServiceLayer.Services.Zoom;
 using System;
@@ -34,6 +38,9 @@ namespace AppointmentAPI
         {
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IZoom, Zoom>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

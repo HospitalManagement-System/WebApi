@@ -3,6 +3,7 @@ using DomainLayer.EntityModels.Procedures;
 using DomainLayer.Enums;
 using DomainLayer.Models;
 using DomainLayer.Models.Master;
+using Microsoft.Data.SqlClient;
 using RepositoryLayer.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace RepositoryLayer
     {
         private ApplicationDbContext _context;
         IInMemoryCache _memorycache;
-        List<RoleMaster> lstRoleMaster;
 
         public UserRepository(IInMemoryCache memorycache, ApplicationDbContext context)
         {
@@ -36,6 +36,7 @@ namespace RepositoryLayer
                         UserName = registration.UserName,
                         Password = registration.FirstName + "123",
                         Status = true,
+                        IsFirstLogIn = true,
                         PatientDetails = new PatientDetails
                         {
                             Title = registration.Title,
@@ -61,13 +62,104 @@ namespace RepositoryLayer
                     _context.UserDetails.Add(UserDetails);
                     _context.SaveChanges();
                 }
+
+                else if (registration.Role.ToUpper() == enumUserType.PHYSICIAN.ToString())
+                {
+                    var UserDetails = new UserDetails
+                    {
+                        UserName = registration.UserName,
+                        Password = registration.FirstName + "123",
+                        Status = true,
+                        IsFirstLogIn = true,
+                        EmployeeDetails = new EmployeeDetails
+                        {
+                            Title = registration.Title,
+                            FirstName = registration.FirstName,
+                            LastName = registration.LastName,
+                            Email = registration.Email,
+                            DateOfBirth = registration.DateOfBirth,
+                            Contact = registration.Contact,
+                            IsActive = true,
+                            Specialization = registration.Specilization,
+                            Designation = registration.Designation
+
+                        },
+                        //PatientDetails = new PatientDetails
+                        //{
+                        //    Id = Guid.NewGuid(),
+                        //    Title = registration.Title,
+                        //    PatientDemographicDetails = new PatientDemographicDetails
+                        //    {
+                        //        PatientRelativeDetails = new PatientRelativeDetails
+                        //        {
+
+                        //        }
+                        //    }
+                        //},
+                        RoleId = roleMaster.Id
+                    };
+                    _context.UserDetails.Add(UserDetails);
+                    _context.SaveChanges();
+                }
+            }
+            catch (SqlException ex)
+            {
+                 
+            }
+        }
+
+        public void ChangePassword(Registration registration)
+        {
+            try
+            {
+                var userDetails = _context.UserDetails.Where(x => x.Id == registration.UserId).FirstOrDefault();
+                if (userDetails != null)
+                {
+                    userDetails.Password = registration.Password;
+                    _context.UserDetails.Update(userDetails);
+                }
             }
             catch (Exception ex)
             {
 
             }
         }
+        public void UpdatePassword(UserDetails user)
+        {
+            try
+            {
+                var userDetails = _context.UserDetails.Where(x => x.Id == user.Id).FirstOrDefault();
+                if (userDetails != null)
+                {
+                    userDetails.Password = user.Password;
+                    _context.UserDetails.Update(userDetails);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
 
+            }
+        }
+        public void LockAccount(UserDetails user)
+        {
+            try
+            {
+                var userDetails = _context.UserDetails.Where(x => x.Id == user.Id).FirstOrDefault();
+                if (userDetails != null)
+                {
+                    userDetails.IsLocked = user.IsLocked;
+                    userDetails.NoOfAttempts = user.NoOfAttempts;
+                    _context.UserDetails.Update(userDetails);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        
         public List<UserInfoDetails> GetUser()
         {
             try
@@ -86,7 +178,8 @@ namespace RepositoryLayer
                                  Id = user.Id,
                                  Username = user.UserName,
                                  Password = user.Password,
-                                 role = roles.UserRole
+                                 role = roles.UserRole,
+                                 IsFirsrLogin = user.IsFirstLogIn
                              };
 
                 foreach (var item in result)
@@ -97,7 +190,7 @@ namespace RepositoryLayer
                     info.UserName = item.Username;
                     info.Password = item.Password;
                     info.Role = item.role;
-
+                    info.IsFirstLogin = item.IsFirsrLogin;
                     userInfos.Add(info);
 
                 }
@@ -106,10 +199,9 @@ namespace RepositoryLayer
                 return userInfos;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return null;
             }
          
         }
@@ -125,5 +217,33 @@ namespace RepositoryLayer
             RoleMaster roleMaster = lstRoleMaster.Where(x => x.UserRole.ToUpper() == role.ToUpper()).FirstOrDefault();
             return roleMaster;
         }
+
+        public EmployeeDetails GetUser(Guid id)
+        {
+            try
+            {
+
+                EmployeeDetails emp = _context.EmployeeDetails.Where(x => x.UserId == id).FirstOrDefault();
+                return emp;
+            }
+            catch (SqlException ex)
+            {
+                return null;
+            }
+
+        }
+        //public List<UserInfo> GetEmployee()
+        //{
+        //    //var userinfo = _context.UserDetails.ToList();
+        //    var roles = 
+        //    var employee = from emp in _context.EmployeeDetails
+        //                   join
+        //                   user in _context.UserDetails
+        //                   on emp.UserId equals user.Id
+        //                   select new
+        //                   {
+
+        //                   };
+        //}
     }
 }

@@ -27,8 +27,36 @@ namespace ServiceLayer
         }
         public List<UserInfoDetails> GetUserData()
         {
+            //List<UserDetails> userDetails = _repository.GetUserData();
             List<UserInfoDetails> userDetails = _repository.GetUser();
             return userDetails;
         }
+
+        public EmployeeDetails GetUser(Guid id)
+        {
+            EmployeeDetails user = _repository.GetUser(id);
+            return user;
+        }
+
+        public void UpdatePassword(Registration registration)
+        {
+            _repository.ChangePassword(registration);
+        }
+
+        public void ResetPassword(UserDetails user)
+        {
+            _repository.UpdatePassword(user);
+        }
+
+        public void LockedAccount(UserDetails user)
+        {
+            _repository.LockAccount(user);
+        }
+
+        //public List<UserInfo> GetEmployee()
+        //{
+        //    List<UserInfo> lstUserinfo = _repository.GetEmployee();
+        //    return lstUserinfo;
+        //}
     }
 }

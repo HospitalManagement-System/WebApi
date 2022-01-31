@@ -12,6 +12,13 @@ namespace ServiceLayer.Interfaces
     public interface IUserService
     {
         void RegisterUserData(Registration registration);
+        //List<UserDetails> GetUserData();
+        EmployeeDetails GetUser(Guid id);
+        void UpdatePassword(Registration registration);
+        void ResetPassword(UserDetails user);
+        void LockedAccount(UserDetails user);
+        
+        //List<UserInfo> GetEmployee();
         List<UserInfoDetails> GetUserData();
 
     }

@@ -11,8 +11,6 @@ namespace ServiceLayer.Services.Email
 {
     public class EmailSender : IEmailSender
     {
-      
-
         public async  Task<string> SendLoginSMSAsync(string UserName,string Password, string Email)
         {
 
