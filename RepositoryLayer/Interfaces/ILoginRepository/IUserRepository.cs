@@ -12,6 +12,13 @@ namespace RepositoryLayer.Interfaces
     public interface IUserRepository
     {
         void AddUser(Registration registration);
+        //List<UserDetails> GetUserData();
+        EmployeeDetails GetUser(Guid id);
+        void ChangePassword(Registration registration);
+        void UpdatePassword(UserDetails user);
+        void LockAccount(UserDetails user);
+        
+        //List<UserInfo> GetEmployee();
         List<UserInfoDetails> GetUser();
     }
 }
