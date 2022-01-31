@@ -36,6 +36,7 @@ namespace RepositoryLayer
                         UserName = registration.UserName,
                         Password = registration.FirstName + "123",
                         Status = true,
+                        IsFirstLogIn = true,
                         PatientDetails = new PatientDetails
                         {
                             Title = registration.Title,
@@ -69,6 +70,7 @@ namespace RepositoryLayer
                         UserName = registration.UserName,
                         Password = registration.FirstName + "123",
                         Status = true,
+                        IsFirstLogIn = true,
                         EmployeeDetails = new EmployeeDetails
                         {
                             Title = registration.Title,
@@ -122,7 +124,42 @@ namespace RepositoryLayer
 
             }
         }
+        public void UpdatePassword(UserDetails user)
+        {
+            try
+            {
+                var userDetails = _context.UserDetails.Where(x => x.Id == user.Id).FirstOrDefault();
+                if (userDetails != null)
+                {
+                    userDetails.Password = user.Password;
+                    _context.UserDetails.Update(userDetails);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
 
+            }
+        }
+        public void LockAccount(UserDetails user)
+        {
+            try
+            {
+                var userDetails = _context.UserDetails.Where(x => x.Id == user.Id).FirstOrDefault();
+                if (userDetails != null)
+                {
+                    userDetails.IsLocked = user.IsLocked;
+                    userDetails.NoOfAttempts = user.NoOfAttempts;
+                    _context.UserDetails.Update(userDetails);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        
         public List<UserInfoDetails> GetUser()
         {
             try
@@ -141,7 +178,8 @@ namespace RepositoryLayer
                                  Id = user.Id,
                                  Username = user.UserName,
                                  Password = user.Password,
-                                 role = roles.UserRole
+                                 role = roles.UserRole,
+                                 IsFirsrLogin = user.IsFirstLogIn
                              };
 
                 foreach (var item in result)
@@ -152,7 +190,7 @@ namespace RepositoryLayer
                     info.UserName = item.Username;
                     info.Password = item.Password;
                     info.Role = item.role;
-
+                    info.IsFirstLogin = item.IsFirsrLogin;
                     userInfos.Add(info);
 
                 }
@@ -161,10 +199,9 @@ namespace RepositoryLayer
                 return userInfos;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return null;
             }
          
         }

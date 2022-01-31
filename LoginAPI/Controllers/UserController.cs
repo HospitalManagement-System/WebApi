@@ -33,13 +33,14 @@ namespace LoginAPI.Controllers
         private SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationSettings _appSettings;
         private IUserService _userService;
+        private IEmailSender _emailSender;
         //private IMessageService _messageservice;
         private ILoggerService _loggerservice;
         public IConfiguration Configuration { get; }
 
 
 
-        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, IConfiguration configuration, IUserService userService, ILoggerService loggerservice, IMessageService messageservice)
+        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, IConfiguration configuration, IUserService userService, ILoggerService loggerservice, IMessageService messageservice, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -47,11 +48,12 @@ namespace LoginAPI.Controllers
             _userService = userService;
             Configuration = configuration;
             this._loggerservice = loggerservice;
+            _emailSender = emailSender;
             //_messageservice = messageservice;
         }
 
-        [HttpGet]
-        [Route("GetUser")]
+        [HttpGet("GetUser")]
+        //[Route("GetUsersData")]
         public List<UserInfoDetails> GetUser()
         {
             List<UserInfoDetails> lstUserDetails = _userService.GetUserData();
@@ -59,13 +61,13 @@ namespace LoginAPI.Controllers
         }
 
 
-        [HttpGet]
-        [Route("GetUser")]
-        public EmployeeDetails GetUser(Guid userId)
+        [HttpGet("{id}")]
+        //[Route("GetUserData")]
+        public EmployeeDetails GetUser(Guid id)
         {
             try
             {
-                EmployeeDetails emp = _userService.GetUser(userId);
+                EmployeeDetails emp = _userService.GetUser(id);
                 return emp;
             }
             catch (Exception ex)
@@ -156,6 +158,21 @@ namespace LoginAPI.Controllers
             }
         }
 
+        [HttpPost("{SendEmail}")]
+        //  [Route("SendEmail")]
+        public async Task<IActionResult> SendEmail(string email)
+        {
+            try
+            {
+                //_emailSender.SendLoginSMSAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] Registration registration)
         {
@@ -193,11 +210,33 @@ namespace LoginAPI.Controllers
             }
         }
 
-        //[HttpPost("ForgotPassword")]
-        //public IActionResult ForgotPassword()
-        //{
+        [HttpPost("ForgotPassword")]
+        public IActionResult ForgotPassword([FromBody] UserDetails user)
+        {
+            try
+            {
+                _userService.ResetPassword(user);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
-        //}
+        [HttpPost("LockAccount")]
+        public IActionResult LockAccount([FromBody] UserDetails user)
+        {
+            try
+            {
+                _userService.LockedAccount(user);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpGet]
         public IActionResult GetEmployeeUser()

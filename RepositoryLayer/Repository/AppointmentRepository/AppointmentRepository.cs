@@ -27,7 +27,7 @@ namespace RepositoryLayer.Repository.AppointmentRepository
                              select new InboxAppointment
                              {
                                  AppointmentId = appointment.Id,
-                                 PatientName = patient.FirstName + patient.LastName,
+                                 PatientName = patient.FirstName + " " + patient.LastName,
                                  AppointmentDateTime = appointment.AppointmentDateTime,
                                  MeetingTitle = appointment.AppointmentType,
                                  Diagnosis = appointment.Diagnosis

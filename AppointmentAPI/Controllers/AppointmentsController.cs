@@ -124,14 +124,22 @@ namespace AppointmentAPI.Controllers
         public async Task<ActionResult> PostAppointments(Appointments appointments)
         {
 
+            try
+            {
+                _context.Appointments.Add(appointments);
+                var SaveResult = await _context.SaveChangesAsync();
 
-            _context.Appointments.Add(appointments);
-            var SaveResult = await _context.SaveChangesAsync();
+                //_context.Appointments.Update(appointments);
+                //var SaveResult = await _context.SaveChangesAsync();
+                string Result = (SaveResult == 1) ? "Success" : "Failure";
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
 
-            //_context.Appointments.Update(appointments);
-            //var SaveResult = await _context.SaveChangesAsync();
-            string Result = (SaveResult == 1) ? "Success" : "Failure";
-            return Ok(Result);
+                throw;
+            }
+        
 
 
         }

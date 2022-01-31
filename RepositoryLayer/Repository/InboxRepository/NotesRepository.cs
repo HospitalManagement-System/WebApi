@@ -26,7 +26,7 @@ namespace RepositoryLayer.Repository.InboxRepository
             try
             {
                 _context.Notes.Add(notes);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (SqlException ex)
             {
@@ -97,7 +97,7 @@ namespace RepositoryLayer.Repository.InboxRepository
                 };
                 //var notes = _context.Notes.Where(x => x.Id == id).FirstOrDefault();
                 _context.Notes.Remove(notes);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (SqlException ex)
             {

@@ -43,6 +43,11 @@ namespace ServiceLayer
             _repository.ChangePassword(registration);
         }
 
+        public void ResetPassword(UserDetails user)
+        {
+            _repository.UpdatePassword(user);
+        }
+
         //public List<UserInfo> GetEmployee()
         //{
         //    List<UserInfo> lstUserinfo = _repository.GetEmployee();

@@ -1,6 +1,7 @@
 ﻿using DomainLayer.EntityModels;
 using DomainLayer.EntityModels.Procedures;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces.IInboxService;
 using System;
@@ -12,8 +13,10 @@ using System.Threading.Tasks;
 
 namespace InboxAPI.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
+    
     public class NotesController : ControllerBase
     {
         public INotesService _notesService;

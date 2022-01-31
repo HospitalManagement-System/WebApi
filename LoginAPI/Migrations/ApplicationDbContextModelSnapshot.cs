@@ -19,6 +19,23 @@ namespace LoginAPI.Migrations
                 .HasAnnotation("ProductVersion", "5.0.13")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DomainLayer.EntityModels.Master.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TransactionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("DomainLayer.EntityModels.Notes", b =>
                 {
                     b.Property<Guid>("Id")
@@ -28,6 +45,9 @@ namespace LoginAPI.Migrations
 
                     b.Property<string>("Designation")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
@@ -50,11 +70,20 @@ namespace LoginAPI.Migrations
                     b.ToTable("Notes");
                 });
 
+            modelBuilder.Entity("DomainLayer.EntityModels.Procedures.ResultStatus", b =>
+                {
+                    b.Property<string>("Result")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Result");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.Appointments", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<DateTime>("AppointmentDateTime")
                         .HasColumnType("datetime2");
@@ -83,6 +112,14 @@ namespace LoginAPI.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MeetingLink")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Mode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -91,6 +128,9 @@ namespace LoginAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("NurseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PatientDetailsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PatientId")
@@ -104,6 +144,8 @@ namespace LoginAPI.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PatientDetailsId");
 
                     b.ToTable("Appointments");
                 });
@@ -128,22 +170,27 @@ namespace LoginAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Specialization")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -268,7 +315,8 @@ namespace LoginAPI.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -276,8 +324,23 @@ namespace LoginAPI.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<double>("Contact")
-                        .HasColumnType("float");
+                    b.Property<string>("AllergynameList")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AllergytypeList")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClinicalInformation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Contact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Createddate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -292,8 +355,7 @@ namespace LoginAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsFatal")
                         .HasColumnType("bit");
@@ -301,18 +363,21 @@ namespace LoginAPI.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PatientRelativeId")
+                    b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("PreviousAllergies")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Pincode")
+                        .HasColumnType("int");
 
                     b.Property<string>("Race")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientRelativeId")
+                    b.HasIndex("PatientId")
                         .IsUnique();
 
                     b.ToTable("PatientDemographicDetails");
@@ -358,13 +423,17 @@ namespace LoginAPI.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Contact")
-                        .HasColumnType("float");
+                    b.Property<string>("Contact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -375,13 +444,25 @@ namespace LoginAPI.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("PatientDemographicsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Pincode")
+                        .HasColumnType("int");
+
                     b.Property<string>("Relation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PatientDemographicsId")
+                        .IsUnique();
 
                     b.ToTable("PatientRelativeDetails");
                 });
@@ -401,40 +482,33 @@ namespace LoginAPI.Migrations
                     b.Property<int>("BodyTemprature")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("DiagnosisId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("Createddate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DiagnosisDescription")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DoctorDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Dosage")
+                    b.Property<string>("DrugDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Height")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Medication")
+                    b.Property<string>("Height")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProcedureDesciption")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ProcedureId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("RespirationRate")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Weight")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
-
-                    b.HasIndex("DiagnosisId");
-
-                    b.HasIndex("ProcedureId");
 
                     b.ToTable("PatientVisitDetails");
                 });
@@ -446,14 +520,24 @@ namespace LoginAPI.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
+                    b.Property<string>("Designation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsFirstLogIn")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
                     b.Property<int>("NoOfAttempts")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
@@ -462,7 +546,8 @@ namespace LoginAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -706,41 +791,55 @@ namespace LoginAPI.Migrations
                     b.Navigation("SenderEmployeeDetails");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.Appointments", b =>
+                {
+                    b.HasOne("DomainLayer.Models.PatientDetails", null)
+                        .WithMany("lstAppointments")
+                        .HasForeignKey("PatientDetailsId");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.EmployeeDetails", b =>
                 {
                     b.HasOne("DomainLayer.Models.UserDetails", "UserDetails")
                         .WithOne("EmployeeDetails")
-                        .HasForeignKey("DomainLayer.Models.EmployeeDetails", "UserId");
+                        .HasForeignKey("DomainLayer.Models.EmployeeDetails", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UserDetails");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.PatientDemographicDetails", b =>
                 {
-                    b.HasOne("DomainLayer.Models.PatientRelativeDetails", "PatientRelativeDetails")
+                    b.HasOne("DomainLayer.Models.PatientDetails", "PatientDetails")
                         .WithOne("PatientDemographicDetails")
-                        .HasForeignKey("DomainLayer.Models.PatientDemographicDetails", "PatientRelativeId")
+                        .HasForeignKey("DomainLayer.Models.PatientDemographicDetails", "PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PatientRelativeDetails");
+                    b.Navigation("PatientDetails");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.PatientDetails", b =>
                 {
-                    b.HasOne("DomainLayer.Models.PatientDemographicDetails", "PatientDemographicDetails")
+                    b.HasOne("DomainLayer.Models.UserDetails", "UserDetails")
                         .WithOne("PatientDetails")
-                        .HasForeignKey("DomainLayer.Models.PatientDetails", "Id")
+                        .HasForeignKey("DomainLayer.Models.PatientDetails", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DomainLayer.Models.UserDetails", "UserDetails")
-                        .WithOne("PatientDetails")
-                        .HasForeignKey("DomainLayer.Models.PatientDetails", "UserId");
+                    b.Navigation("UserDetails");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.PatientRelativeDetails", b =>
+                {
+                    b.HasOne("DomainLayer.Models.PatientDemographicDetails", "PatientDemographicDetails")
+                        .WithOne("PatientRelativeDetails")
+                        .HasForeignKey("DomainLayer.Models.PatientRelativeDetails", "PatientDemographicsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("PatientDemographicDetails");
-
-                    b.Navigation("UserDetails");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.PatientVisitDetails", b =>
@@ -751,23 +850,7 @@ namespace LoginAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DomainLayer.Models.Master.Diagnosis", "Diagnosis")
-                        .WithMany("lstPatientVisitDetails")
-                        .HasForeignKey("DiagnosisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DomainLayer.Models.Master.Procedure", "Procedure")
-                        .WithMany("lstPatientVisitDetails")
-                        .HasForeignKey("ProcedureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Appointments");
-
-                    b.Navigation("Diagnosis");
-
-                    b.Navigation("Procedure");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.UserDetails", b =>
@@ -839,16 +922,6 @@ namespace LoginAPI.Migrations
                     b.Navigation("lstSentNotes");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.Master.Diagnosis", b =>
-                {
-                    b.Navigation("lstPatientVisitDetails");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.Master.Procedure", b =>
-                {
-                    b.Navigation("lstPatientVisitDetails");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.Master.RoleMaster", b =>
                 {
                     b.Navigation("lstUserDetails");
@@ -856,11 +929,13 @@ namespace LoginAPI.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.PatientDemographicDetails", b =>
                 {
-                    b.Navigation("PatientDetails");
+                    b.Navigation("PatientRelativeDetails");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.PatientRelativeDetails", b =>
+            modelBuilder.Entity("DomainLayer.Models.PatientDetails", b =>
                 {
+                    b.Navigation("lstAppointments");
+
                     b.Navigation("PatientDemographicDetails");
                 });
 

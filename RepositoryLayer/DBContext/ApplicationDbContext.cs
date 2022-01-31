@@ -56,6 +56,7 @@ namespace RepositoryLayer
         public DbSet<PatientVisitDetails> PatientVisitDetails { get; set; }
         public DbSet<PatientDemographicDetails> PatientDemographicDetails { get; set; }
         public DbSet<PatientRelativeDetails> PatientRelativeDetails { get; set; }
+        //public DbSet<EmployeeAvailability> EmployeeAvailability { get; set; }
 
         //public DbSet<Logger> Logger { get; set; }
 
@@ -127,18 +128,44 @@ namespace RepositoryLayer
             .Entity<Procedure>().Property(x => x.Id)
             .HasDefaultValueSql("newid()");
 
-            // modelBuilder
-            //.Entity<Appointments>().Property(x => x.Id)
-            //.HasDefaultValueSql("newid()");
+            modelBuilder
+           .Entity<Appointments>().Property(x => x.Id)
+           .HasDefaultValueSql("newid()");
+
+           // modelBuilder.Entity<Appointments>()
+           //.HasOne(s => s.PatientDetails)
+           //.WithMany(g => g.lstAppointments)
+           //.HasForeignKey(s => s.PatientId)
+           //.OnDelete(DeleteBehavior.Restrict);
 
 
-            // modelBuilder
-            // .Entity<PatientDemographicDetails>().Property(x => x.Id)
-            // .HasDefaultValueSql("newid()");
+           // modelBuilder.Entity<Appointments>()
+           //.HasOne(s => s.PhysicianEmployee)
+           //.WithMany(g => g.lstAppointments)
+           //.HasForeignKey(s => s.PatientId)
+           //.OnDelete(DeleteBehavior.Restrict);
 
-            // modelBuilder
-            // .Entity<PatientRelativeDetails>().Property(x => x.Id)
-            // .HasDefaultValueSql("newid()");
+
+           // modelBuilder.Entity<Appointments>()
+           //.HasOne(s => s.PatientDetails)
+           //.WithMany(g => g.lstAppointments)
+           //.HasForeignKey(s => s.PatientId)
+           //.OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder
+            .Entity<PatientDemographicDetails>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+
+            modelBuilder.Entity<PatientDemographicDetails>()
+           .HasOne(s => s.PatientRelativeDetails)
+           .WithOne(g => g.PatientDemographicDetails)
+           .HasForeignKey<PatientRelativeDetails>(s => s.PatientDemographicsId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+            .Entity<PatientRelativeDetails>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
 
 
             //Skip Tables
