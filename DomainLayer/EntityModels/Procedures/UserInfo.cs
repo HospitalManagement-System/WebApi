@@ -22,5 +22,10 @@ namespace DomainLayer.EntityModels.Procedures
         public bool IsLocked { get; set; }
 
         public string Role { get; set; }
+
+
     }
+
+
+
 }
