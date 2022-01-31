@@ -8,6 +8,6 @@ namespace ServiceLayer.Interfaces.IZoom
 {
     public interface IZoom
     {
-        public string Zoom();
+        public Tuple<string, string> Zoom();
     }
 }

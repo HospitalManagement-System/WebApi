@@ -8,15 +8,16 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Net;
-using System.Text;
+
 
 
 namespace ServiceLayer.Services.Zoom
 {
     public class Zoom : IZoom
     {
-         string IZoom.Zoom()
+        Tuple<string, string> IZoom.Zoom()
         {
+
             var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
             var now = DateTime.UtcNow;
             var apiSecret = "wAcHGaptiIESm478FDJ2DeAbhDQiitIpI9yT";
@@ -35,7 +36,7 @@ namespace ServiceLayer.Services.Zoom
             var client = new RestClient("https://api.zoom.us/v2/users/info@techussain.com/meetings");
             var request = new RestRequest(Method.POST);
             request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(new { topic = "Meeting with Raj", duration = "10", start_time = "2021-04-20T05:00:00", type = "2" });
+            request.AddJsonBody(new { topic = "Meeting", duration = "10", start_time = "2021-04-20T05:00:00", type = "2" });
 
             request.AddHeader("authorization", String.Format("Bearer {0}", tokenString));
             IRestResponse restResponse = client.Execute(request);
@@ -43,11 +44,11 @@ namespace ServiceLayer.Services.Zoom
             int numericStatusCode = (int)statusCode;
             var jObject = JObject.Parse(restResponse.Content);
 
-            var Host = (string)jObject["start_url"];
-            var Text = (string)jObject["join_url"];
+            var start = (string)jObject["start_url"];
+            var Join = (string)jObject["join_url"];
             var Text1 = Convert.ToString(numericStatusCode);
 
-            return Text;
+            return new Tuple<string, string>(start, Join);
         }
     }
 }
