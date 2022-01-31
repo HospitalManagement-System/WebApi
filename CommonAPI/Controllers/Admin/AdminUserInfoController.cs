@@ -33,13 +33,14 @@ namespace CommonAPI.Controllers.Admin
         [HttpGet]
         public IEnumerable<UserInfo> GetHospitalUsers()
         {
-
+            var Roles = (_context.RoleMaster.Where(x=>x.UserRole=="PHYSICIAN" || x.UserRole =="Nurse").ToList());
 
             var UserData = (from u in _context.UserDetails
                             join e in _context.EmployeeDetails 
                             on u.Id equals e.UserId
                             join r in _context.RoleMaster
                             on  u.RoleId equals r.Id
+                            where((u.RoleId==Roles[0].Id) || (u.RoleId == Roles[1].Id))
                             select new
                             {
                                 UserId = u.Id,
@@ -77,6 +78,55 @@ namespace CommonAPI.Controllers.Admin
 
             //  return (IEnumerable<UserInfo>)USerInfo;
             //return Ok(UserData);
+        }
+
+
+        [HttpGet("GetPatientUsers")]
+        public IEnumerable<UserInfo> GetPatientUsers()
+        {
+            var Roles = (_context.RoleMaster.Where(x => x.UserRole == "PATIENT").ToList());
+
+            var UserData = (from u in _context.UserDetails
+                            join p in _context.PatientDetails
+                            on u.Id equals p.UserId
+                            join e in _context.PatientDemographicDetails
+                            on p.Id equals e.PatientId
+                            join r in _context.RoleMaster
+                            on u.RoleId equals r.Id
+                            where ((u.RoleId == Roles[0].Id))
+                            select new
+                            {
+                                UserId = u.Id,
+                                EmployeeId = e.Id,
+                                firstName = e.FirstName,
+                                contact = e.Contact,
+                                email = e.Email,
+                                isActive = u.IsActive,
+                                isLocked = u.IsLocked,
+                                Role = r.UserRole,
+                            }
+                            ).ToList();
+
+
+
+            List<UserInfo> userInfos = new List<UserInfo>();
+
+            foreach (var item in UserData)
+            {
+                UserInfo userInfo = new UserInfo();
+                userInfo.UserId = item.UserId;
+                userInfo.FirstName = item.firstName;
+                userInfo.Contact = item.contact;
+                userInfo.Email = item.email;
+                userInfo.IsActive = item.isActive;
+                userInfo.IsLocked = item.isLocked;
+                userInfo.Role = item.Role;
+                userInfos.Add(userInfo);
+            }
+
+            return userInfos;
+
+            
         }
 
         // PUT api/<AdminUserInfoController>/5
@@ -134,8 +184,46 @@ namespace CommonAPI.Controllers.Admin
         }
 
 
-        
+        [HttpPut("PatientActive/{id}")]
+        public IActionResult PatientActive(string id, bool Status, string Type)
+        {
+            var User = new Guid(id);
+
+            var CheckUser = _context.UserDetails.Where(x => x.Id == User).FirstOrDefault();
+
+            if (CheckUser != null && Type == "Locked")
+            {
+                if (Status)
+                {
+                    CheckUser.IsLocked = true;
+
+                }
+                else
+                {
+                    CheckUser.IsLocked = false;
+                }
+
+                var Result = _context.SaveChanges();
+
+                return Ok((Result == 1 ? "Success" : "Failure"));
+            }
+            else if (CheckUser != null && Type == "Active")
+            {
+                CheckUser.IsActive = Status;
+
+                var Result = _context.SaveChanges();
+
+                return Ok((Result == 1 ? "Success" : "Failure"));
+            }
 
 
-    }
+            return Ok("Failure");
+
+        }
+
+
+
+
+
+        }
 }
