@@ -57,7 +57,7 @@ namespace RepositoryLayer
 
         public DbSet<PatientVisitDetails> PatientVisitDetails { get; set; }
         public DbSet<PatientRelativeDetails> PatientRelativeDetails { get; set; }
-        //public DbSet<EmployeeAvailability> EmployeeAvailability { get; set; }
+        public DbSet<EmployeeAvailability> EmployeeAvailability { get; set; }
 
         //public DbSet<Logger> Logger { get; set; }
 

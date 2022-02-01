@@ -8,8 +8,8 @@ namespace DomainLayer.Models
 {
     public class ChangePassword
     {
-        public Guid UserId { get; set; }
-        public string Username { get; set; }
+        public Guid Id { get; set; }
+        //public string Username { get; set; }
         public string Password { get; set; }
     }
 }

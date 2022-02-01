@@ -255,19 +255,30 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpGet("GetBookSlots/{Id}")]
-        public async Task<ActionResult<IEnumerable<Appointments>>> GetBookSlots(string Id, DateTime appointmentdateTime)
+        //public async Task<ActionResult<IEnumerable<Appointments>>> GetBookSlots(string Id, DateTime appointmentdateTime)
+        public async Task<IActionResult> GetBookSlots(string Id, DateTime appointmentdateTime)
         {
 
             Guid PhysicianID = new Guid(Id);
 
-            var slot = await (from c in _context.Appointments
-                              where (c.PhysicianId == PhysicianID && c.bookslot != null &&
-                              c.AppointmentDateTime.Date == Convert.ToDateTime(appointmentdateTime).Date
-                              )
-                              select new { c.bookslot }).ToListAsync();
+            var slot = _context.Appointments.Where(x => x.PhysicianId == PhysicianID && x.bookslot != null
+                          && x.AppointmentDateTime.Date == Convert.ToDateTime(appointmentdateTime).Date)
+                            .Select(t => t.bookslot).ToList();
+            string empslot = _context.EmployeeAvailability.Where(x => x.PhysicianId == PhysicianID
+                                      && x.DateTime.Date == Convert.ToDateTime(appointmentdateTime).Date).Select(x => x.TimeSlot).FirstOrDefault();
 
+            string[] arrempavailable = empslot.Split(',');
 
+            slot.AddRange(arrempavailable);
             return Ok(slot);
+
+            //await (from c in _context.Appointments
+            //              where (c.PhysicianId == PhysicianID && c.bookslot != null &&
+            //              c.AppointmentDateTime.Date == Convert.ToDateTime(appointmentdateTime).Date
+            //              )
+            //              select new { c.bookslot }).ToListAsync();
+
+
 
         }
 

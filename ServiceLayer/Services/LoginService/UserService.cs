@@ -38,9 +38,9 @@ namespace ServiceLayer
             return user;
         }
 
-        public void UpdatePassword(Registration registration)
+        public void UpdatePassword(ChangePassword changePassword)
         {
-            _repository.ChangePassword(registration);
+            _repository.ChangePassword(changePassword);
         }
 
         public void ResetPassword(UserDetails user)
