@@ -91,6 +91,38 @@ namespace LoginAPI.Migrations
                     b.ToTable("Education");
                 });
 
+            modelBuilder.Entity("DomainLayer.EntityModels.Master.Gender", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gender");
+                });
+
+            modelBuilder.Entity("DomainLayer.EntityModels.Master.Specalization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specalization");
+                });
+
             modelBuilder.Entity("DomainLayer.EntityModels.Master.Subscription", b =>
                 {
                     b.Property<Guid>("Id")
