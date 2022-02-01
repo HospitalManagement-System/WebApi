@@ -12,6 +12,7 @@ using ServiceLayer.Interfaces.IAppointmentService;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Interfaces.IZoom;
 using DomainLayer.Models.Master;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AppointmentAPI.Controllers
 {
@@ -271,18 +272,25 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPatch("ApproveReject/{Id}")]
-        public IActionResult ApproveReject(string Id, string Status, string DeletedReason)
+        public IActionResult ApproveReject(string Id,string Status, string DeletedReason="")
         {
             Guid AppointmentId = new Guid(Id);
 
-            //var TRrsaction = _context.Transactions.Where(x => x.Value == Status).FirstOrDefault();
+            
             var FindAppointment = _context.Appointments.Where(x => x.Id == AppointmentId).FirstOrDefault();
 
             if (FindAppointment != null)
             {
                 FindAppointment.AppointmentStatus = Status;
-                FindAppointment.DeletedReason = DeletedReason;
-                var Result = _context.SaveChanges();
+                if(string.IsNullOrEmpty(DeletedReason))
+                {
+                    FindAppointment.DeletedReason = "Canceled Appointment From Calendar";
+                }
+                else
+                {
+                    FindAppointment.DeletedReason = DeletedReason;
+                }
+                var Result= _context.SaveChanges();
 
                 return Ok(Result == 1 ? "Success" : "Failure");
             }
@@ -388,7 +396,13 @@ namespace AppointmentAPI.Controllers
         [HttpGet("GetAllPhysician")]
         public IActionResult GetAllPhysician()
         {
+            var Roles = (_context.RoleMaster.Where(x => x.UserRole == "PHYSICIAN").ToList());
             var Physican = (from e in _context.EmployeeDetails
+                            join u in _context.UserDetails
+                            on e.UserId equals u.Id
+                            join r in _context.RoleMaster
+                            on u.RoleId equals r.Id
+                            where(u.RoleId == Roles[0].Id)
                             select new
                             {
                                 Id = e.Id,

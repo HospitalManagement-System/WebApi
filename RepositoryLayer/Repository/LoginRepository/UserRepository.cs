@@ -230,6 +230,7 @@ namespace RepositoryLayer
         {
             try
             {
+
                 EmployeeDetails emp = _context.EmployeeDetails.Where(x => x.UserId == id).FirstOrDefault();
                 return emp;
             }
