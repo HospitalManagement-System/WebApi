@@ -16,7 +16,7 @@ namespace LoginAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.13")
+                .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("DomainLayer.EntityModels.BarChartDetails", b =>
@@ -35,6 +35,30 @@ namespace LoginAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BarChartDetails");
+                });
+
+            modelBuilder.Entity("DomainLayer.EntityModels.EmployeeAvailability", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAbsent")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PhysicianId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TimeSlot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeeAvailability");
                 });
 
             modelBuilder.Entity("DomainLayer.EntityModels.Master.Department", b =>

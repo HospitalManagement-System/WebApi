@@ -214,6 +214,13 @@ namespace RepositoryLayer
             .Entity<Specalization>().Property(x => x.Id)
             .HasDefaultValueSql("newid()");
 
+            modelBuilder
+            .Entity<EmployeeAvailability>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+
+            modelBuilder.Entity<EmployeeAvailability>().Ignore(x => x.arrTimeSlot);
+
+
             base.OnModelCreating(modelBuilder);
         }
 

@@ -264,12 +264,13 @@ namespace AppointmentAPI.Controllers
             var slot = _context.Appointments.Where(x => x.PhysicianId == PhysicianID && x.bookslot != null
                           && x.AppointmentDateTime.Date == Convert.ToDateTime(appointmentdateTime).Date)
                             .Select(t => t.bookslot).ToList();
-            string empslot = _context.EmployeeAvailability.Where(x => x.PhysicianId == PhysicianID
-                                      && x.DateTime.Date == Convert.ToDateTime(appointmentdateTime).Date).Select(x => x.TimeSlot).FirstOrDefault();
 
-            string[] arrempavailable = empslot.Split(',');
+            //string empslot = _context.EmployeeAvailability.Where(x => x.PhysicianId == PhysicianID
+            //                          && x.DateTime.Date == Convert.ToDateTime(appointmentdateTime).Date).Select(x => x.TimeSlot).FirstOrDefault();
 
-            slot.AddRange(arrempavailable);
+            //string[] arrempavailable = empslot.Split(',');
+
+            //slot.AddRange(arrempavailable);
             return Ok(slot);
 
             //await (from c in _context.Appointments
@@ -352,11 +353,13 @@ namespace AppointmentAPI.Controllers
               from a in _context.Appointments
               join e in _context.EmployeeDetails
               on a.PhysicianId equals e.Id
+              join u in _context.UserDetails 
+              on  a.PatientId equals u.Id
               join p in _context.PatientDetails
-              on a.PatientId equals p.Id
+              on a.PatientId equals p.UserId
               join pd in _context.PatientDemographicDetails
               on p.PatientDemographicId equals pd.Id
-              where (a.AppointmentDateTime >= DateTime.Now & a.AppointmentStatus == "Approved")
+              where (a.AppointmentDateTime >= DateTime.Now && a.AppointmentStatus == "Approved")
               select new
               {
 
