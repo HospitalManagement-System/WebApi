@@ -72,6 +72,10 @@ namespace RepositoryLayer
 
         public DbSet<Subscription> Subscription { get; set; }
 
+        public DbSet<Specalization> Specalization { get; set; }
+
+        public DbSet<Gender> Gender { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -138,7 +142,7 @@ namespace RepositoryLayer
             .Entity<Procedure>().Property(x => x.Id)
             .HasDefaultValueSql("newid()");
             modelBuilder
-.Entity<BarChartDetails>().Property(x => x.Id);
+           .Entity<BarChartDetails>().Property(x => x.Id);
             modelBuilder
             .Entity<PatientDemographicDetails>().Property(x => x.Id)
             .HasDefaultValueSql("newid()");
@@ -203,6 +207,11 @@ namespace RepositoryLayer
 
             modelBuilder
             .Entity<Subscription>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
+
+
+            modelBuilder
+            .Entity<Specalization>().Property(x => x.Id)
             .HasDefaultValueSql("newid()");
 
             base.OnModelCreating(modelBuilder);
