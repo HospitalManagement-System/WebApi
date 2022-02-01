@@ -63,8 +63,9 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
 
                 var Id = new Guid(appointmentid);
                 PatientVisitDetails patientDetailsList = _context.PatientVisitDetails.Where(x => x.AppointmentId == Id).FirstOrDefault();
-                if (patientDetailsList != null)
+                if (patientDetailsList.Equals(null))
                 {
+
                     patientDetailsList.Diagnosislist = patientDetailsList.DiagnosisDescription.Split(',').ToList();
                     patientDetailsList.Druglist = patientDetailsList.DrugDescription.Split(',').ToList();
 

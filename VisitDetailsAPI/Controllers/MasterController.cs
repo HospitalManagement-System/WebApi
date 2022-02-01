@@ -1,6 +1,7 @@
 ﻿using DomainLayer.Models;
 using DomainLayer.Models.Master;
 using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer;
 using ServiceLayer.Interfaces.IMasterService;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,11 @@ namespace VisitDetailsAPI.Controllers
     {
         
         private IMasterService _MasterService;
-        public MasterController(IMasterService MasterService)
+        private ApplicationDbContext _context;
+        public MasterController(IMasterService MasterService,ApplicationDbContext context)
         {
             _MasterService = MasterService;
-
+            _context = context;
 
         }
         [HttpGet]
@@ -170,7 +172,20 @@ namespace VisitDetailsAPI.Controllers
                 return null;
             }
         }
-
-
+        [HttpGet]
+        [Route("GetPatientId")]
+        public string GetPatientId(string userid)
+        {
+            try
+            {
+                var id = new Guid(userid);
+                var result = _context.PatientDetails.Where(x => x.UserId == id).Select(x => x.Id.ToString()).FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

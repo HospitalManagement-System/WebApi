@@ -3,6 +3,7 @@ using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer;
 using ServiceLayer.Interfaces.IVisitDetails;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,15 @@ namespace VisitDetailsAPI.Controllers
     {
         private IVisitService _VisitService;
         private UserManager<ApplicationUser> _userManager;
-        public DemographicsdetailsController(IVisitService visitService, UserManager<ApplicationUser> userManager)
+        private ApplicationDbContext _context;
+        public DemographicsdetailsController(IVisitService visitService, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _VisitService = visitService;
             _userManager = userManager;
-                        
-        }
+            _context = context;
+             
+
+         }
         // GET: api/<DemographicsdetailsController>
         [HttpGet]
         [Route("Getallpatientdetails")]
@@ -87,5 +91,6 @@ namespace VisitDetailsAPI.Controllers
         public void Delete(int id)
         {
         }
+       
     }
 }
