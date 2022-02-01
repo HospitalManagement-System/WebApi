@@ -37,6 +37,7 @@ namespace RepositoryLayer
                         Password = registration.FirstName + "123",
                         Status = true,
                         IsFirstLogIn = true,
+                        IsActive = true,
                         PatientDetails = new PatientDetails
                         {
                             Title = registration.Title,
@@ -63,7 +64,8 @@ namespace RepositoryLayer
                     _context.SaveChanges();
                 }
 
-                else if (registration.Role.ToUpper() == enumUserType.PHYSICIAN.ToString())
+                //else if (registration.Role.ToUpper() == enumUserType.PHYSICIAN.ToString())
+                else
                 {
                     var UserDetails = new UserDetails
                     {
@@ -71,6 +73,7 @@ namespace RepositoryLayer
                         Password = registration.FirstName + "123",
                         Status = true,
                         IsFirstLogIn = true,
+                        IsActive = false,
                         EmployeeDetails = new EmployeeDetails
                         {
                             Title = registration.Title,
@@ -108,15 +111,16 @@ namespace RepositoryLayer
             }
         }
 
-        public void ChangePassword(Registration registration)
+        public void ChangePassword(ChangePassword changepassword)
         {
             try
             {
-                var userDetails = _context.UserDetails.Where(x => x.Id == registration.UserId).FirstOrDefault();
+                var userDetails = _context.UserDetails.Where(x => x.Id == changepassword.Id).FirstOrDefault();
                 if (userDetails != null)
                 {
-                    userDetails.Password = registration.Password;
+                    userDetails.Password = changepassword.Password;
                     _context.UserDetails.Update(userDetails);
+                    _context.SaveChanges();
                 }
             }
             catch (Exception ex)
@@ -179,7 +183,9 @@ namespace RepositoryLayer
                                  Username = user.UserName,
                                  Password = user.Password,
                                  role = roles.UserRole,
-                                 IsFirsrLogin = user.IsFirstLogIn
+                                 IsFirsrLogin = user.IsFirstLogIn,
+                                 IsLocked = user.IsLocked,
+                                 IsActive = user.IsActive
                              };
 
                 foreach (var item in result)
@@ -191,6 +197,8 @@ namespace RepositoryLayer
                     info.Password = item.Password;
                     info.Role = item.role;
                     info.IsFirstLogin = item.IsFirsrLogin;
+                    info.IsLocked = item.IsLocked;
+                    info.IsActive = item.IsActive;
                     userInfos.Add(info);
 
                 }

@@ -158,13 +158,13 @@ namespace LoginAPI.Controllers
             }
         }
 
-        [HttpPost("{SendEmail}")]
+        [HttpPost("SendEmail/{email}")]
         //  [Route("SendEmail")]
-        public async Task<IActionResult> SendEmail(string email)
+        public async Task<IActionResult> SendEmail(string email,string username)
         {
             try
             {
-                //_emailSender.SendLoginSMSAsync();
+                await _emailSender.ForgotPassword(email, username);
                 return Ok();
             }
             catch (Exception ex)
@@ -174,38 +174,38 @@ namespace LoginAPI.Controllers
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] Registration registration)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePassword)
         {
 
             try
             {
-                var applicationUser = new ApplicationUser()
-                {
-                    UserName = registration.UserName,
-                    Email = registration.Email,
-                    fullName = registration.FirstName + registration.LastName
-                };
+                //var applicationUser = new ApplicationUser()
+                //{
+                //    UserName = registration.UserName,
+                //    Email = registration.Email,
+                //    fullName = registration.FirstName + registration.LastName
+                //};
 
-                var result = await _userManager.CreateAsync(applicationUser, registration.Password);
-                _userService.UpdatePassword(registration);
+                //var result = await _userManager.CreateAsync(applicationUser, registration.Password);
+                _userService.UpdatePassword(changePassword);
                 await _loggerservice.WriteLog(new Logger
                 {
-                    ComponentName = "User/ChangePassword",
-                    Message = "Password changed for" + registration.UserName,
-                    LogDateTime = DateTime.Now,
+                    //ComponentName = "User/ChangePassword",
+                    //Message = "Password changed for" + registration.UserName,
+                    //LogDateTime = DateTime.Now,
                     //Logtype = enumLogType.SUCCESS.ToString()
                 });
                 return Ok();
             }
             catch (Exception ex)
             {
-                await _loggerservice.WriteLog(new Logger
-                {
-                    ComponentName = "User/ChangePassword",
-                    Message = "Password change failed for" + registration.UserName,
-                    LogDateTime = DateTime.Now,
-                    //Logtype = enumLogType.SUCCESS.ToString()
-                });
+                //await _loggerservice.WriteLog(new Logger
+                //{
+                //    ComponentName = "User/ChangePassword",
+                //    Message = "Password change failed for" + registration.UserName,
+                //    LogDateTime = DateTime.Now,
+                //    //Logtype = enumLogType.SUCCESS.ToString()
+                //});
                 return StatusCode(500);
             }
         }
