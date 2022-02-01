@@ -23,8 +23,13 @@ namespace RepositoryLayer.Repository.CommonRepository
                 {
                     employeeAttendance.TimeSlot += item + ",";
                 }
-                _context.EmployeeAvailability.Add(employeeAttendance);
-                _context.SaveChanges();
+                if (!_context.EmployeeAvailability.Any(w => w.PhysicianId == employeeAttendance.PhysicianId))
+                {
+                    _context.EmployeeAvailability.Add(employeeAttendance);
+                    _context.SaveChanges();
+
+                }
+                   
             }
             catch (Exception ex)
             {
@@ -35,7 +40,7 @@ namespace RepositoryLayer.Repository.CommonRepository
 
         public List<EmployeeAvailability> GetAttendanceAvailability()
         {
-
+           
             List<EmployeeAvailability> result = _context.EmployeeAvailability.ToList();
             return result;
         }
