@@ -1,27 +1,19 @@
-﻿using DomainLayer.Models;
-using DomainLayer;
-using Microsoft.AspNetCore.Http;
+﻿using DomainLayer;
+using DomainLayer.EntityModels;
+using DomainLayer.EntityModels.ListModels;
+using DomainLayer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ServiceLayer;
+using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.ICommonService;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using RepositoryLayer;
-using Microsoft.Extensions.Configuration;
-using ServiceLayer.Interfaces;
-using DomainLayer.EntityModels.Procedures;
-using DomainLayer.EntityModels.ListModels;
-
-using DomainLayer.EntityModels;
-using DomainLayer.Enums;
-using ServiceLayer.Interfaces.ICommonService;
 
 namespace LoginAPI.Controllers
 {
@@ -160,7 +152,7 @@ namespace LoginAPI.Controllers
 
         [HttpPost("SendEmail/{email}")]
         //  [Route("SendEmail")]
-        public async Task<IActionResult> SendEmail(string email,string username)
+        public async Task<IActionResult> SendEmail(string email, string username)
         {
             try
             {

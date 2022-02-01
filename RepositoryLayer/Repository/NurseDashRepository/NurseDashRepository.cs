@@ -52,7 +52,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                             on a.PatientId equals p.Id
                             join pd in _context.PatientDemographicDetails
                             on p.PatientDemographicId equals pd.Id
-                            where a.AppointmentDateTime == DateTime.Today && a.Mode == "Upcoming"
+                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Upcoming"
                             select new
                             {
                                 a.Id,

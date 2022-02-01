@@ -104,5 +104,10 @@ namespace CommonAPI.Controllers.MasterData
         {
             return _context.Education.Any(e => e.Id == id);
         }
+
+
+
+
+
     }
 }
