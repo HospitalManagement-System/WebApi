@@ -64,7 +64,7 @@ namespace VisitDetailsAPI.Controllers
 
 
         // PUT api/<DemographicsdetailsController>/5
-        [HttpPut("UpdateDemographic")]
+        [HttpPut("UpdateDemographic/{Demoid}")]
         //[Route("Put")]
         public IActionResult UpdateDemographic(string Demoid, PatientDemographicDetails patientDemographicDetails)
         {

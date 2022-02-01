@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models.Master;
+﻿using DomainLayer.Models;
+using DomainLayer.Models.Master;
 using RepositoryLayer.Interfaces.IMasterRepository;
 using ServiceLayer.Interfaces.IMasterService;
 using System;
@@ -65,6 +66,12 @@ namespace ServiceLayer.Services.MasterService
             List<Procedure> procedures = _repository.Getproceduredetails();
 
             return procedures;
+        }
+
+        public string GetRole(string id)
+        {
+            return _repository.GetRolefromid(id);
+            
         }
     }
 }

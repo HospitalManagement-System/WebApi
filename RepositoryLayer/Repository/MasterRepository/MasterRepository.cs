@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models.Master;
+﻿using DomainLayer.Models;
+using DomainLayer.Models.Master;
 using RepositoryLayer.Interfaces.IMasterRepository;
 using System;
 using System.Collections.Generic;
@@ -143,6 +144,33 @@ namespace RepositoryLayer.Repository.MasterRepository
             {
                 return null;
 
+            }
+        }
+
+        public string GetRolefromid(string id)
+        {
+            try
+            {
+                var Id = new Guid(id);
+                List<RoleMaster> roles = _context.RoleMaster.ToList();
+                UserDetails user = _context.UserDetails.Where(x => x.Id == Id).FirstOrDefault();
+                var result = roles.Where(x => x.Id == user.RoleId).Select(x => x.UserRole).FirstOrDefault();
+                // List<> lst = _context.Appointments.Where(x => x.PatientId == Id).ToList();
+                //var result = from u in _context.UserDetails
+                //              join r in _context.RoleMaster
+                //              on u.RoleId equals r.Id
+                //              where u.Id == Id
+                //              select new
+                //              {
+                //                  role = r.UserRole
+                //              };
+                //UserDetails user = new UserDetails();
+                
+                return result;
+            }
+            catch(Exception ex)
+            {
+                return null;
             }
         }
     }

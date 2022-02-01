@@ -45,15 +45,11 @@ namespace VisitDetailsAPI.Controllers
 
        
         [HttpPut("PutPatientDetails")]
-      
         public string PutPatientDetails(string id, PatientVisitDetails patientDetails)
         {
             try
             {
                 return _VisitService.putvisitdetails(id,patientDetails);
-
-
-
             }
             catch (Exception ex)
             {

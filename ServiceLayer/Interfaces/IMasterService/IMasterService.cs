@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models.Master;
+﻿using DomainLayer.Models;
+using DomainLayer.Models.Master;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace ServiceLayer.Interfaces.IMasterService
         List<Procedure> Getproceduredetails();
         Drug Getdetailsfromdrugname(string drugname);
         List<Drug> Getdrugdetails();
+        string GetRole(string id);
     }
 }

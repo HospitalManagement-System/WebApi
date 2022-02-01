@@ -40,7 +40,7 @@ namespace DomainLayer.Models
         
         [ForeignKey("PatientDetails")]
         public Guid PatientId { get; set; }
-      // public PatientDetails PatientDetails { get; set; }
+        public PatientDetails PatientDetails { get; set; }
 
         public string AllergynameList { get; set; }
         public string AllergytypeList { get; set; }
@@ -51,6 +51,9 @@ namespace DomainLayer.Models
         public DateTime Createddate { get; set; }
 
         public string AllergyDetails { get; set; }
-        
+
+        [NotMapped]
+        public List<string> AllergyListname { get; set; }
+
     }
 }

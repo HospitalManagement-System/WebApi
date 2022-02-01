@@ -63,10 +63,13 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
 
                 var Id = new Guid(appointmentid);
                 PatientVisitDetails patientDetailsList = _context.PatientVisitDetails.Where(x => x.AppointmentId == Id).FirstOrDefault();
-                patientDetailsList.Diagnosislist = patientDetailsList.DiagnosisDescription.Split(',').ToList();
-                patientDetailsList.Druglist = patientDetailsList.DrugDescription.Split(',').ToList();
-              
-                patientDetailsList.Procedureslist = patientDetailsList.ProcedureDesciption.Split(',').ToList();
+                if (patientDetailsList != null)
+                {
+                    patientDetailsList.Diagnosislist = patientDetailsList.DiagnosisDescription.Split(',').ToList();
+                    patientDetailsList.Druglist = patientDetailsList.DrugDescription.Split(',').ToList();
+
+                    patientDetailsList.Procedureslist = patientDetailsList.ProcedureDesciption.Split(',').ToList();
+                }
                 return patientDetailsList;
             }
             catch(Exception ex)

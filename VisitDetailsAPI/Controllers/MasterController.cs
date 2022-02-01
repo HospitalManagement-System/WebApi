@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models.Master;
+﻿using DomainLayer.Models;
+using DomainLayer.Models.Master;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces.IMasterService;
 using System;
@@ -44,8 +45,21 @@ namespace VisitDetailsAPI.Controllers
         {
             try
             {
-                List<Allergy> allergy = _MasterService.GetAllergyfromallergytype(AllergyType);
-                return allergy;
+                if (AllergyType != null)
+                {
+                    if (AllergyType.Contains(','))
+                    {
+                        List<Allergy> getdetails = _MasterService.GetAllAllergydetails();
+                        return getdetails;
+                    }
+                    else
+                    {
+                        List<Allergy> allergy = _MasterService.GetAllergyfromallergytype(AllergyType);
+                        return allergy;
+                    }
+                    
+                }
+                return null;
             }
             catch(Exception ex)
             {
@@ -142,6 +156,19 @@ namespace VisitDetailsAPI.Controllers
                 return null;
             }
 
+        }
+        [HttpGet]
+        public string GetRole(string id)
+        {
+            try
+            {
+               string user  = _MasterService.GetRole(id);
+                return user;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
 

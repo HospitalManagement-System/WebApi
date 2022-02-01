@@ -45,5 +45,5 @@ namespace DomainLayer.Models
         public EmployeeDetails EmployeeDetails { get; set; }
 
 
-    }
+    }   
 }

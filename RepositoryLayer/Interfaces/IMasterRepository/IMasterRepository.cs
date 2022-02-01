@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models.Master;
+﻿using DomainLayer.Models;
+using DomainLayer.Models.Master;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace RepositoryLayer.Interfaces.IMasterRepository
         Procedure Getdetailsfromproceduredes(string diagnosisisdes);
         List<Drug> Getdrugdetail();
         List<Procedure> Getproceduredetails();
+        string GetRolefromid(string id);
     }
 }

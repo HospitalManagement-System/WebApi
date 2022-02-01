@@ -24,44 +24,7 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
 
         public int SaveResult { get; private set; }
         public string Result { get;set; }
-        //public int AddDemographicsDetails(PatientDemographicsdetails patientDemographicDetails)
-        //{
-        //    try
-        //    {
-        //       // var PatientDetails = _context.PatientDetails.Where(x => x.Id == patientDemographicDetails.PatientId)
-        //        var PatientDemographicDetails = new PatientDemographicDetails
-        //        {
-
-        //            FirstName = patientDemographicDetails.firstname,
-        //            LastName = patientDemographicDetails.lastName,
-        //            Contact = patientDemographicDetails.contactnumber,
-        //            DateOfBirth = patientDemographicDetails.dateOfBirth,
-        //           PatientId =patientDemographicDetails.PatientId,
-        //           //PreviousAllergies= patientDemographicDetails.allergyname,
-        //            PatientRelativeDetails = new PatientRelativeDetails
-        //            {
-        //                //Title = patientDemographicDetails.
-        //                FirstName=patientDemographicDetails.emergancyfirstname,
-        //                LastName=patientDemographicDetails.emergancylastname,
-        //                Address=patientDemographicDetails.emergancyaddress,
-        //                Relation=patientDemographicDetails.emergancyrelationship,
-        //                Email=patientDemographicDetails.emergancyemail,
-        //                //Contact=patientDemographicDetails.emergancycontactnumber,
-                       
-        //            }
-                    
-        //        };
-
-        //        _context.PatientDemographicDetails.Add(PatientDemographicDetails);
-        //        int result= _context.SaveChanges();
-        //        return result;
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return 0;
-
-        //    }
-        ////}
+     
 
         public int AddDemographicsDetails(PatientDemographicDetails patientDemographicDetails)
         {
@@ -120,18 +83,20 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
             }
         }
 
+
         public  PatientDemographicDetails Getpatientdemodetailsfrompatientid(string patientid)
         {
             var Id = new Guid(patientid);
 
             try
             {
-                 //PatientDemographicDetails patientDemographicDetails =   _context.PatientDemographicDetails.Where(x => x.PatientId == patientid).FirstOrDefault();
-                //PatientDemographicDetails patientDemographicDetails = _context.PatientDemographicDetails.Where(x => x.PatientId == patientid).FirstOrDefault();
-                //var x = JsonSerializer.Serialize(patientDemographicDetails);
-                //PatientDemographicDetails patientDemographicDetails;
+           
                 PatientDemographicDetails patientDemographicDetails = _context.PatientDemographicDetails.Include(x=>x.PatientRelativeDetails).FirstOrDefault(x => x.PatientId == Id);
-                patientDemographicDetails.Allergylist = patientDemographicDetails.AllergytypeList.Split(',').ToList();
+                if (patientDemographicDetails != null)
+                {
+                    patientDemographicDetails.Allergylist = patientDemographicDetails.AllergytypeList.Split(',').ToList();
+                    patientDemographicDetails.AllergyListname = patientDemographicDetails.AllergynameList.Split(',').ToList();
+                }
                 return patientDemographicDetails;
             }
             catch (Exception ex)
@@ -179,10 +144,13 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
                         Existingdetails.Pincode = patientDemographicDetails.Pincode;
                         Existingdetails.Country = patientDemographicDetails.Country;
                         Existingdetails.State = patientDemographicDetails.State;
-                        //Existingdetails.Allergylist = patientDemographicDetails.Allergylist;
-                       Existingdetails.AllergytypeList  = string.Join(",", patientDemographicDetails.Allergylist.ToArray());
-                        Existingdetails.AllergynameList = patientDemographicDetails.AllergynameList;
+                        Existingdetails.Gender = patientDemographicDetails.Gender;
+                        if (patientDemographicDetails.Allergylist != null && patientDemographicDetails.AllergyListname != null)
+                        {
+                            Existingdetails.AllergytypeList = string.Join(",", patientDemographicDetails.Allergylist.ToArray());
+                            Existingdetails.AllergynameList = string.Join(",", patientDemographicDetails.AllergyListname.ToArray());
 
+                        }
 
                         Existingdetails.AllergyDetails = patientDemographicDetails.AllergyDetails;
                         Existingdetails.ClinicalInformation = patientDemographicDetails.ClinicalInformation;
@@ -195,6 +163,7 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
                         Existingdetails.PatientRelativeDetails.Pincode = patientDemographicDetails.PatientRelativeDetails.Pincode;
                         Existingdetails.PatientRelativeDetails.Country = patientDemographicDetails.PatientRelativeDetails.Country;
                         Existingdetails.PatientRelativeDetails.State = patientDemographicDetails.PatientRelativeDetails.State;
+                        Existingdetails.Createddate = DateTime.Now;
 
 
 
