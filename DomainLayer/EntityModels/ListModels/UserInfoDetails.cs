@@ -16,9 +16,8 @@ namespace DomainLayer.EntityModels.ListModels
 
         public string Password { get; set; }
         public bool IsFirstLogin { get; set; }
+        public bool IsLocked { get; set; }
+        public bool IsActive { get; set; }
 
-
-
-      
     }
 }
