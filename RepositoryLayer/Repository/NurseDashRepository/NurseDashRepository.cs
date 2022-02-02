@@ -41,6 +41,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
         public List<NurseAppointment> GetnurseDetails()
         {
             List<NurseAppointment> nurseAppointments = new List<NurseAppointment>();
+           
 
             try
             {
@@ -52,7 +53,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                             on a.PatientId equals p.Id
                             join pd in _context.PatientDemographicDetails
                             on p.PatientDemographicId equals pd.Id
-                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Upcoming"
+                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Upcoming" && a.AppointmentStatus=="Approved"
                             select new
                             {
                                 a.Id,
@@ -109,7 +110,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                             on a.PatientId equals p.Id
                             join pd in _context.PatientDemographicDetails
                             on p.PatientDemographicId equals pd.Id
-                            where (a.AppointmentDateTime > DateTime.Today)
+                            where (a.AppointmentDateTime > DateTime.Today && a.QueueStatus == "Upcoming" && a.AppointmentStatus == "Approved")
                             select new
                             {
 
