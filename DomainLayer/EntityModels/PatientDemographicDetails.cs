@@ -33,8 +33,8 @@ namespace DomainLayer.Models
         public string Country { get; set; }
         public string State { get; set; }
         [NotMapped]
-        public string Allergylist { get; set; }
-       
+       // public string Allergylist { get; set; }
+        public List<string> Allergylist { get; set; }
         public bool IsFatal { get; set; }
         
         
@@ -49,5 +49,11 @@ namespace DomainLayer.Models
         public PatientRelativeDetails PatientRelativeDetails { get; set; }
 
         public DateTime Createddate { get; set; }
+
+        public string AllergyDetails { get; set; }
+
+        [NotMapped]
+        public List<string> AllergyListname { get; set; }
+
     }
 }

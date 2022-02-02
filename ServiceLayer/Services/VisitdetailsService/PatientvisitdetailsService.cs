@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.Interfaces.IVisitdetailsRepository;
 using RepositoryLayer.Repository.VisitdetailsRepository;
 using ServiceLayer.Interfaces.IVisitDetails;
@@ -24,9 +25,23 @@ namespace ServiceLayer.Services.VisitdetailsService
             return _repository.AddpatientvisitDetails(patientVisitDetails);
         }
 
+        public IEnumerable<PatientVisitDetails> GetdetailsfrompatientId(string patientid)
+        {
+            return _repository.GetdetailsfromPatientid(patientid);
+        }
+
         public PatientVisitDetails GetVisitdetailsfromId(string appointmentid)
         {
             return _repository.Getdetailsfromid(appointmentid);
         }
+
+        public string putvisitdetails(string id, PatientVisitDetails patientDetails)
+        {
+            return _repository.updatepatientvisitdetails(id, patientDetails);
+        }
+
+        
     }
 }
+
+

@@ -45,39 +45,21 @@ namespace VisitDetailsAPI.Controllers
             }
         }
 
-        // PUT: api/PatientDetails/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPatientDetails(Guid id, PatientDetails patientDetails)
+       
+        [HttpPut("PutPatientDetails")]
+        public string PutPatientDetails(string id, PatientVisitDetails patientDetails)
         {
-            if (id != patientDetails.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(patientDetails).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                return _VisitService.putvisitdetails(id,patientDetails);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!PatientDetailsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return null;
             }
-
-            return NoContent();
         }
 
-        // POST: api/PatientDetails
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPost]
         public  string PostPatientDetails(PatientVisitDetails patientDetails)
         {
@@ -85,17 +67,14 @@ namespace VisitDetailsAPI.Controllers
             {
                 return _VisitService.Addpatientvisitdetails(patientDetails);
 
-                // return Ok(new string("Registration Success"));
+               
 
             }
             catch (Exception ex)
             {
                 return null;
             }
-            //_context.PatientDetails.Add(patientDetails);
-            //await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetPatientDetails", new { id = patientDetails.Id }, patientDetails);
+           
         }
 
         // DELETE: api/PatientDetails/5
@@ -113,10 +92,22 @@ namespace VisitDetailsAPI.Controllers
 
             return NoContent();
         }
-
-        private bool PatientDetailsExists(Guid id)
-        {
-            return _context.PatientDetails.Any(e => e.Id == id);
+        //[HttpGet]
+        //public List<PatientVisitDetails> GetPatientDetailsfrompatientid(string patientid)
+        //{
+        //    try
+        //    {
+        //        List<PatientVisitDetails> patientVisitDetails = _VisitService.GetdetailsfrompatientId(patientid);
+        //        return patientVisitDetails;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //}
+        //    private bool PatientDetailsExists(Guid id)
+        //    {
+        //        return _context.PatientDetails.Any(e => e.Id == id);
+        //    }
         }
     }
-}
