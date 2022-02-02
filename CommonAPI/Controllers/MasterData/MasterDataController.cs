@@ -1,5 +1,6 @@
 ﻿using DomainLayer.EntityModels.Master;
 using DomainLayer.Models.Master;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CommonAPI.Controllers.MasterData
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MasterDataController : ControllerBase

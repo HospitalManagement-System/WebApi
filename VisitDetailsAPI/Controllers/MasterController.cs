@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Models.Master;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces.IMasterService;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace VisitDetailsAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MasterController : ControllerBase

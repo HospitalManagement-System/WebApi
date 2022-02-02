@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InboxAPI.Controllers
 {
-    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     

@@ -14,9 +14,11 @@ using ServiceLayer.Interfaces.IZoom;
 using DomainLayer.Models.Master;
 using Microsoft.IdentityModel.Tokens;
 using DomainLayer.EntityModels.Master;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppointmentAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AppointmentsController : ControllerBase

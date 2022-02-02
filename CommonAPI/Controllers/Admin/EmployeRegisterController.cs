@@ -13,10 +13,12 @@ using ServiceLayer.Interfaces;
 using System.IO;
 using static DomainLayer.Models.Mail;
 using ServiceLayer.Interfaces.IEncription;
+using Microsoft.AspNetCore.Authorization;
 //using  CommonAPI.Model.Message;
 
 namespace CommonAPI.Controllers.Admin
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeRegisterController : ControllerBase
