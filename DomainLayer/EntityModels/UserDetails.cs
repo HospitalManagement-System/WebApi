@@ -24,7 +24,7 @@ namespace DomainLayer.Models
 
         [MaxLength(50)]
         public string Password { get; set; }
-        //public string RoleId { get; set; }
+        public string Designation { get; set; }
         public bool Status { get; set; }   
         public bool IsFirstLogIn { get; set; }
         public int NoOfAttempts { get; set; }

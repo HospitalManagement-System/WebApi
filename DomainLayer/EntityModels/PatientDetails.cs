@@ -24,6 +24,8 @@ namespace DomainLayer.Models
         public Guid UserId { get; set; }
         [ForeignKey("Id")]
         public UserDetails UserDetails { get; set; }
+
+        public List<Appointments> lstAppointments { get; set; }
         
 
     }

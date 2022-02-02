@@ -15,6 +15,9 @@ namespace DomainLayer.EntityModels.ListModels
         public string UserName { get; set; }
 
         public string Password { get; set; }
+        public bool IsFirstLogin { get; set; }
+
+
 
       
     }

@@ -11,7 +11,7 @@ namespace DomainLayer.Models.Master
     {
         public RoleMaster()
         {
-            lstUserDetails = new List<UserDetails>();
+            //lstUserDetails = new List<UserDetails>();
         }
         [Key]
         public Guid Id { get; set; }

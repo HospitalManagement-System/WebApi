@@ -54,5 +54,9 @@ namespace DomainLayer.Models
 
         [MaxLength(int.MaxValue)]
         public string PhysicianMeetingLink { get; set; }
+        [MaxLength(50)]
+        public string QueueStatus { get; set; }
+
+
     }
 }
