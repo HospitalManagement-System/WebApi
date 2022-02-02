@@ -3,6 +3,7 @@ using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer;
 using ServiceLayer.Interfaces.IVisitDetails;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,15 @@ namespace VisitDetailsAPI.Controllers
     {
         private IVisitService _VisitService;
         private UserManager<ApplicationUser> _userManager;
-        public DemographicsdetailsController(IVisitService visitService, UserManager<ApplicationUser> userManager)
+        private ApplicationDbContext _context;
+        public DemographicsdetailsController(IVisitService visitService, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _VisitService = visitService;
             _userManager = userManager;
-                        
-        }
+            _context = context;
+             
+
+         }
         // GET: api/<DemographicsdetailsController>
         [HttpGet]
         [Route("Getallpatientdetails")]
@@ -48,7 +52,7 @@ namespace VisitDetailsAPI.Controllers
         
         [HttpPost]
         [Route("PostPatientdemographicsdetails")]
-        public async Task<int> PostPatientdemographicsdetails([FromBody] Demographicsdetails objpatientDemographicDetails)
+        public async Task<int> PostPatientdemographicsdetails([FromBody] PatientDemographicDetails objpatientDemographicDetails)
         {
             try
             {
@@ -65,12 +69,14 @@ namespace VisitDetailsAPI.Controllers
 
 
         // PUT api/<DemographicsdetailsController>/5
-        [HttpPut]
-        public string Put(Guid patientid, [FromBody] Demographicsdetails patientDemographicDetails)
+        [HttpPut("UpdateDemographic/{Demoid}")]
+        //[Route("Put")]
+        public IActionResult UpdateDemographic(string Demoid, PatientDemographicDetails patientDemographicDetails)
         {
             try
             {
-                return _VisitService.UpdateDemographicsUserDetails(patientid, patientDemographicDetails);
+
+                return Ok(_VisitService.UpdateDemographicsUserDetails(Demoid,patientDemographicDetails));
 
                 // return Ok(new string("Registration Success"));
 
@@ -86,5 +92,6 @@ namespace VisitDetailsAPI.Controllers
         public void Delete(int id)
         {
         }
+       
     }
 }

@@ -9,10 +9,13 @@ namespace RepositoryLayer.Interfaces.IVisitdetailsRepository
 {
     public interface IVisitRepository
     {
-        int AddDemographicsDetails(Demographicsdetails patientDemographicDetails);
+       // int AddDemographicsDetails(PatientDemographicsdetails patientDemographicDetails);
         List<PatientDemographicDetails> GetPatientDemographicDetails();
         PatientDemographicDetails Getpatientdemodetailsfrompatientid(string patientid);
-        string UpdateDemographicsdetails(Guid demoghraphicsid, Demographicsdetails patientDemographicDetails);
+        //string UpdateDemographicsdetails(PatientDemographicDetails patientDemographicDetails);
+        //int AddDemographicsDetails(PatientDemographicsdetails patientDemographicDetails);
+        int AddDemographicsDetails(PatientDemographicDetails patientDemographicDetails);
+        string UpdateDemographicsdetails(string demoid, PatientDemographicDetails patientDemographicDetails);
 
         //List<UserDetails> GetUser();
     }

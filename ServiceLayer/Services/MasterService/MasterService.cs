@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models.Master;
+﻿using DomainLayer.Models;
+using DomainLayer.Models.Master;
 using RepositoryLayer.Interfaces.IMasterRepository;
 using ServiceLayer.Interfaces.IMasterService;
 using System;
@@ -22,10 +23,55 @@ namespace ServiceLayer.Services.MasterService
             return allergy;
         }
 
-        public Allergy GetAllergyfromallergytype(string AllergyType)
+        public List<Allergy> GetAllergyfromallergytype(string AllergyType)
         {
-            Allergy allergy = _repository.GetAllergyfromallergytype(AllergyType);
+            List<Allergy> allergy = _repository.GetAllergyfromallergytype(AllergyType);
             return allergy;
+        }
+
+        public Diagnosis Getdetailsfromdiagnosisdes(string diagnosisisdes)
+        {
+            Diagnosis diagnosis = _repository.Getdignosisdetailsfromdesc(diagnosisisdes);
+            return diagnosis;
+        }
+
+        public Drug Getdetailsfromdrugname(string drugname)
+        {
+            Drug drug = _repository.Getdetailsfromdrugname(drugname);
+           return drug;
+        }
+
+        public Procedure Getdetailsfromproceduredes(string diagnosisisdes)
+        {
+            Procedure procedure = _repository.Getdetailsfromproceduredes(diagnosisisdes);
+            return procedure;
+        }
+
+        public List<Diagnosis> Getdiagnosisdetails()
+        {
+            List<Diagnosis> diagnosis = _repository.Getdignosisdetails();
+            return diagnosis;
+        }
+
+        public List<Drug> Getdrugdetails()
+        {
+            List<Drug> drug = _repository.Getdrugdetail();
+                return drug;
+
+
+        }
+
+        public List<Procedure> Getproceduredetails()
+        {
+            List<Procedure> procedures = _repository.Getproceduredetails();
+
+            return procedures;
+        }
+
+        public string GetRole(string id)
+        {
+            return _repository.GetRolefromid(id);
+            
         }
     }
 }
