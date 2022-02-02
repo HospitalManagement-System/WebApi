@@ -1,5 +1,6 @@
 ﻿using DomainLayer.EntityModels.Master;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CommonAPI.Controllers.Payment
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentApiController : ControllerBase

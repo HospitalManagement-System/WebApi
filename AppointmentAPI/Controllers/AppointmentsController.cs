@@ -13,9 +13,12 @@ using ServiceLayer.Interfaces;
 using ServiceLayer.Interfaces.IZoom;
 using DomainLayer.Models.Master;
 using Microsoft.IdentityModel.Tokens;
+using DomainLayer.EntityModels.Master;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppointmentAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AppointmentsController : ControllerBase
@@ -140,19 +143,28 @@ namespace AppointmentAPI.Controllers
                 var Hour = appointments.bookslot;
                 string[] timeSplit = Hour.Split("to");
                 string[] secondSplit = timeSplit[0].Split(":");
-                if (secondSplit[1].Contains("30"))
+                if (timeSplit[1].Contains("30"))
+                {
+                    int Hours = Convert.ToInt32(timeSplit[0]);
+                    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
+                    appointmentsData.AppointmentDateTime = dt3;
+                }
+                else if(secondSplit[1].Contains("30"))
                 {
                     int Hours = Convert.ToInt32(secondSplit[0]);
                     int Minutes = Convert.ToInt32(secondSplit[1]);
                     DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, Minutes, 0);
                     appointmentsData.AppointmentDateTime = dt3;
                 }
-                else
-                {
-                    int Hours = Convert.ToInt32(timeSplit[0]);
-                    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
-                    appointmentsData.AppointmentDateTime = dt3;
-                }
+                //else
+                //{
+                //    int Hours = Convert.ToInt32(timeSplit[0]);
+                //    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
+                //    appointmentsData.AppointmentDateTime = dt3;
+                //}
+                //string[] secondSplit1 = timeSplit[0].Split(":");
+                //TimeSpan ts = new TimeSpan(Convert.ToInt32(secondSplit1[0]), Convert.ToInt32(secondSplit1[1]), 0);
+                //appointments.AppointmentDateTime = Time.Date + ts;
 
                 appointmentsData.Diagnosis = appointments.Diagnosis;
                 appointmentsData.AppointmentType = appointments.AppointmentType;
@@ -179,7 +191,8 @@ namespace AppointmentAPI.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                //throw ex;
+                return Ok("Failure");
             }
 
 
@@ -244,19 +257,31 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpGet("GetBookSlots/{Id}")]
-        public async Task<ActionResult<IEnumerable<Appointments>>> GetBookSlots(string Id, DateTime appointmentdateTime)
+        //public async Task<ActionResult<IEnumerable<Appointments>>> GetBookSlots(string Id, DateTime appointmentdateTime)
+        public async Task<IActionResult> GetBookSlots(string Id, DateTime appointmentdateTime)
         {
 
             Guid PhysicianID = new Guid(Id);
 
-            var slot = await (from c in _context.Appointments
-                              where (c.PhysicianId == PhysicianID && c.bookslot != null &&
-                              c.AppointmentDateTime.Date == Convert.ToDateTime(appointmentdateTime).Date
-                              )
-                              select new { c.bookslot }).ToListAsync();
+            var slot = _context.Appointments.Where(x => x.PhysicianId == PhysicianID && x.bookslot != null
+                          && x.AppointmentDateTime.Date == Convert.ToDateTime(appointmentdateTime).Date)
+                            .Select(t => t.bookslot).ToList();
 
+            //string empslot = _context.EmployeeAvailability.Where(x => x.PhysicianId == PhysicianID
+            //                          && x.DateTime.Date == Convert.ToDateTime(appointmentdateTime).Date).Select(x => x.TimeSlot).FirstOrDefault();
 
+            //string[] arrempavailable = empslot.Split(',');
+
+            //slot.AddRange(arrempavailable);
             return Ok(slot);
+
+            //await (from c in _context.Appointments
+            //              where (c.PhysicianId == PhysicianID && c.bookslot != null &&
+            //              c.AppointmentDateTime.Date == Convert.ToDateTime(appointmentdateTime).Date
+            //              )
+            //              select new { c.bookslot }).ToListAsync();
+
+
 
         }
 
@@ -330,11 +355,13 @@ namespace AppointmentAPI.Controllers
               from a in _context.Appointments
               join e in _context.EmployeeDetails
               on a.PhysicianId equals e.Id
+              join u in _context.UserDetails 
+              on  a.PatientId equals u.Id
               join p in _context.PatientDetails
-              on a.PatientId equals p.Id
+              on a.PatientId equals p.UserId
               join pd in _context.PatientDemographicDetails
               on p.PatientDemographicId equals pd.Id
-              where (a.AppointmentDateTime >= DateTime.Now & a.AppointmentStatus == "Approved")
+              where (a.AppointmentDateTime >= DateTime.Now && a.AppointmentStatus == "Approved")
               select new
               {
 
@@ -403,23 +430,24 @@ namespace AppointmentAPI.Controllers
 
         }
 
-        [HttpGet("GetPhysicianByDiagnosics/{Id}")]
-        public IActionResult GetPhysicianByDiagnosics(string Id)
+        [HttpGet("GetPhysicianByDiagnosics/{Diagnosics}")]
+        public IActionResult GetPhysicianByDiagnosics(string Diagnosics)
         {
-            var Diagnosics = new Guid(Id);
+            //var Diagnosics = new Guid(Id);
+
 
             var Physican = (from e in _context.EmployeeDetails
                             join u in _context.UserDetails
                             on e.UserId equals u.Id
                             join r in _context.RoleMaster
                             on u.RoleId equals r.Id
-                            where (r.UserRole.ToUpper() == "PHYSICIAN")
+                            where ((r.UserRole.ToUpper() == "PHYSICIAN")&& (e.Specialization == Diagnosics))
                             select new
                             {
                                 Id = e.Id,
                                 PhysicianName = e.FirstName
                             }
-                            );
+                           );
 
             return Ok(Physican);
 
@@ -507,6 +535,29 @@ namespace AppointmentAPI.Controllers
 
             return Ok(drugslist);
         }
+
+
+
+        [HttpGet("GetDiagnosisData")]
+        public async Task<IActionResult> GetDiagnosisData()
+        {
+            var result = await (from c in _context.Diagnosis
+                                select new { ID = c.Id, Value = c.DiagnosisCode }
+                          ).ToListAsync();
+            return Ok(result);
+        }
+
+
+        [HttpGet("Specialization")]
+        public async Task<ActionResult<IEnumerable<Specalization>>> Specialization()
+        {
+
+            var User = (_context.RoleMaster.Where(x => x.UserRole == "PHYSICIAN").FirstOrDefault());
+            var Specialization = await _context.Specalization.Where(e => e.RoleId == User.Id).ToListAsync();
+            return Ok(Specialization);
+        }
+
+
 
     }
 }

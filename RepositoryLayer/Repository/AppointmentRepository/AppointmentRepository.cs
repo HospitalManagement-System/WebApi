@@ -21,9 +21,11 @@ namespace RepositoryLayer.Repository.AppointmentRepository
             {
                 List<Appointments> lstAppoitntment = _context.Appointments.Where(x => x.PhysicianId == id || x.NurseId == id).ToList();
                 var result = from appointment in lstAppoitntment
+                             join u in _context.UserDetails
+                             on appointment.PatientId equals u.Id
                              join
                              patient in _context.PatientDetails
-                             on appointment.PatientId equals patient.Id
+                             on u.Id equals patient.UserId
                              select new InboxAppointment
                              {
                                  AppointmentId = appointment.Id,

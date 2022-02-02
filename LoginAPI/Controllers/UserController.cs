@@ -1,27 +1,20 @@
-﻿using DomainLayer.Models;
-using DomainLayer;
-using Microsoft.AspNetCore.Http;
+﻿using DomainLayer;
+using DomainLayer.EntityModels;
+using DomainLayer.EntityModels.ListModels;
+using DomainLayer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ServiceLayer;
+using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.ICommonService;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using RepositoryLayer;
-using Microsoft.Extensions.Configuration;
-using ServiceLayer.Interfaces;
-using DomainLayer.EntityModels.Procedures;
-using DomainLayer.EntityModels.ListModels;
-
-using DomainLayer.EntityModels;
-using DomainLayer.Enums;
-using ServiceLayer.Interfaces.ICommonService;
 
 namespace LoginAPI.Controllers
 {
@@ -36,7 +29,7 @@ namespace LoginAPI.Controllers
         private IEmailSender _emailSender;
         //private IMessageService _messageservice;
         private ILoggerService _loggerservice;
-        public IConfiguration Configuration { get; }
+        public IConfiguration _config { get; }
 
 
 
@@ -46,7 +39,7 @@ namespace LoginAPI.Controllers
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
             _userService = userService;
-            Configuration = configuration;
+            _config = configuration;
             this._loggerservice = loggerservice;
             _emailSender = emailSender;
             //_messageservice = messageservice;
@@ -129,28 +122,16 @@ namespace LoginAPI.Controllers
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(objLogin.Username);
-                //if (user != null && await _userManager.CheckPasswordAsync(user, objLogin.Email))
-                //{
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    //Subject = new ClaimsIdentity(new Claim[]
-                    //{
-                    //new Claim("UserID",user.Id.ToString())
-                    //}),
-                    Expires = DateTime.UtcNow.AddDays(1),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ApplicationSetting:Client_Url"].ToString())), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-                var token = tokenHandler.WriteToken(securityToken);
-
-                return Ok(new { token });
-                //}
-                //else
-                //{
-                //return BadRequest();
-                //}
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var token1 = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                null,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials: credentials);
+                var token = new JwtSecurityTokenHandler().WriteToken(token1);
+                return Ok(new { token});
+              
             }
             catch (Exception ex)
             {
@@ -158,13 +139,13 @@ namespace LoginAPI.Controllers
             }
         }
 
-        [HttpPost("{SendEmail}")]
+        [HttpPost("SendEmail/{email}")]
         //  [Route("SendEmail")]
-        public async Task<IActionResult> SendEmail(string email)
+        public async Task<IActionResult> SendEmail(string email, string username)
         {
             try
             {
-                //_emailSender.SendLoginSMSAsync();
+                await _emailSender.ForgotPassword(email, username);
                 return Ok();
             }
             catch (Exception ex)
@@ -174,38 +155,38 @@ namespace LoginAPI.Controllers
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] Registration registration)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePassword)
         {
 
             try
             {
-                var applicationUser = new ApplicationUser()
-                {
-                    UserName = registration.UserName,
-                    Email = registration.Email,
-                    fullName = registration.FirstName + registration.LastName
-                };
+                //var applicationUser = new ApplicationUser()
+                //{
+                //    UserName = registration.UserName,
+                //    Email = registration.Email,
+                //    fullName = registration.FirstName + registration.LastName
+                //};
 
-                var result = await _userManager.CreateAsync(applicationUser, registration.Password);
-                _userService.UpdatePassword(registration);
+                //var result = await _userManager.CreateAsync(applicationUser, registration.Password);
+                _userService.UpdatePassword(changePassword);
                 await _loggerservice.WriteLog(new Logger
                 {
-                    ComponentName = "User/ChangePassword",
-                    Message = "Password changed for" + registration.UserName,
-                    LogDateTime = DateTime.Now,
+                    //ComponentName = "User/ChangePassword",
+                    //Message = "Password changed for" + registration.UserName,
+                    //LogDateTime = DateTime.Now,
                     //Logtype = enumLogType.SUCCESS.ToString()
                 });
                 return Ok();
             }
             catch (Exception ex)
             {
-                await _loggerservice.WriteLog(new Logger
-                {
-                    ComponentName = "User/ChangePassword",
-                    Message = "Password change failed for" + registration.UserName,
-                    LogDateTime = DateTime.Now,
-                    //Logtype = enumLogType.SUCCESS.ToString()
-                });
+                //await _loggerservice.WriteLog(new Logger
+                //{
+                //    ComponentName = "User/ChangePassword",
+                //    Message = "Password change failed for" + registration.UserName,
+                //    LogDateTime = DateTime.Now,
+                //    //Logtype = enumLogType.SUCCESS.ToString()
+                //});
                 return StatusCode(500);
             }
         }

@@ -14,7 +14,7 @@ namespace ServiceLayer.Interfaces
         void RegisterUserData(Registration registration);
         //List<UserDetails> GetUserData();
         EmployeeDetails GetUser(Guid id);
-        void UpdatePassword(Registration registration);
+        void UpdatePassword(ChangePassword changePassword);
         void ResetPassword(UserDetails user);
         void LockedAccount(UserDetails user);
         

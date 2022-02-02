@@ -14,7 +14,7 @@ namespace RepositoryLayer.Interfaces
         void AddUser(Registration registration);
         //List<UserDetails> GetUserData();
         EmployeeDetails GetUser(Guid id);
-        void ChangePassword(Registration registration);
+        void ChangePassword(ChangePassword changePassword);
         void UpdatePassword(UserDetails user);
         void LockAccount(UserDetails user);
         

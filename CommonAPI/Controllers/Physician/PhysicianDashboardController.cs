@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces.ICommonService;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace CommonAPI.Controllers.Physician
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PhysicianDashboardController : ControllerBase

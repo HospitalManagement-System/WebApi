@@ -13,10 +13,12 @@ using ServiceLayer.Interfaces;
 using System.IO;
 using static DomainLayer.Models.Mail;
 using ServiceLayer.Interfaces.IEncription;
+using Microsoft.AspNetCore.Authorization;
 //using  CommonAPI.Model.Message;
 
 namespace CommonAPI.Controllers.Admin
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeRegisterController : ControllerBase
@@ -113,6 +115,7 @@ namespace CommonAPI.Controllers.Admin
                     DateOfBirth = userDetails.EmployeeDetails.DateOfBirth,
                     Contact = userDetails.EmployeeDetails.Contact,
                     Specialization = userDetails.EmployeeDetails.Specialization,
+                    Designation = userDetails.EmployeeDetails.Designation,
                     Email = userDetails.EmployeeDetails.Email,
                     CreatedOn = new DateTime(),
 
