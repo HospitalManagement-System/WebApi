@@ -113,6 +113,7 @@ namespace CommonAPI.Controllers.Admin
                     DateOfBirth = userDetails.EmployeeDetails.DateOfBirth,
                     Contact = userDetails.EmployeeDetails.Contact,
                     Specialization = userDetails.EmployeeDetails.Specialization,
+                    Designation = userDetails.EmployeeDetails.Designation,
                     Email = userDetails.EmployeeDetails.Email,
                     CreatedOn = new DateTime(),
 

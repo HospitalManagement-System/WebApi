@@ -16,7 +16,7 @@ namespace LoginAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.13")
+                .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("DomainLayer.EntityModels.BarChartDetails", b =>
@@ -112,6 +112,38 @@ namespace LoginAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Education");
+                });
+
+            modelBuilder.Entity("DomainLayer.EntityModels.Master.Gender", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gender");
+                });
+
+            modelBuilder.Entity("DomainLayer.EntityModels.Master.Specalization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specalization");
                 });
 
             modelBuilder.Entity("DomainLayer.EntityModels.Master.Subscription", b =>

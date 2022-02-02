@@ -9,8 +9,9 @@ namespace DomainLayer.EntityModels
 {
     public class EmployeeAvailability
     {
+        [Key]
         public Guid Id { get; set; }
-        public string PhysicianId { get; set; }
+        public Guid PhysicianId { get; set; }
         public string TimeSlot { get; set; }
         [NotMapped]
         public string[] arrTimeSlot { get; set; }

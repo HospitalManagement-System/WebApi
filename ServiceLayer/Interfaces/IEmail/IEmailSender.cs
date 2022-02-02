@@ -11,5 +11,6 @@ namespace ServiceLayer.Interfaces
          Task<string> SendLoginSMSAsync(string UserName,string Password, string Email);
 
         Task<string> SendAppointmentAsync(string Email,string UserName, string Physician, string Diagnosics,DateTime dateTime);
+        Task<string> ForgotPassword(string Email, string Username);
     }
 }
