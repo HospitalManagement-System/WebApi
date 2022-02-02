@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace VisitDetailsAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DemographicsdetailsController : ControllerBase

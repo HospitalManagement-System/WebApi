@@ -93,7 +93,7 @@ namespace LoginAPI
 
             //JWT Authentication
 
-            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSetting:JWT_Secret"].ToString());
+            var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"].ToString());
 
             services.AddAuthentication(x =>
             {
@@ -107,7 +107,7 @@ namespace LoginAPI
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
+                    ValidateIssuer = false,
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
                 };
@@ -120,6 +120,7 @@ namespace LoginAPI
         {
             if (env.IsDevelopment())
             {
+                app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CosmosMW v1"));
@@ -131,11 +132,13 @@ namespace LoginAPI
 
             app.UseAuthentication();
             //CORS
-            app.UseCors(builder =>
-            builder.WithOrigins(Configuration["ApplicationSetting:Client_Url"].ToString())
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            );
+            //app.UseCors(builder =>
+            //builder.WithOrigins(Configuration["Jwt:Client_Url"].ToString())
+            //.AllowAnyHeader()
+            //.AllowAnyMethod()
+            //);
+
+
 
             app.UseAuthorization();
 

@@ -54,8 +54,7 @@ namespace InboxAPI
 
             services.AddCors();
 
-            services.AddControllers().AddNewtonsoftJson();
-            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSetting:JWT_Secret"].ToString());
+            var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"].ToString());
 
             services.AddAuthentication(x =>
             {
@@ -74,7 +73,6 @@ namespace InboxAPI
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +80,7 @@ namespace InboxAPI
         {
             if (env.IsDevelopment())
             {
+                app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "InboxAPI v1"));
@@ -93,11 +92,11 @@ namespace InboxAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors(builder =>
-            builder.WithOrigins(Configuration["ApplicationSetting:Client_Url"].ToString())
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            );
+            //app.UseCors(builder =>
+            //builder.WithOrigins(Configuration["ApplicationSetting:Client_Url"].ToString())
+            //.AllowAnyHeader()
+            //.AllowAnyMethod()
+            //);
 
             app.UseEndpoints(endpoints =>
             {

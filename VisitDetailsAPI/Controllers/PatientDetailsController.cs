@@ -10,9 +10,11 @@ using RepositoryLayer;
 using ServiceLayer.Interfaces.IVisitDetails;
 using Microsoft.AspNetCore.Identity;
 using DomainLayer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VisitDetailsAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PatientDetailsController : ControllerBase
