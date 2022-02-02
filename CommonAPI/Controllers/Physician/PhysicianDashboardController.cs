@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces.ICommonService;
@@ -36,6 +37,18 @@ namespace CommonAPI.Controllers.Physician
         {
             List<EmployeeAvailability> employeeAvailabilities = _service.GetAttendanceAvailability();
             return Ok(employeeAvailabilities);
+
+        }
+        [HttpGet("GetNextAppointment")]
+        public ActionResult GetNextAppointment()
+        {
+
+
+
+            List<NurseAppointment> getNurseDetails = _service.GetNextPatientDetails();
+
+
+            return Ok(getNurseDetails);
 
         }
     }

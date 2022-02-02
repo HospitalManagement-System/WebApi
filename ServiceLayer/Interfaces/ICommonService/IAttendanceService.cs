@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace ServiceLayer.Interfaces.ICommonService
         void AddAtendance(EmployeeAvailability employeeAttendance);
 
         List<EmployeeAvailability> GetAttendanceAvailability();
+        public List<NurseAppointment> GetNextPatientDetails();
     }
 }

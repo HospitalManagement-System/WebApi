@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.Models;
 using RepositoryLayer.Interfaces.ICommonRepository;
 using ServiceLayer.Interfaces.ICommonService;
 using System;
@@ -25,6 +26,11 @@ namespace ServiceLayer.Services.CommonService
         {
             List<EmployeeAvailability> lstEmployeeDetails = _repository.GetAttendanceAvailability();
             return lstEmployeeDetails;
+        }
+        public List<NurseAppointment> GetNextPatientDetails()
+        {
+            List<NurseAppointment> nurseAppointmentDetails = _repository.GetNextPatientDetails();
+            return nurseAppointmentDetails;
         }
     }
 }

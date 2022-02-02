@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.Models;
 using RepositoryLayer.Interfaces.ICommonRepository;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,65 @@ namespace RepositoryLayer.Repository.CommonRepository
            
             List<EmployeeAvailability> result = _context.EmployeeAvailability.ToList();
             return result;
+        }
+
+
+        public List<NurseAppointment> GetNextPatientDetails()
+        {
+            List<NurseAppointment> nurseAppointments = new List<NurseAppointment>();
+
+            try
+            {
+                var User = (
+                            from a in _context.Appointments
+                            join e in _context.EmployeeDetails
+                            on a.PhysicianId equals e.Id
+                            join p in _context.PatientDetails
+                            on a.PatientId equals p.Id
+                            join pd in _context.PatientDemographicDetails
+                            on p.PatientDemographicId equals pd.Id
+                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Ongoing"
+                            select new
+                            {
+                                a.Id,
+                                Name = p.FirstName + "" + p.LastName,
+                                pd.Gender,
+                                a.Diagnosis,
+                                pd.Contact,
+                                pd.Age,
+                                pd.Email,
+                                PhysicanName = e.FirstName + "" + e.LastName
+
+                            });
+
+                foreach (var item in User)
+                {
+                    NurseAppointment nurse = new NurseAppointment();
+                    nurse.Id = item.Id;
+                    nurse.Name = item.Name;
+                    nurse.Gender = item.Gender;
+                    nurse.PhysicanName = item.PhysicanName;
+                    nurse.Age = item.Age;
+                    nurse.Email = item.Email;
+                    nurse.Diagnosis = item.Diagnosis;
+                    nurse.Contact = item.Contact;
+
+
+
+                    nurseAppointments.Add(nurse);
+                }
+
+                return nurseAppointments;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+
+
         }
     }
 }
