@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DomainLayer.Models
+namespace DomainLayer.EntityModels.Master
 {
-    public class ChangePassword
+    public class Gender
     {
+        [Key]
         public Guid Id { get; set; }
-        //public string Username { get; set; }
-        public string Password { get; set; }
+        public string Value { get; set; }
     }
 }

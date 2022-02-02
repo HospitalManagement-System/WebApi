@@ -107,7 +107,7 @@ namespace LoginAPI
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
+                    ValidateIssuer = true,
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
                 };

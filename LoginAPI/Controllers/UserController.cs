@@ -1,27 +1,19 @@
-﻿using DomainLayer.Models;
-using DomainLayer;
-using Microsoft.AspNetCore.Http;
+﻿using DomainLayer;
+using DomainLayer.EntityModels;
+using DomainLayer.EntityModels.ListModels;
+using DomainLayer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ServiceLayer;
+using ServiceLayer.Interfaces;
+using ServiceLayer.Interfaces.ICommonService;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using RepositoryLayer;
-using Microsoft.Extensions.Configuration;
-using ServiceLayer.Interfaces;
-using DomainLayer.EntityModels.Procedures;
-using DomainLayer.EntityModels.ListModels;
-
-using DomainLayer.EntityModels;
-using DomainLayer.Enums;
-using ServiceLayer.Interfaces.ICommonService;
 
 namespace LoginAPI.Controllers
 {
@@ -158,13 +150,13 @@ namespace LoginAPI.Controllers
             }
         }
 
-        [HttpPost("{SendEmail}")]
+        [HttpPost("SendEmail/{email}")]
         //  [Route("SendEmail")]
-        public async Task<IActionResult> SendEmail(string email)
+        public async Task<IActionResult> SendEmail(string email, string username)
         {
             try
             {
-                //_emailSender.SendLoginSMSAsync();
+                await _emailSender.ForgotPassword(email, username);
                 return Ok();
             }
             catch (Exception ex)
@@ -174,38 +166,38 @@ namespace LoginAPI.Controllers
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] Registration registration)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePassword)
         {
 
             try
             {
-                var applicationUser = new ApplicationUser()
-                {
-                    UserName = registration.UserName,
-                    Email = registration.Email,
-                    fullName = registration.FirstName + registration.LastName
-                };
+                //var applicationUser = new ApplicationUser()
+                //{
+                //    UserName = registration.UserName,
+                //    Email = registration.Email,
+                //    fullName = registration.FirstName + registration.LastName
+                //};
 
-                var result = await _userManager.CreateAsync(applicationUser, registration.Password);
-                _userService.UpdatePassword(registration);
+                //var result = await _userManager.CreateAsync(applicationUser, registration.Password);
+                _userService.UpdatePassword(changePassword);
                 await _loggerservice.WriteLog(new Logger
                 {
-                    ComponentName = "User/ChangePassword",
-                    Message = "Password changed for" + registration.UserName,
-                    LogDateTime = DateTime.Now,
+                    //ComponentName = "User/ChangePassword",
+                    //Message = "Password changed for" + registration.UserName,
+                    //LogDateTime = DateTime.Now,
                     //Logtype = enumLogType.SUCCESS.ToString()
                 });
                 return Ok();
             }
             catch (Exception ex)
             {
-                await _loggerservice.WriteLog(new Logger
-                {
-                    ComponentName = "User/ChangePassword",
-                    Message = "Password change failed for" + registration.UserName,
-                    LogDateTime = DateTime.Now,
-                    //Logtype = enumLogType.SUCCESS.ToString()
-                });
+                //await _loggerservice.WriteLog(new Logger
+                //{
+                //    ComponentName = "User/ChangePassword",
+                //    Message = "Password change failed for" + registration.UserName,
+                //    LogDateTime = DateTime.Now,
+                //    //Logtype = enumLogType.SUCCESS.ToString()
+                //});
                 return StatusCode(500);
             }
         }
