@@ -136,6 +136,8 @@ namespace LoginAPI.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
+
+
             }
         }
 
