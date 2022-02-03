@@ -119,6 +119,7 @@ namespace RepositoryLayer
                 if (userDetails != null)
                 {
                     userDetails.Password = changepassword.Password;
+                    userDetails.IsFirstLogIn = false;                   
                     _context.UserDetails.Update(userDetails);
                     _context.SaveChanges();
                 }
