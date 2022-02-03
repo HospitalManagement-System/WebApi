@@ -182,6 +182,11 @@ namespace RepositoryLayer
            .HasForeignKey<PatientRelativeDetails>(s => s.PatientDemographicsId)
            .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<PatientDetails>()
+            .HasOne(s => s.PatientDemographicDetails)
+            .WithOne(g => g.PatientDetails)
+            .HasForeignKey<PatientDetails>(s => s.PatientDemographicId);
+
             modelBuilder
             .Entity<PatientRelativeDetails>().Property(x => x.Id)
             .HasDefaultValueSql("newid()");
