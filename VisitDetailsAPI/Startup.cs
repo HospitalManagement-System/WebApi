@@ -112,7 +112,7 @@ namespace VisitDetailsAPI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

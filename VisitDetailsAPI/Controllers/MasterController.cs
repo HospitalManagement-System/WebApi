@@ -161,7 +161,7 @@ namespace VisitDetailsAPI.Controllers
             }
 
         }
-        [HttpGet]
+        [HttpGet("GetRole")]
         public string GetRole(string id)
         {
             try

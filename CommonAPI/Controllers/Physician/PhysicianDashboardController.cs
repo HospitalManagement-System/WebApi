@@ -25,17 +25,21 @@ namespace CommonAPI.Controllers.Physician
             _context = context;
         }
         [HttpPost]
-        public void PostAttendance(EmployeeAvailability employeeAttendance)
+        public IActionResult PostAttendance(EmployeeAvailability employeeAttendance)
         {
             try
             {
                 _service.AddAtendance(employeeAttendance);
-              
+
+                return Ok("Success");
             }
             catch (Exception ex)
             {
-
+                return Ok("Faliure");
             }
+
+
+            return Ok("Faliure");
         }
         [HttpGet("GetAvailablePhysicianDetails")]
         public IActionResult GetAvailablePhysicianDetails()
