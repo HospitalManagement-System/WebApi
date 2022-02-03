@@ -189,5 +189,48 @@ namespace VisitDetailsAPI.Controllers
                 return null;
             }
         }
+
+
+        [HttpPost]
+        [Route("UploadMasters")]
+        public IActionResult ImportMasters()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                string message = "";
+                if (file.Length > 0)
+                {
+
+                    //var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    ////var fullPath = Path.Combine(pathToSave, fileName);
+                    //////var dbPath = Path.Combine(folderName, fileName);
+                    /////
+
+                    //Stream stream = file;
+                    if (file.FileName.EndsWith(".xls"))
+                    {
+
+                    }
+                    else if (file.FileName.EndsWith(".xlsx"))
+                    {
+
+                    }
+                    else
+                    {
+                        message = "This file format is not supported";
+                    }
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }
