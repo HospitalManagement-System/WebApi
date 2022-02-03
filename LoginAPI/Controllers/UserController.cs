@@ -12,6 +12,7 @@ using ServiceLayer.Interfaces.ICommonService;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace LoginAPI.Controllers
         private IEmailSender _emailSender;
         //private IMessageService _messageservice;
         private ILoggerService _loggerservice;
-        public IConfiguration Configuration { get; }
+        public IConfiguration _config { get; }
 
 
 
@@ -38,7 +39,7 @@ namespace LoginAPI.Controllers
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
             _userService = userService;
-            Configuration = configuration;
+            _config = configuration;
             this._loggerservice = loggerservice;
             _emailSender = emailSender;
             //_messageservice = messageservice;
@@ -121,32 +122,22 @@ namespace LoginAPI.Controllers
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(objLogin.Username);
-                //if (user != null && await _userManager.CheckPasswordAsync(user, objLogin.Email))
-                //{
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    //Subject = new ClaimsIdentity(new Claim[]
-                    //{
-                    //new Claim("UserID",user.Id.ToString())
-                    //}),
-                    Expires = DateTime.UtcNow.AddDays(1),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ApplicationSetting:Client_Url"].ToString())), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-                var token = tokenHandler.WriteToken(securityToken);
-
-                return Ok(new { token });
-                //}
-                //else
-                //{
-                //return BadRequest();
-                //}
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var token1 = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                null,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials: credentials);
+                var token = new JwtSecurityTokenHandler().WriteToken(token1);
+                return Ok(new { token});
+              
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
+
+
             }
         }
 

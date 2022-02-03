@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DomainLayer.EntityModels.Master;
 using RepositoryLayer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommonAPI.Controllers.MasterData
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentsController : ControllerBase

@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels.Procedures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace CommonAPI.Controllers.Admin
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminUserInfoController : ControllerBase

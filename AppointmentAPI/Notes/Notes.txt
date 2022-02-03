@@ -37,3 +37,14 @@
 
 
             //}
+
+
+             //else
+                //{
+                //    int Hours = Convert.ToInt32(timeSplit[0]);
+                //    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
+                //    appointmentsData.AppointmentDateTime = dt3;
+                //}
+                //string[] secondSplit1 = timeSplit[0].Split(":");
+                //TimeSpan ts = new TimeSpan(Convert.ToInt32(secondSplit1[0]), Convert.ToInt32(secondSplit1[1]), 0);
+                //appointments.AppointmentDateTime = Time.Date + ts;

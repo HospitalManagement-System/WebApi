@@ -12,11 +12,16 @@ namespace ServiceLayer.Services.VisitdetailsService
     public class PatientvisitService : IVisitService
     {
         private IVisitRepository _repository;
+       
+
         public PatientvisitService(IVisitRepository repository)
         {
             _repository = repository;
         }
-        public int DemographicsUserDetails(Demographicsdetails patientDemographicDetails)
+       
+       
+
+        public int DemographicsUserDetails(PatientDemographicDetails patientDemographicDetails)
         {
             return _repository.AddDemographicsDetails(patientDemographicDetails);
         }
@@ -32,10 +37,9 @@ namespace ServiceLayer.Services.VisitdetailsService
             PatientDemographicDetails odetails = _repository.Getpatientdemodetailsfrompatientid(patientid);
             return odetails;
         }
-
-        public string UpdateDemographicsUserDetails(Guid patientid, Demographicsdetails patientDemographicDetails)
+        public string UpdateDemographicsUserDetails(string demoid, PatientDemographicDetails patientDemographicDetails)
         {
-            return _repository.UpdateDemographicsdetails(patientid, patientDemographicDetails);
+            return _repository.UpdateDemographicsdetails(demoid,patientDemographicDetails);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace ServiceLayer.Interfaces.IVisitDetails
     {
        string Addpatientvisitdetails(PatientVisitDetails patientVisitDetails);
         PatientVisitDetails GetVisitdetailsfromId(string appointmentid);
+        string putvisitdetails(string id, PatientVisitDetails patientDetails);
+        IEnumerable<PatientVisitDetails> GetdetailsfrompatientId(string patientid);
     }
 }

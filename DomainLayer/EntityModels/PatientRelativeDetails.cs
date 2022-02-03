@@ -34,5 +34,7 @@ namespace DomainLayer.Models
         [ForeignKey("PatientDemographicDetails")]
         public Guid PatientDemographicsId { get; set; }
         public PatientDemographicDetails PatientDemographicDetails { get; set; }
+
+        public Boolean IsAccess { get; set; }
     }
 }

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DomainLayer.Models.Master;
 using RepositoryLayer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppointmentAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DiagnosesController : ControllerBase
