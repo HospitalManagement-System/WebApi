@@ -138,6 +138,19 @@ namespace AppointmentAPI.Controllers
 
             try
             {
+                
+                var Nurse = (from e in _context.EmployeeDetails
+                             join u in _context.UserDetails
+                             on e.UserId equals u.Id
+                             join r in _context.RoleMaster
+                             on u.RoleId equals r.Id
+                             where (r.UserRole=="Nurse")
+                             select new
+                             {
+                                 NurseId=e.Id
+                             }
+                             ).FirstOrDefault();
+
                 Appointments appointmentsData = new Appointments();
                 var Time = appointments.AppointmentDateTime;
                 var Hour = appointments.bookslot;
@@ -156,21 +169,13 @@ namespace AppointmentAPI.Controllers
                     DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, Minutes, 0);
                     appointmentsData.AppointmentDateTime = dt3;
                 }
-                //else
-                //{
-                //    int Hours = Convert.ToInt32(timeSplit[0]);
-                //    DateTime dt3 = new DateTime(Time.Year, Time.Month, Time.Day, Hours, 0, 0);
-                //    appointmentsData.AppointmentDateTime = dt3;
-                //}
-                //string[] secondSplit1 = timeSplit[0].Split(":");
-                //TimeSpan ts = new TimeSpan(Convert.ToInt32(secondSplit1[0]), Convert.ToInt32(secondSplit1[1]), 0);
-                //appointments.AppointmentDateTime = Time.Date + ts;
-
+               
                 appointmentsData.Diagnosis = appointments.Diagnosis;
                 appointmentsData.AppointmentType = appointments.AppointmentType;
                 appointmentsData.bookslot = appointments.bookslot;
                 appointmentsData.PatientId = appointments.PatientId;
                 appointmentsData.PhysicianId = appointments.PhysicianId;
+                appointmentsData.NurseId = Nurse.NurseId;
                 appointmentsData.Mode = appointments.Mode;
                 appointmentsData.AppointmentStatus = appointments.AppointmentStatus;
                 appointmentsData.QueueStatus = "Upcoming";
@@ -478,6 +483,7 @@ namespace AppointmentAPI.Controllers
                                                  patientName = m != null ? m.FirstName : "Unknown",
                                                  physicianName = e != null ? e.FirstName : "Unknown",
                                                  diagnosis = a.Diagnosis,
+                                                 mode=a.Mode
 
                                              }
                                 );
@@ -557,6 +563,25 @@ namespace AppointmentAPI.Controllers
             return Ok(Specialization);
         }
 
+
+
+        [HttpGet("GetCalendarData/{Id}")]
+        public async Task<IActionResult> GetCalendarData(string Id)
+        {
+            var appointmentID = new Guid(Id);
+
+            var result = await (from a in _context.Appointments
+                                join u in _context.UserDetails
+                                on a.PatientId equals u.Id
+                                join p in _context.PatientDetails
+                                on u.Id equals p.UserId
+                                join e in _context.EmployeeDetails
+                                on a.PhysicianId equals e.Id
+                                where (a.Id==appointmentID)
+                                select new { p.FirstName ,appointmentDate = a.AppointmentDateTime.Date ,bookSlot=a.bookslot,physicianName=e.FirstName,diagnosis= a.Diagnosis }
+                          ).ToListAsync();
+            return Ok(result);
+        }
 
 
     }

@@ -44,9 +44,10 @@ namespace InboxAPI.Controllers
         // GET: api/<NotesController>
         [HttpGet("{id}")]
         ////[Route("GetNotesById/{id}")]
-        public IActionResult GetNotesById(Guid id)
+        public  IActionResult GetNotesById(Guid id)
         {
-            List<NoteData> lstNotesData = _notesService.GetNotesData(id);
+            List<NoteData> lstNotesData =  _notesService.GetNotesData(id);
+
             return Ok(lstNotesData);
         }
 

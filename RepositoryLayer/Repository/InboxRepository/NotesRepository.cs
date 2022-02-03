@@ -54,7 +54,7 @@ namespace RepositoryLayer.Repository.InboxRepository
             try
             {
 
-                var notes = _context.Notes.Where(item => item.SenderEmployeeId == loggedinUserId
+                var notes =  _context.Notes.Where(item => item.SenderEmployeeId == loggedinUserId
                                                 || item.RecieverEmployeeId == loggedinUserId).ToList();
 
                 var users1 = notes.Select(item => item.SenderEmployeeId);
