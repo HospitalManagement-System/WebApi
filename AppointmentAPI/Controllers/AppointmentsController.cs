@@ -559,6 +559,25 @@ namespace AppointmentAPI.Controllers
 
 
 
+        [HttpGet("GetCalendarData/{Id}")]
+        public async Task<IActionResult> GetCalendarData(string Id)
+        {
+            var appointmentID = new Guid(Id);
+
+            var result = await (from a in _context.Appointments
+                                join u in _context.UserDetails
+                                on a.PatientId equals u.Id
+                                join p in _context.PatientDetails
+                                on u.Id equals p.UserId
+                                join e in _context.EmployeeDetails
+                                on a.PhysicianId equals e.Id
+                                where (a.Id==appointmentID)
+                                select new { p.FirstName ,appointmentDate = a.AppointmentDateTime.Date ,bookSlot=a.bookslot,physicianName=e.FirstName,diagnosis= a.Diagnosis }
+                          ).ToListAsync();
+            return Ok(result);
+        }
+
+
     }
 }
 
