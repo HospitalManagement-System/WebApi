@@ -26,26 +26,31 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
         {
             try
             {
-                var PatientVisitDetails = new PatientVisitDetails
+                // var Id = new Guid(patientVisitDetails.AppointmentId.ToString());
+                PatientVisitDetails patientDetailsList = _context.PatientVisitDetails.Where(x => x.AppointmentId == patientVisitDetails.AppointmentId).FirstOrDefault();
+                if (patientVisitDetails == null)
                 {
+                    var PatientVisitDetails = new PatientVisitDetails
+                    {
+                        Height = patientVisitDetails.Height,
+                        Weight = patientVisitDetails.Weight,
+                        BloodPressure = patientVisitDetails.BloodPressure,
+                        BodyTemprature = patientVisitDetails.BodyTemprature,
+                        RespirationRate = patientVisitDetails.RespirationRate,
+                        DoctorDescription = patientVisitDetails.DoctorDescription,
+                        ProcedureDesciption = patientVisitDetails.ProcedureDesciption,
+                        DiagnosisDescription = patientVisitDetails.DiagnosisDescription,
+                        AppointmentId = patientVisitDetails.AppointmentId,
+                        Createddate = DateTime.Now,
 
-                    Height = patientVisitDetails.Height,
-                    Weight = patientVisitDetails.Weight,
-                    BloodPressure = patientVisitDetails.BloodPressure,
-                    BodyTemprature = patientVisitDetails.BodyTemprature,
-                    RespirationRate = patientVisitDetails.RespirationRate,
-                    DoctorDescription = patientVisitDetails.DoctorDescription,
-                    ProcedureDesciption = patientVisitDetails.ProcedureDesciption,
-                    DiagnosisDescription = patientVisitDetails.DiagnosisDescription,
-                    AppointmentId=patientVisitDetails.AppointmentId,
-                    Createddate = DateTime.Now,
+                    };
+                    _context.PatientVisitDetails.Add(PatientVisitDetails);
 
 
-                };
-                _context.PatientVisitDetails.Add(PatientVisitDetails);
 
-                int result = _context.SaveChanges();
-                Result = (SaveResult == 1) ? "Failure" : "Success";
+                    int result = _context.SaveChanges();
+                    Result = (SaveResult == 1) ? "Failure" : "Success";
+                }
                 return Result;
             }
             catch (Exception ex)
@@ -63,13 +68,15 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
 
                 var Id = new Guid(appointmentid);
                 PatientVisitDetails patientDetailsList = _context.PatientVisitDetails.Where(x => x.AppointmentId == Id).FirstOrDefault();
-                if (patientDetailsList.Equals(null))
+                if (patientDetailsList != null)
                 {
+                    if (patientDetailsList.Equals(null))
+                    {
 
-                    patientDetailsList.Diagnosislist = patientDetailsList.DiagnosisDescription.Split(',').ToList();
-                    patientDetailsList.Druglist = patientDetailsList.DrugDescription.Split(',').ToList();
-
-                    patientDetailsList.Procedureslist = patientDetailsList.ProcedureDesciption.Split(',').ToList();
+                        patientDetailsList.Diagnosislist = patientDetailsList.DiagnosisDescription.Split(',').ToList();
+                        patientDetailsList.Druglist = patientDetailsList.DrugDescription.Split(',').ToList();
+                        patientDetailsList.Procedureslist = patientDetailsList.ProcedureDesciption.Split(',').ToList();
+                    }
                 }
                 return patientDetailsList;
             }
