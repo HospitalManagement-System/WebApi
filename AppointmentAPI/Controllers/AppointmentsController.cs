@@ -25,8 +25,7 @@ namespace AppointmentAPI.Controllers
     {
         private readonly ApplicationDbContext _context;
         public IAppointmentService _service;
-        //private readonly IEmailSender _iEMailSender;
-
+       
         private readonly IEmailSender _iEMailSender;
 
         private readonly IZoom _zoom;
