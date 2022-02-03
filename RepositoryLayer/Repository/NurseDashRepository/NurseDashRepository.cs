@@ -41,18 +41,24 @@ namespace RepositoryLayer.Repository.NurseDashRepository
         public List<NurseAppointment> GetnurseDetails()
         {
             List<NurseAppointment> nurseAppointments = new List<NurseAppointment>();
+           
 
             try
             {
+
+
+              
                 var User = (
                             from a in _context.Appointments
-                            join e in _context.EmployeeDetails
-                            on a.PhysicianId equals e.Id
+                            join U in _context.UserDetails
+                            on a.PatientId equals U.Id
                             join p in _context.PatientDetails
-                            on a.PatientId equals p.Id
+                            on a.PatientId equals p.UserId
                             join pd in _context.PatientDemographicDetails
                             on p.PatientDemographicId equals pd.Id
-                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Upcoming"
+                            join e in _context.EmployeeDetails
+                            on a.PhysicianId equals e.Id                            
+                            where (a.AppointmentDateTime.Date == DateTime.Today.Date && a.QueueStatus == "Upcoming" && a.AppointmentStatus == "Approved")
                             select new
                             {
                                 a.Id,
@@ -102,15 +108,17 @@ namespace RepositoryLayer.Repository.NurseDashRepository
             try
             {
                 var User = (
-                            from a in _context.Appointments
-                            join e in _context.EmployeeDetails
-                            on a.PhysicianId equals e.Id
-                            join p in _context.PatientDetails
-                            on a.PatientId equals p.Id
-                            join pd in _context.PatientDemographicDetails
-                            on p.PatientDemographicId equals pd.Id
-                            where (a.AppointmentDateTime > DateTime.Today)
-                            select new
+                           from a in _context.Appointments
+                           join U in _context.UserDetails
+                           on a.PatientId equals U.Id
+                           join p in _context.PatientDetails
+                           on a.PatientId equals p.UserId
+                           join pd in _context.PatientDemographicDetails
+                           on p.PatientDemographicId equals pd.Id
+                           join e in _context.EmployeeDetails
+                           on a.PhysicianId equals e.Id
+                           where (a.AppointmentDateTime.Date > DateTime.Today.Date && a.QueueStatus == "Upcoming" && a.AppointmentStatus == "Approved")
+                           select new
                             {
 
                                 a.Id,
@@ -185,7 +193,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                 Appointments Existingdetails = _context.Appointments.Where(x => x.Id == appid).FirstOrDefault();
                 if (Existingdetails != null)
                 {
-                    Existingdetails.Mode = "Ongoing";
+                    Existingdetails.QueueStatus = "Ongoing";
                     _context.Appointments.Update(Existingdetails);
                     int result = _context.SaveChanges();
                     Result = (SaveResult == 1) ? "Failure" : "Success";
