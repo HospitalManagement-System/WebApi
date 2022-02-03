@@ -1,4 +1,5 @@
 ﻿using DomainLayer.EntityModels;
+using DomainLayer.Models;
 using RepositoryLayer.Interfaces.ICommonRepository;
 using System;
 using System.Collections.Generic;
@@ -17,20 +18,140 @@ namespace RepositoryLayer.Repository.CommonRepository
         }
         public void SaveAttendance(EmployeeAvailability employeeAttendance)
         {
-            //_context.EmployeeAvailability.Add(employeeAttendance);
+            try
+            {
+
+
+                foreach (var item in employeeAttendance.arrTimeSlot)
+                {
+                    employeeAttendance.TimeSlot += item + ",";
+                }
+                if (!_context.EmployeeAvailability.Any(w => w.PhysicianId == employeeAttendance.PhysicianId))
+                {
+                    _context.EmployeeAvailability.Add(employeeAttendance);
+                    _context.SaveChanges();
+
+                }
+                   
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
-        public IEnumerable<EmployeeAvailability> GetAttendanceAvailability(Guid phyid)
+        public List<EmployeeAvailability> GetAttendanceAvailability()
         {
-            //List<EmployeeAvailability> result = _context.EmployeeAvailability.Where(x => x.DateTime == DateTime.Today && x.PhysicianId.ToString() == phyid.ToString()).ToList();
+          
 
-            //foreach (var item in result)
-            //{
-            //    item.arrTimeSlot = item.TimeSlot.Split(',');
-            //}
-            //return result;  
-            var result = new EmployeeAvailability();
-            yield return result;
+            List<EmployeeAvailability> employeeAvailabilities = new List<EmployeeAvailability>();
+
+            try
+            {
+                var User = (
+                            from a in _context.EmployeeAvailability
+                            join e in _context.EmployeeDetails
+                            on a.PhysicianId equals e.UserId
+                          
+
+                            select new
+                            {
+
+                                a.Id,
+                                Name = e.FirstName,
+                               a.IsAbsent,
+                               a.TimeSlot,
+                               a.DateTime,
+                                a.PhysicianId,
+                                e.Specialization,
+                              
+
+                            }).ToList();
+
+                foreach (var item in User)
+                {
+                    EmployeeAvailability empployee = new EmployeeAvailability();
+                    empployee.Id = item.Id;
+                    empployee.PhysicianId = item.PhysicianId;
+                    empployee.DateTime = item.DateTime;
+                    empployee.TimeSlot = item.TimeSlot;
+                    empployee.IsAbsent = item.IsAbsent;
+
+                    empployee.Speciliazation = item.Specialization;
+                    empployee.FirstName = item.Name;
+
+                    employeeAvailabilities.Add(empployee);
+                }
+
+                return employeeAvailabilities;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //List<EmployeeAvailability> result = _context.EmployeeAvailability.ToList();
+            //    return result;
+        }
+
+
+        public List<NurseAppointment> GetNextPatientDetails()
+        {
+            List<NurseAppointment> nurseAppointments = new List<NurseAppointment>();
+
+            try
+            {
+                var User = (
+                            from a in _context.Appointments
+                            join e in _context.EmployeeDetails
+                            on a.PhysicianId equals e.Id
+                            join p in _context.PatientDetails
+                            on a.PatientId equals p.Id
+                            join pd in _context.PatientDemographicDetails
+                            on p.PatientDemographicId equals pd.Id
+                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Ongoing"
+                            select new
+                            {
+                                a.Id,
+                                Name = p.FirstName + "" + p.LastName,
+                                pd.Gender,
+                                a.Diagnosis,
+                                pd.Contact,
+                                pd.Age,
+                                pd.Email,
+                                PhysicanName = e.FirstName + "" + e.LastName
+
+                            });
+
+                foreach (var item in User)
+                {
+                    NurseAppointment nurse = new NurseAppointment();
+                    nurse.Id = item.Id;
+                    nurse.Name = item.Name;
+                    nurse.Gender = item.Gender;
+                    nurse.PhysicanName = item.PhysicanName;
+                    nurse.Age = item.Age;
+                    nurse.Email = item.Email;
+                    nurse.Diagnosis = item.Diagnosis;
+                    nurse.Contact = item.Contact;
+
+
+
+                    nurseAppointments.Add(nurse);
+                }
+
+                return nurseAppointments;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+
+
         }
     }
 }

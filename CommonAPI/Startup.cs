@@ -25,6 +25,10 @@ using System.Threading.Tasks;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ServiceLayer.Interfaces.ICommonService;
+using ServiceLayer.Services.CommonService;
+using RepositoryLayer.Interfaces.ICommonRepository;
+using RepositoryLayer.Repository.CommonRepository;
 
 namespace CommonAPI
 {
@@ -43,6 +47,8 @@ namespace CommonAPI
             services.AddScoped<INurseService, NurseDashService>();
             services.AddScoped<INurseRepository, NurseDashRepository>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<IAttendanceRepository, AttendanceRepository>();
             services.AddScoped<IEncryption, Encryption>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
