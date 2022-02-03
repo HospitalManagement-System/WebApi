@@ -47,11 +47,17 @@ namespace LoginAPI.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAbsent")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("PhysicianId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Speciliazation")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TimeSlot")
                         .HasColumnType("nvarchar(max)");
