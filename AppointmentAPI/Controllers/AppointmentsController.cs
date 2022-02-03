@@ -84,6 +84,78 @@ namespace AppointmentAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetAllAppointmentsById/{Id}")]
+        public async Task<ActionResult<IEnumerable<Appointments>>> GetAllAppointmentsById(string Id,string Role)
+        {
+            var UserId = new Guid(Id);
+
+            if (Role == "PATIENT")
+            {
+                var result = await (from c in _context.Appointments
+                                   .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime >= DateTime.Now && p.PatientId==UserId)
+                                    select new
+                                    {
+                                        publicId = c.Id,
+                                        title = c.AppointmentType,
+                                        date = c.AppointmentDateTime,
+                                        description = "Test",
+                                        color = (
+                                        c.AppointmentStatus.Equals("Pending") ? "red" :
+                                        c.AppointmentStatus.Equals("Approved") ? "green" :
+                                        c.AppointmentStatus.Equals("Rejected") ? "blue" : "Unknown"
+                                        )
+                                    }
+                              ).ToListAsync();
+
+                return Ok(result);
+            }
+            else if(Role == "PHYSICIAN")
+            {
+                var result = await (from c in _context.Appointments
+                                    join e in _context.EmployeeDetails
+                                    on c.PhysicianId equals e.Id
+                                    join u in _context.UserDetails
+                                    on  e.UserId equals u.Id
+                                   where( c.AppointmentStatus != ("Rejected") && c.AppointmentDateTime.Date >= DateTime.Now && u.Id == UserId)
+                                    select new
+                                    {
+                                        publicId = c.Id,
+                                        title = c.AppointmentType,
+                                        date = c.AppointmentDateTime,
+                                        description = "Test",
+                                        color = (
+                                        c.AppointmentStatus.Equals("Pending") ? "red" :
+                                        c.AppointmentStatus.Equals("Approved") ? "green" :
+                                        c.AppointmentStatus.Equals("Rejected") ? "blue" : "Unknown"
+                                        )
+                                    }
+                             ).ToListAsync();
+                return Ok(result);
+            }
+            else
+            {
+                var result = await (from c in _context.Appointments
+                              .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime >= DateTime.Now)
+                                    select new
+                                    {
+                                        publicId = c.Id,
+                                        title = c.AppointmentType,
+                                        date = c.AppointmentDateTime,
+                                        description = "Test",
+                                        color = (
+                                        c.AppointmentStatus.Equals("Pending") ? "red" :
+                                        c.AppointmentStatus.Equals("Approved") ? "green" :
+                                        c.AppointmentStatus.Equals("Rejected") ? "blue" : "Unknown"
+                                        )
+                                    }
+                         ).ToListAsync();
+
+                return Ok(result);
+            }
+
+            return Ok();
+        }
+
 
         // GET: api/Appointments/5
         [HttpGet("{id}")]
