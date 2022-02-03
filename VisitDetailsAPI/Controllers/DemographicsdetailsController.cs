@@ -19,6 +19,7 @@ namespace VisitDetailsAPI.Controllers
     [ApiController]
     public class DemographicsdetailsController : ControllerBase
     {
+
         private IVisitService _VisitService;
         private UserManager<ApplicationUser> _userManager;
         private ApplicationDbContext _context;
