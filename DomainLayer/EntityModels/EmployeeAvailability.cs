@@ -19,5 +19,11 @@ namespace DomainLayer.EntityModels
         public bool IsAbsent { get; set; }
         public DateTime DateTime { get; set; }
 
+        public string FirstName { get; set; }
+
+        public string Speciliazation { get; set; }
+
+
+
     }
 }

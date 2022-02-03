@@ -2,6 +2,7 @@
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer;
 using ServiceLayer.Interfaces.ICommonService;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,11 @@ namespace CommonAPI.Controllers.Physician
     public class PhysicianDashboardController : ControllerBase
     {
         public IAttendanceService _service { get; set; }
-        public PhysicianDashboardController(IAttendanceService service)
+        private readonly ApplicationDbContext _context;
+        public PhysicianDashboardController(IAttendanceService service, ApplicationDbContext context)
         {
             _service = service;
+            _context = context;
         }
         [HttpPost]
         public void PostAttendance(EmployeeAvailability employeeAttendance)
@@ -35,7 +38,7 @@ namespace CommonAPI.Controllers.Physician
         [HttpGet("GetAvailablePhysicianDetails")]
         public IActionResult GetAvailablePhysicianDetails()
         {
-            List<EmployeeAvailability> employeeAvailabilities = _service.GetAttendanceAvailability();
+           var employeeAvailabilities = _service.GetAttendanceAvailability();
             return Ok(employeeAvailabilities);
 
         }
@@ -49,6 +52,28 @@ namespace CommonAPI.Controllers.Physician
 
 
             return Ok(getNurseDetails);
+
+        }
+
+
+        [HttpGet("GetAllSpecialization")]
+        public IActionResult GetAllSpecialization()
+        {
+            var Roles = (_context.RoleMaster.Where(x => x.UserRole == "PHYSICIAN").ToList());
+            var Specialization = (from e in _context.EmployeeDetails
+                            join u in _context.UserDetails
+                            on e.UserId equals u.Id
+                            join r in _context.RoleMaster
+                            on u.RoleId equals r.Id
+                            where (u.RoleId == Roles[0].Id)
+                            select new
+                            {
+                                id = e.Id,
+                                specialization = e.Specialization
+                            }
+                            ).ToList();
+
+            return Ok(Specialization);
 
         }
     }

@@ -12,7 +12,7 @@ namespace ServiceLayer.Interfaces.ICommonService
     {
         void AddAtendance(EmployeeAvailability employeeAttendance);
 
-        List<EmployeeAvailability> GetAttendanceAvailability();
+        public IEnumerable<EmployeeAvailability> GetAttendanceAvailability();
         public List<NurseAppointment> GetNextPatientDetails();
     }
 }

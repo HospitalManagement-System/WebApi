@@ -22,9 +22,9 @@ namespace ServiceLayer.Services.CommonService
             _repository.SaveAttendance(employeeAttendance);
         }
 
-        public List<EmployeeAvailability> GetAttendanceAvailability()
+        public IEnumerable<EmployeeAvailability> GetAttendanceAvailability()
         {
-            List<EmployeeAvailability> lstEmployeeDetails = _repository.GetAttendanceAvailability();
+           var lstEmployeeDetails = _repository.GetAttendanceAvailability();
             return lstEmployeeDetails;
         }
         public List<NurseAppointment> GetNextPatientDetails()

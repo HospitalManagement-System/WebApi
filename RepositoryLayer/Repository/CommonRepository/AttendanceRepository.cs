@@ -20,6 +20,8 @@ namespace RepositoryLayer.Repository.CommonRepository
         {
             try
             {
+
+
                 foreach (var item in employeeAttendance.arrTimeSlot)
                 {
                     employeeAttendance.TimeSlot += item + ",";
@@ -41,9 +43,56 @@ namespace RepositoryLayer.Repository.CommonRepository
 
         public List<EmployeeAvailability> GetAttendanceAvailability()
         {
-           
-            List<EmployeeAvailability> result = _context.EmployeeAvailability.ToList();
-            return result;
+          
+
+            List<EmployeeAvailability> employeeAvailabilities = new List<EmployeeAvailability>();
+
+            try
+            {
+                var User = (
+                            from a in _context.EmployeeAvailability
+                            join e in _context.EmployeeDetails
+                            on a.PhysicianId equals e.UserId
+                          
+
+                            select new
+                            {
+
+                                a.Id,
+                                Name = e.FirstName,
+                               a.IsAbsent,
+                               a.TimeSlot,
+                               a.DateTime,
+                                a.PhysicianId,
+                                e.Specialization,
+                              
+
+                            }).ToList();
+
+                foreach (var item in User)
+                {
+                    EmployeeAvailability empployee = new EmployeeAvailability();
+                    empployee.Id = item.Id;
+                    empployee.PhysicianId = item.PhysicianId;
+                    empployee.DateTime = item.DateTime;
+                    empployee.TimeSlot = item.TimeSlot;
+                    empployee.IsAbsent = item.IsAbsent;
+
+                    empployee.Speciliazation = item.Specialization;
+                    empployee.FirstName = item.Name;
+
+                    employeeAvailabilities.Add(empployee);
+                }
+
+                return employeeAvailabilities;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //List<EmployeeAvailability> result = _context.EmployeeAvailability.ToList();
+            //    return result;
         }
 
 
