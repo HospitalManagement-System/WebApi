@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LoginAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     //[Authorize]
