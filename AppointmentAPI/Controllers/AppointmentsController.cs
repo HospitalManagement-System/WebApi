@@ -65,7 +65,7 @@ namespace AppointmentAPI.Controllers
         public async Task<ActionResult<IEnumerable<Appointments>>> GetAllAppointments()
         {
             var result = await (from c in _context.Appointments
-                               .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime >= DateTime.Now)
+                               .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime.Date >= DateTime.Today.Date)
                                 select new
                                 {
                                     publicId = c.Id,
@@ -91,7 +91,7 @@ namespace AppointmentAPI.Controllers
             if (Role == "PATIENT")
             {
                 var result = await (from c in _context.Appointments
-                                   .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime >= DateTime.Now && p.PatientId==UserId)
+                                   .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime.Date >= DateTime.Today.Date && p.PatientId==UserId)
                                     select new
                                     {
                                         publicId = c.Id,
@@ -115,7 +115,7 @@ namespace AppointmentAPI.Controllers
                                     on c.PhysicianId equals e.Id
                                     join u in _context.UserDetails
                                     on  e.UserId equals u.Id
-                                   where( c.AppointmentStatus != ("Rejected") && c.AppointmentDateTime.Date >= DateTime.Now && u.Id == UserId)
+                                   where( c.AppointmentStatus != ("Rejected") && c.AppointmentDateTime.Date >= DateTime.Today.Date && u.Id == UserId)
                                     select new
                                     {
                                         publicId = c.Id,
@@ -134,7 +134,7 @@ namespace AppointmentAPI.Controllers
             else
             {
                 var result = await (from c in _context.Appointments
-                              .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime >= DateTime.Now)
+                              .Where(p => p.AppointmentStatus != ("Rejected") && p.AppointmentDateTime.Date >= DateTime.Today.Date)
                                     select new
                                     {
                                         publicId = c.Id,
@@ -436,8 +436,8 @@ namespace AppointmentAPI.Controllers
               join p in _context.PatientDetails
               on a.PatientId equals p.UserId
               join pd in _context.PatientDemographicDetails
-              on p.PatientDemographicId equals pd.Id
-              where (a.AppointmentDateTime >= DateTime.Now && a.AppointmentStatus == "Approved")
+              on p.Id equals pd.PatientId
+              where (a.AppointmentDateTime >= DateTime.Now && (a.AppointmentStatus == "Approved" || a.AppointmentStatus == "pending"))
               select new
               {
 

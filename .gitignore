@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /AppointmentAPI/Controllers/ZoomApiController.cs
 /LoginAPI/Migrations/20220127072342_innit.cs
 /LoginAPI/Migrations/20220127072342_innit.Designer.cs
+/InboxAPI/Migrations

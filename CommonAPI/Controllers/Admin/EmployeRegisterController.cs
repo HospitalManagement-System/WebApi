@@ -100,7 +100,7 @@ namespace CommonAPI.Controllers.Admin
             var User = new UserDetails
             {
                 UserName = userDetails.EmployeeDetails.Email,
-                Password = "Password@123",
+                Password = Password,
                 Status = true,
                 IsFirstLogIn = true,
                 NoOfAttempts = 0,

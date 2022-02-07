@@ -11,7 +11,7 @@ namespace ServiceLayer.Interfaces
 {
     public interface IUserService
     {
-        void RegisterUserData(Registration registration);
+        Task RegisterUserData(Registration registration);
         //List<UserDetails> GetUserData();
         EmployeeDetails GetUser(Guid id);
         void UpdatePassword(ChangePassword changePassword);

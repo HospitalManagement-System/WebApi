@@ -11,7 +11,7 @@ namespace RepositoryLayer.Interfaces
 {
     public interface IUserRepository
     {
-        void AddUser(Registration registration);
+        string AddUser(Registration registration);
         //List<UserDetails> GetUserData();
         EmployeeDetails GetUser(Guid id);
         void ChangePassword(ChangePassword changePassword);

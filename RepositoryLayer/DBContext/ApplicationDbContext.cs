@@ -109,6 +109,12 @@ namespace RepositoryLayer
            .Entity<PatientDetails>().Property(x => x.Id)
            .HasDefaultValueSql("newid()");
 
+            modelBuilder.Entity<UserDetails>()
+            .HasOne<PatientDetails>(s => s.PatientDetails)
+            .WithOne(ad => ad.UserDetails)
+            .HasForeignKey<PatientDetails>(x => x.UserId);
+
+
             modelBuilder
            .Entity<Notes>().Property(x => x.Id)
            .HasDefaultValueSql("newid()");
@@ -185,7 +191,7 @@ namespace RepositoryLayer
             modelBuilder.Entity<PatientDetails>()
             .HasOne(s => s.PatientDemographicDetails)
             .WithOne(g => g.PatientDetails)
-            .HasForeignKey<PatientDetails>(s => s.PatientDemographicId);
+            .HasForeignKey<PatientDemographicDetails>(s => s.PatientId);
 
             modelBuilder
             .Entity<PatientRelativeDetails>().Property(x => x.Id)

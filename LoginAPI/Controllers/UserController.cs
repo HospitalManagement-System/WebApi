@@ -85,23 +85,17 @@ namespace LoginAPI.Controllers
 
             try
             {
-                //var result = await _userManager.CreateAsync(applicationUser, objRegistration.Email);
-                //if (result.Errors.Count() == 0)
+                
+                await _userService.RegisterUserData(objRegistration);
+                //await _loggerservice.WriteLog(new Logger
                 //{
-                _userService.RegisterUserData(objRegistration);
-                await _loggerservice.WriteLog(new Logger
-                {
-                    ComponentName = "User/RegistrationAction",
-                    Message = "Registration done for" + objRegistration.FirstName + ", Email : " + objRegistration.Email,
-                    LogDateTime = DateTime.Now,
-                    //Logtype = enumLogType.SUCCESS.ToString()
-                });
+                //    ComponentName = "User/RegistrationAction",
+                //    Message = "Registration done for" + objRegistration.FirstName + ", Email : " + objRegistration.Email,
+                //    LogDateTime = DateTime.Now,
+                //    //Logtype = enumLogType.SUCCESS.ToString()
+                //});
                 return Ok(new string("Registration Success"));
-                //}
-                //else
-                //{
-                //    return Ok(result);
-                //}
+                
             }
             catch (Exception ex)
             {

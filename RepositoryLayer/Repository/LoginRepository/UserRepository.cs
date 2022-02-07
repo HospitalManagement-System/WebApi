@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace RepositoryLayer
 {
     public class UserRepository: IUserRepository
@@ -18,13 +19,15 @@ namespace RepositoryLayer
         private ApplicationDbContext _context;
         IInMemoryCache _memorycache;
 
+
+
         public UserRepository(IInMemoryCache memorycache, ApplicationDbContext context)
         {
             _context = context;
             _memorycache = memorycache;
         }
 
-        public void AddUser(Registration registration)
+        public string AddUser(Registration registration)
         {
             try
             {
@@ -34,7 +37,7 @@ namespace RepositoryLayer
                     var UserDetails = new UserDetails
                     {
                         UserName = registration.UserName,
-                        Password = registration.FirstName + "123",
+                        Password = registration.Password,
                         Status = true,
                         IsFirstLogIn = true,
                         IsActive = true,
@@ -61,10 +64,10 @@ namespace RepositoryLayer
                         RoleId = roleMaster.Id
                     };
                     _context.UserDetails.Add(UserDetails);
-                    _context.SaveChanges();
+                    var Save = _context.SaveChanges();
+                   var Result = (Save > 1 ? "Success" : "Failure");
+                    return Result;
                 }
-
-                //else if (registration.Role.ToUpper() == enumUserType.PHYSICIAN.ToString())
                 else
                 {
                     var UserDetails = new UserDetails
@@ -87,27 +90,20 @@ namespace RepositoryLayer
                             Designation = registration.Designation
 
                         },
-                        //PatientDetails = new PatientDetails
-                        //{
-                        //    Id = Guid.NewGuid(),
-                        //    Title = registration.Title,
-                        //    PatientDemographicDetails = new PatientDemographicDetails
-                        //    {
-                        //        PatientRelativeDetails = new PatientRelativeDetails
-                        //        {
-
-                        //        }
-                        //    }
-                        //},
                         RoleId = roleMaster.Id
                     };
                     _context.UserDetails.Add(UserDetails);
-                    _context.SaveChanges();
+                    var Save = _context.SaveChanges();
+                    var Result = (Save == 1 ? "Success" : "Failure");
+                    return Result;
                 }
+
+                return "Failure";
+
             }
             catch (SqlException ex)
             {
-                 
+                return "Failure";
             }
         }
 
