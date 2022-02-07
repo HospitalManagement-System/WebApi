@@ -1,0 +1,64 @@
+﻿Procs:
+1)12-01-22
+create  proc GetHospitalUserInfo  
+as  
+begin  
+select   
+u.Id as UserId,  
+e.id as EmployeeId,  
+e.FirstName,  
+e.Contact,  
+e.Specialization,  
+e.Email,  
+isnull(u.IsActive,0) as IsActive ,  
+isnull(u.IsLocked,0) as isDisabled,  
+case u.RoleId  
+when '97C08789-A518-41CF-8CDC-3212BFD36375' then 'Patient'  
+when 'EBA09DC2-1FE7-4F1F-AA48-5E393174B491' then 'ADMIN'  
+when '2F8077B0-0C73-4DD3-A882-681AE662AC47' then 'PHYSICIAN'  
+when '42479E8D-DB60-4871-83C0-7820C8590614' then 'NURSE'  
+else 'other'  
+end  
+as Role  
+from UserDetails u  
+inner join EmployeeDetails e with(nolock) on u.Id=e.UserId  
+where ISNULL(u.IsActive,0)=1  
+  
+end  
+============================================= 
+2)
+--UpdateHospitalUserInfo '42755198-79EE-413F-6B1A-08D9D587680A','Locked'
+alter  proc UpdateHospitalUserInfo  
+@UserId nvarchar(max),
+@Type nvarchar(max)
+as  
+begin  
+
+if(@Type='Locked')
+begin
+
+  if exists(select id from  userDetails where id=@UserId)
+  begin
+  update userDetails set isLocked=1 where id=@UserId
+  select 'Success' as Result
+  end
+  else
+  begin
+  select 'Failed' as Result
+  end
+end
+else if (@Type='Active')
+begin
+  if exists(select id from  userDetails where id=@UserId)
+  begin
+  update userDetails set IsActive=1 where id=@UserId
+  select 'Success' as Result
+  end
+  else
+  begin
+  select 'Failed' as Result
+  end
+end
+
+  
+end  

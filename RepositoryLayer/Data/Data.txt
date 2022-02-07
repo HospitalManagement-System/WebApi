@@ -1,0 +1,138 @@
+﻿
+Insert into RoleMaster (UserRole) VALUES('PATIENT')
+Insert into RoleMaster (UserRole) VALUES('NURSE')
+Insert into RoleMaster (UserRole) VALUES('PHYSICIAN')
+Insert into RoleMaster (UserRole) VALUES('ADMIN')
+
+
+
+
+INSERT INTO Education (Id,Value,RoleId)
+VALUES
+    (NewId(),'MBBS',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'BDS',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'BAMS',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'BUMS',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'B.Sc.Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'B.Sc.(Hons.) (Nursing)',(select Id from RoleMaster where UserRole='NURSE')),
+	(NewId(),'PostBasic B.Sc. Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'BUMS',(select Id from RoleMaster where UserRole='NURSE'))
+
+
+INSERT INTO Designation(Id,Value,RoleId)
+VALUES
+    (NewId(),'Cardiologist',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Audiologist',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'Dentist',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Gynaecologist',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'Nursing assistant (CNA)',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'Licensed practical nurse (LPN)',(select Id from RoleMaster where UserRole='NURSE')),
+	(NewId(),'Registered nurse (RN)',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'Advanced practice registered nurses (APRNs)',(select Id from RoleMaster where UserRole='NURSE'))
+
+
+
+INSERT INTO Department(Id,Value,RoleId)
+VALUES
+    (NewId(),'Operating theatre (OT)',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Intensive care unit (ICU)',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'Paramedical Departments',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'Pathology Department',(select Id from RoleMaster where UserRole='NURSE'))	
+	
+	
+
+INSERT INTO Specalization(Id,Value,RoleId)
+VALUES
+    (NewId(),'Anatomical Pathology',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Anesthesiology',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'Cardiology',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Cardiovascular/Thoracic Surgery',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'Clinical Immunology/Allergy',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Critical Care Medicine',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+	(NewId(),'Geriatric Medicine',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Medical Microbiology and Infectious Diseases',(select Id from RoleMaster where UserRole='PHYSICIAN')),
+    (NewId(),'Dialysis Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'Genetics Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+	(NewId(),'Geriatric Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'Cardiovascular/Thoracic Surgery',(select Id from RoleMaster where UserRole='NURSE')),
+	(NewId(),'Mental Health Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'Neonatal Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+	(NewId(),'Oncology Nursing',(select Id from RoleMaster where UserRole='NURSE')),
+    (NewId(),'Pediatric Nursing',(select Id from RoleMaster where UserRole='NURSE'))	
+
+
+insert into gender(id,value)
+values(newId(),'Male'),
+(newId(),'Female'),
+(newId(),'Other')
+
+
+INSERT INTO [dbo].[Procedure] (Id,ProcedureCode,Description,IsDepricated)
+VALUES(NewId(),'0016070',('Bypass Cerebral Ventricle'),0),
+(NewId(),'0016071',('Mastoid Sinus with Autologous'),0),
+(NewId(),'0016073',('Blood Vessel with Autologous'),0)
+
+
+
+
+
+INSERT INTO Diagnosis (Id,DiagnosisCode,Description,IsDepricated)
+VALUES
+(NewId(),'Anatomical Pathology','Anatomical Pathology',0),
+(NewId(),'Anesthesiology','Anesthesiology',0),
+(NewId(),'Cardiology',('Cardiology'),0),
+(NewId(),'Cardiovascular/Thoracic Surgery',('Cardiovascular/Thoracic Surgery'),0),
+(NewId(),'Clinical Immunology/Allergy',('Clinical Immunology/Allergy'),0),
+(NewId(),'Critical Care Medicine',('Critical Care Medicine'),0),
+(NewId(),'Geriatric Medicine',('Geriatric Medicine'),0)
+
+
+
+
+INSERT INTO [dbo].[Drug] (Id,DrugName,DrugGenericName,DrugManufacturerName,DrugForm,DrugStrength)
+VALUES (NewId(),('Paracitomol'),(''),(''),(''),('')),
+(NewId(),('vicks'),(''),(''),(''),('')),
+(NewId(),('chestancold'),(''),(''),(''),('')
+)
+
+
+
+
+INSERT INTO [dbo].[Allergy] (Id,AllergyCode,AllergyType,AllergyName,ClinicalInformation)
+VALUES (NewId(),('Bos d 3.0101'),('Animal'),('Bovine'),('')),
+(NewId(),('Bla g 6.0301'),('Insect'),('German cockroach'),('')),
+(NewId(),('Alt a 1.0102'),('Fungi'),('Fungus'),('')
+)
+
+
+
+INSERT INTO BarChartDetails(
+
+Disease,
+Count
+)
+VALUES
+(
+
+'Fever',
+'45'
+),
+(
+
+'Malaria',
+'45'
+),
+(
+
+'Covid',
+'145'
+),
+(
+
+'Cancer',
+'34'
+),(
+
+'Cold',
+'145'
+);
