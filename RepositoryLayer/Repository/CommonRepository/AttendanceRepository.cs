@@ -109,8 +109,8 @@ namespace RepositoryLayer.Repository.CommonRepository
                             join p in _context.PatientDetails
                             on a.PatientId equals p.Id
                             join pd in _context.PatientDemographicDetails
-                            on p.PatientDemographicId equals pd.Id
-                            where a.AppointmentDateTime == DateTime.Today && a.QueueStatus == "Ongoing"
+                            on p.Id equals pd.PatientId
+                            where a.AppointmentDateTime.Date == DateTime.Today && a.QueueStatus == "Ongoing"
                             select new
                             {
                                 a.Id,

@@ -41,7 +41,8 @@ namespace LoginAPI.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -52,8 +53,8 @@ namespace LoginAPI.Migrations
                     b.Property<bool>("IsAbsent")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PhysicianId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("PhysicianId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Speciliazation")
                         .HasColumnType("nvarchar(max)");
@@ -481,6 +482,9 @@ namespace LoginAPI.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<string>("AllergyDetails")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("AllergynameList")
                         .HasColumnType("nvarchar(max)");
 
@@ -559,9 +563,6 @@ namespace LoginAPI.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PatientDemographicId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -597,6 +598,9 @@ namespace LoginAPI.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAccess")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");

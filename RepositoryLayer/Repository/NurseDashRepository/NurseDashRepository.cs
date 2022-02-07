@@ -55,7 +55,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                             join p in _context.PatientDetails
                             on a.PatientId equals p.UserId
                             join pd in _context.PatientDemographicDetails
-                            on p.PatientDemographicId equals pd.Id
+                            on p.Id equals pd.PatientId
                             join e in _context.EmployeeDetails
                             on a.PhysicianId equals e.Id                            
                             where (a.AppointmentDateTime.Date == DateTime.Today.Date && a.QueueStatus == "Upcoming" && a.AppointmentStatus == "Approved")
@@ -114,7 +114,7 @@ namespace RepositoryLayer.Repository.NurseDashRepository
                            join p in _context.PatientDetails
                            on a.PatientId equals p.UserId
                            join pd in _context.PatientDemographicDetails
-                           on p.PatientDemographicId equals pd.Id
+                           on p.Id equals pd.PatientId
                            join e in _context.EmployeeDetails
                            on a.PhysicianId equals e.Id
                            where (a.AppointmentDateTime.Date > DateTime.Today.Date && a.QueueStatus == "Upcoming" && a.AppointmentStatus == "Approved")

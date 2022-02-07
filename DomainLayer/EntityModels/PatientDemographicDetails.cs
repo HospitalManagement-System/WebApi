@@ -38,7 +38,7 @@ namespace DomainLayer.Models
         public bool IsFatal { get; set; }
         
         
-        [ForeignKey("PatientDetails")]
+        [ForeignKey("Id")]
         public Guid PatientId { get; set; }
         public PatientDetails PatientDetails { get; set; }
 

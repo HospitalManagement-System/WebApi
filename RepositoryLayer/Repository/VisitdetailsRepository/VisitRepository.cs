@@ -94,8 +94,12 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
                 PatientDemographicDetails patientDemographicDetails = _context.PatientDemographicDetails.Include(x=>x.PatientRelativeDetails).FirstOrDefault(x => x.PatientId == Id);
                 if (patientDemographicDetails!=null)
                 {
-                    patientDemographicDetails.Allergylist = patientDemographicDetails.AllergytypeList.Split(',').ToList();
-                    patientDemographicDetails.AllergyListname = patientDemographicDetails.AllergynameList.Split(',').ToList();
+
+                    if (patientDemographicDetails.Equals(null))
+                    {
+                        patientDemographicDetails.Allergylist = patientDemographicDetails.AllergytypeList.Split(',').ToList();
+                        patientDemographicDetails.AllergyListname = patientDemographicDetails.AllergynameList.Split(',').ToList();
+                    }
                 }
                 return patientDemographicDetails;
             }

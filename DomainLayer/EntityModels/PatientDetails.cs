@@ -18,8 +18,8 @@ namespace DomainLayer.Models
         public double Contact { get; set; }
         public bool IsActive { get; set; }
         
-        public Guid PatientDemographicId { get; set; }
-        //[ForeignKey("Id")]
+        //public Guid PatientDemographicId { get; set; }
+        //  [ForeignKey("Id")]
         public PatientDemographicDetails PatientDemographicDetails { get; set; }
         public Guid UserId { get; set; }
         [ForeignKey("Id")]

@@ -28,7 +28,7 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
             {
                 // var Id = new Guid(patientVisitDetails.AppointmentId.ToString());
                 PatientVisitDetails patientDetailsList = _context.PatientVisitDetails.Where(x => x.AppointmentId == patientVisitDetails.AppointmentId).FirstOrDefault();
-                if (patientVisitDetails == null)
+                if (patientDetailsList == null)
                 {
                     var PatientVisitDetails = new PatientVisitDetails
                     {
