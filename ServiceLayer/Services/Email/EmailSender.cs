@@ -19,46 +19,46 @@ namespace ServiceLayer.Services.Email
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
-            //Replace Email
-            MailText = MailText.Replace("[newusername]", UserName).Replace("[username]", Email).Replace("[passsword]", Password);
+            ////Replace Email
+            //MailText = MailText.Replace("[newusername]", UserName).Replace("[username]", Email).Replace("[passsword]", Password);
 
-            MailText = MailText.Replace("[username]", Email).Replace("[passsword]", Password);
+            //MailText = MailText.Replace("[username]", Email).Replace("[passsword]", Password);
 
-            Root root = new Root();
-            root.from = "Cosmo Hospital";
-            root.to = Email;
-            root.subject = "Login Details";
-            //root.message = $"<p>Welcome To Cosmos Hospital</p> <p>Dear {UserName} </p> <p>Your Temporary Email and Password Has been Created</p> <p>UserName:{Email}</p> <p>UserName:{Password}</p>";
-            root.message = MailText;
-            //Serialize
-            string output = JsonConvert.SerializeObject(root);
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
-                Headers =
-                {
-                   { "x-user-name", "test" },
-                   { "x-rapidapi-host", "easymail.p.rapidapi.com" },
-                   { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
-                },
+            //Root root = new Root();
+            //root.from = "Cosmo Hospital";
+            //root.to = Email;
+            //root.subject = "Login Details";
+            ////root.message = $"<p>Welcome To Cosmos Hospital</p> <p>Dear {UserName} </p> <p>Your Temporary Email and Password Has been Created</p> <p>UserName:{Email}</p> <p>UserName:{Password}</p>";
+            //root.message = MailText;
+            ////Serialize
+            //string output = JsonConvert.SerializeObject(root);
+            //var client = new HttpClient();
+            //var request = new HttpRequestMessage
+            //{
+            //    Method = HttpMethod.Post,
+            //    RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
+            //    Headers =
+            //    {
+            //       { "x-user-name", "test" },
+            //       { "x-rapidapi-host", "easymail.p.rapidapi.com" },
+            //       { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
+            //    },
 
-                Content = new StringContent(output)
-                {
-                    Headers =
-                     {
-                         ContentType = new MediaTypeHeaderValue("application/json")
-                     }
-                }
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-                return body;
+            //    Content = new StringContent(output)
+            //    {
+            //        Headers =
+            //         {
+            //             ContentType = new MediaTypeHeaderValue("application/json")
+            //         }
+            //    }
+            //};
+            //using (var response = await client.SendAsync(request))
+            //{
+            //    response.EnsureSuccessStatusCode();
+            //    var body = await response.Content.ReadAsStringAsync();
+            //    return body;
 
-            }
+            //}
 
             return "Success";
 
@@ -74,45 +74,45 @@ namespace ServiceLayer.Services.Email
             string MailText = str.ReadToEnd();
             str.Close();
             //Replace Email
-            MailText = MailText.Replace("[newusername]", UserName).Replace("[username]", Email).Replace("[passsword]", Password);
+            //MailText = MailText.Replace("[newusername]", UserName).Replace("[username]", Email).Replace("[passsword]", Password);
 
-            MailText = MailText.Replace("[username]", Email).Replace("[passsword]", Password);
+            //MailText = MailText.Replace("[username]", Email).Replace("[passsword]", Password);
 
-            Root root = new Root();
-            root.from = "Cosmo Hospital";
-            root.to = Email;
-            root.subject = "Login Details";
-            //root.message = $"<p>Welcome To Cosmos Hospital</p> <p>Dear {UserName} </p> <p>Your Temporary Email and Password Has been Created</p> <p>UserName:{Email}</p> <p>UserName:{Password}</p>";
-            root.message = MailText;
-            //Serialize
-            string output = JsonConvert.SerializeObject(root);
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
-                Headers =
-                {
-                   { "x-user-name", "test" },
-                   { "x-rapidapi-host", "easymail.p.rapidapi.com" },
-                   { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
-                },
+            //Root root = new Root();
+            //root.from = "Cosmo Hospital";
+            //root.to = Email;
+            //root.subject = "Login Details";
+            ////root.message = $"<p>Welcome To Cosmos Hospital</p> <p>Dear {UserName} </p> <p>Your Temporary Email and Password Has been Created</p> <p>UserName:{Email}</p> <p>UserName:{Password}</p>";
+            //root.message = MailText;
+            ////Serialize
+            //string output = JsonConvert.SerializeObject(root);
+            //var client = new HttpClient();
+            //var request = new HttpRequestMessage
+            //{
+            //    Method = HttpMethod.Post,
+            //    RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
+            //    Headers =
+            //    {
+            //       { "x-user-name", "test" },
+            //       { "x-rapidapi-host", "easymail.p.rapidapi.com" },
+            //       { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
+            //    },
 
-                Content = new StringContent(output)
-                {
-                    Headers =
-                     {
-                         ContentType = new MediaTypeHeaderValue("application/json")
-                     }
-                }
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-                return body;
+            //    Content = new StringContent(output)
+            //    {
+            //        Headers =
+            //         {
+            //             ContentType = new MediaTypeHeaderValue("application/json")
+            //         }
+            //    }
+            //};
+            //using (var response = await client.SendAsync(request))
+            //{
+            //    response.EnsureSuccessStatusCode();
+            //    var body = await response.Content.ReadAsStringAsync();
+            //    return body;
 
-            }
+            //}
 
             return "Success";
 
@@ -126,43 +126,43 @@ namespace ServiceLayer.Services.Email
             string MailText = str.ReadToEnd();
             str.Close();
 
-            MailText = MailText.Replace("[username]", UserName).Replace("[Physician]", Physician).Replace("[Diagnosics]", Diagnosics).Replace("[Date]", dateTime.ToString());
+            //MailText = MailText.Replace("[username]", UserName).Replace("[Physician]", Physician).Replace("[Diagnosics]", Diagnosics).Replace("[Date]", dateTime.ToString());
 
-            Root root = new Root();
-            root.from = "Cosmo Hospital";
-            root.to = Email;
-            root.subject = "Appointment Approved";
+            //Root root = new Root();
+            //root.from = "Cosmo Hospital";
+            //root.to = Email;
+            //root.subject = "Appointment Approved";
            
-            root.message = MailText;
-            //Serialize
-            string output = JsonConvert.SerializeObject(root);
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
-                Headers =
-                {
-                   { "x-user-name", "test" },
-                   { "x-rapidapi-host", "easymail.p.rapidapi.com" },
-                   { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
-                },
+            //root.message = MailText;
+            ////Serialize
+            //string output = JsonConvert.SerializeObject(root);
+            //var client = new HttpClient();
+            //var request = new HttpRequestMessage
+            //{
+            //    Method = HttpMethod.Post,
+            //    RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
+            //    Headers =
+            //    {
+            //       { "x-user-name", "test" },
+            //       { "x-rapidapi-host", "easymail.p.rapidapi.com" },
+            //       { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
+            //    },
 
-                Content = new StringContent(output)
-                {
-                    Headers =
-                     {
-                         ContentType = new MediaTypeHeaderValue("application/json")
-                     }
-                }
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-                return body;
+            //    Content = new StringContent(output)
+            //    {
+            //        Headers =
+            //         {
+            //             ContentType = new MediaTypeHeaderValue("application/json")
+            //         }
+            //    }
+            //};
+            //using (var response = await client.SendAsync(request))
+            //{
+            //    response.EnsureSuccessStatusCode();
+            //    var body = await response.Content.ReadAsStringAsync();
+            //    return body;
 
-            }
+            //}
 
             return "Success";
         }
@@ -177,42 +177,42 @@ namespace ServiceLayer.Services.Email
             str.Close();
 
 
-            MailText = MailText.Replace("[user]", UserName).Replace("[password]", "Password@123");
+            //MailText = MailText.Replace("[user]", UserName).Replace("[password]", "Password@123");
 
-            Root root = new Root();
-            root.from = "Cosmo Hospital";
-            root.to = Email;
-            root.subject = "Login Details";
-            root.message = MailText;
-            //Serialize
-            string output = JsonConvert.SerializeObject(root);
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
-                Headers =
-                {
-                   { "x-user-name", "test" },
-                   { "x-rapidapi-host", "easymail.p.rapidapi.com" },
-                   { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
-                },
+            //Root root = new Root();
+            //root.from = "Cosmo Hospital";
+            //root.to = Email;
+            //root.subject = "Login Details";
+            //root.message = MailText;
+            ////Serialize
+            //string output = JsonConvert.SerializeObject(root);
+            //var client = new HttpClient();
+            //var request = new HttpRequestMessage
+            //{
+            //    Method = HttpMethod.Post,
+            //    RequestUri = new Uri("https://easymail.p.rapidapi.com/send"),
+            //    Headers =
+            //    {
+            //       { "x-user-name", "test" },
+            //       { "x-rapidapi-host", "easymail.p.rapidapi.com" },
+            //       { "x-rapidapi-key", "797560b494msha740e3c190fc521p1121f9jsnf1246d569dde" },
+            //    },
 
-                Content = new StringContent(output)
-                {
-                    Headers =
-                     {
-                         ContentType = new MediaTypeHeaderValue("application/json")
-                     }
-                }
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-                return body;
+            //    Content = new StringContent(output)
+            //    {
+            //        Headers =
+            //         {
+            //             ContentType = new MediaTypeHeaderValue("application/json")
+            //         }
+            //    }
+            //};
+            //using (var response = await client.SendAsync(request))
+            //{
+            //    response.EnsureSuccessStatusCode();
+            //    var body = await response.Content.ReadAsStringAsync();
+            //    return body;
 
-            }
+            //}
 
             return "Success";
 
