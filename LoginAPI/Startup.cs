@@ -32,6 +32,28 @@ using RepositoryLayer.Interfaces.ICommonRepository;
 using ServiceLayer.Services.Encryption;
 using ServiceLayer.Interfaces.IEncription;
 using ServiceLayer.Services.Email;
+using ServiceLayer.Interfaces.IZoom;
+using ServiceLayer.Services.Zoom;
+using ServiceLayer.Interfaces.IAppointmentService;
+using ServiceLayer.Services.AppointmentService;
+using RepositoryLayer.Repository.AppointmentRepository;
+using RepositoryLayer.Interfaces.IAppointmentRepository;
+using ServiceLayer.Interfaces.INurseDashboard;
+using RepositoryLayer.Interfaces.INurseDashRepository;
+using ServiceLayer.Services.NurseDashBoardServices;
+using RepositoryLayer.Repository.NurseDashRepository;
+using RepositoryLayer.Repository.InboxRepository;
+using ServiceLayer.Services.InboxService;
+using ServiceLayer.Interfaces.IInboxService;
+using RepositoryLayer.Interfaces.IInboxRepository;
+using ServiceLayer.Interfaces.IVisitDetails;
+using ServiceLayer.Services.VisitdetailsService;
+using RepositoryLayer.Repository.VisitdetailsRepository;
+using RepositoryLayer.Interfaces.IVisitdetailsRepository;
+using ServiceLayer.Interfaces.IMasterService;
+using ServiceLayer.Services.MasterService;
+using RepositoryLayer.Repository.MasterRepository;
+using RepositoryLayer.Interfaces.IMasterRepository;
 
 namespace LoginAPI
 {
@@ -59,6 +81,35 @@ namespace LoginAPI
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<IInMemoryCache, InMemoryCache>();
+
+
+            // Appointmenet
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IZoom, Zoom>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
+            // CommonAPI
+            services.AddScoped<INurseService, NurseDashService>();
+            services.AddScoped<INurseRepository, NurseDashRepository>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+            services.AddScoped<IEncryption, Encryption>();
+
+            // InboxAPI
+            services.AddScoped<INotesService, NotesService>();
+            services.AddScoped<INotesRepository, NotesRepository>();
+
+            // VisitDetails
+            services.AddScoped<IVisitService, PatientvisitService>();
+            services.AddScoped<IVisitRepository, VisitRepository>();
+            services.AddScoped<IPatientvisitdetailsService, PatientvisitdetailsService>();
+            services.AddScoped<IPatientvisitdetailRepository, PatientvisitdetailsRepository>();
+            services.AddScoped<IMasterService, MasterService>();
+            services.AddScoped<IMasterRepository, MasterRepository>();
+
+
             services.AddMemoryCache();
 
             services.AddControllers();

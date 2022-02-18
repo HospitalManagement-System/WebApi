@@ -111,4 +111,9 @@
     <Folder Include="bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.1\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Razorpay" Version="3.0.0" />
+    <PackageReference Include="RestSharp" Version="107.0.3" />
+  </ItemGroup>
+
 </Project>
