@@ -76,6 +76,8 @@ namespace RepositoryLayer
 
         public DbSet<Gender> Gender { get; set; }
 
+        public DbSet<BedManagement> BedManagement { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -230,6 +232,10 @@ namespace RepositoryLayer
             .HasDefaultValueSql("newid()");
 
             modelBuilder.Entity<EmployeeAvailability>().Ignore(x => x.arrTimeSlot);
+
+            modelBuilder
+            .Entity<BedManagement>().Property(x => x.Id)
+            .HasDefaultValueSql("newid()");
 
 
             base.OnModelCreating(modelBuilder);

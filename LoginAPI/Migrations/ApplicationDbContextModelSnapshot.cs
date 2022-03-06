@@ -308,6 +308,27 @@ namespace LoginAPI.Migrations
                     b.ToTable("Appointments");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.BedManagement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<int>("Bed")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Room")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BedManagement");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.EmployeeDetails", b =>
                 {
                     b.Property<Guid>("Id")

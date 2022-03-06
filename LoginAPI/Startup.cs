@@ -121,7 +121,7 @@ namespace LoginAPI
             //DB Connection
             string connection = Configuration.GetConnectionString("LoginConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
-                                                         b => b.MigrationsAssembly("LoginAPI"))
+                                                         b => b.MigrationsAssembly("HospitalAPI"))
             );
 
             //Identity
