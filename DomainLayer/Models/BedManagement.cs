@@ -14,11 +14,9 @@ namespace DomainLayer.Models
         public int Floor { get; set; }
         public int Room { get; set; }
         public int Bed { get; set; }
-    }
-    public class BedRequest
-    {
-        public BedManagement[] AddBedDetails { get; set; }
-        public BedManagement[] RemovedBedDetails { get; set; }
-        public BedManagement[] UpdatedBedDetails { get; set; }
+        public bool IsAvilable { get; set; }
+        public int BedType { get; set; }
+        public int RoomType { get; set; }
+        public string FullName { get; set; }
     }
 }

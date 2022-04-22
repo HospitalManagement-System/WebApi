@@ -76,24 +76,53 @@ namespace HospitalAPI.Controllers.CommonAPI.BedMangement
         // POST: api/BedManagements
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BedManagement>> PostBedManagement(BedRequest bedManagement)
+        public async Task<ActionResult<BedManagement>> PostBedManagement(BedManagement bedManagement)
         {
-            for (int i = 0; i < bedManagement.AddBedDetails.Length; i++)
+            _context.BedManagement.Add(bedManagement);
+            await _context.SaveChangesAsync();
+            return Ok("done");
+        }
+        [HttpPost("UpdateBedStatus")]
+        public async Task<ActionResult<BedManagement>> UpdateBedStatus(BedManagement bedManagement)
+        {
+            var result = _context.BedManagement.SingleOrDefault(i => i.Floor == bedManagement.Floor
+                && i.Room == bedManagement.Room
+                && i.Bed == bedManagement.Bed);
+            if (result != null)
             {
-                _context.BedManagement.Add(bedManagement.AddBedDetails[i]);
-                await _context.SaveChangesAsync();
-            }
-            for (int i = 0; i < bedManagement.RemovedBedDetails.Length; i++)
-            {
-                _context.BedManagement.Remove(bedManagement.AddBedDetails[i]);
-                await _context.SaveChangesAsync();
-            }
-            for (int i = 0; i < bedManagement.UpdatedBedDetails.Length; i++)
-            {
-                _context.BedManagement.Update(bedManagement.AddBedDetails[i]);
+                result.BedType = bedManagement.BedType;
+                result.IsAvilable = bedManagement.IsAvilable;
+                result.FullName = bedManagement.FullName;
+                result.RoomType = bedManagement.RoomType;
                 await _context.SaveChangesAsync();
             }
             return Ok("done");
+        }
+        [HttpPost("DeleteFloorRoomBed")]
+        public async Task<ActionResult<BedManagement>> DeleteBedManagementFromDB(BedManagement bedManagement)
+        {
+            if (bedManagement.Floor !=-1 && bedManagement.Room == -1 && bedManagement.Bed == -1)
+            {
+                // Delete Floor
+                _context.BedManagement.RemoveRange(_context.BedManagement.Where(i => i.Floor == bedManagement.Floor));
+            }
+            else if (bedManagement.Floor!=-1 &&  bedManagement.Room != -1 && bedManagement.Bed == -1)
+            {
+                // Delete Room
+                _context.BedManagement.RemoveRange(_context.BedManagement.Where(i => i.Floor == bedManagement.Floor
+                && i.Room == bedManagement.Room));
+
+            }
+            else
+            {
+                // Delete Bed
+                _context.BedManagement.RemoveRange(_context.BedManagement.Where(i => i.Floor == bedManagement.Floor
+                && i.Room == bedManagement.Room
+                && i.Bed == bedManagement.Bed
+                && i.Id == bedManagement.Id));
+            }
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         // DELETE: api/BedManagements/5

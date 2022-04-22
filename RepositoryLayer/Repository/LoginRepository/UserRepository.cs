@@ -26,6 +26,22 @@ namespace RepositoryLayer
             _context = context;
             _memorycache = memorycache;
         }
+        public UserDetails Login(Login objLogin)
+        {
+            UserDetails userDetails = _context.UserDetails.Where(x => x.UserName == objLogin.Username && x.Password == objLogin.Password).FirstOrDefault();
+            //if (userDetails != null)
+            //{
+            //    try
+            //    {
+            //        userDetails.Role = _context.RoleMaster.Where(x => x.Id == userDetails.RoleId).FirstOrDefault().UserRole;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        userDetails.Role = "";
+            //    }
+            //}
+            return userDetails;
+        }
 
         public string AddUser(Registration registration)
         {

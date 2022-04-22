@@ -318,10 +318,22 @@ namespace LoginAPI.Migrations
                     b.Property<int>("Bed")
                         .HasColumnType("int");
 
+                    b.Property<int>("BedType")
+                        .HasColumnType("int");
+
                     b.Property<int>("Floor")
                         .HasColumnType("int");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAvilable")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Room")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

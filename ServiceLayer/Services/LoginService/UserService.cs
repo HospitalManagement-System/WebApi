@@ -73,7 +73,12 @@ namespace ServiceLayer
         {
             _repository.LockAccount(user);
         }
-
+        public UserDetails Login(Login loginobj)
+        {
+            loginobj.Password = _encryption.EncodePasswordToBase64(loginobj.Password);
+            UserDetails UserDetails = _repository.Login(loginobj);
+            return UserDetails;
+        }
         //public List<UserInfo> GetEmployee()
         //{
         //    List<UserInfo> lstUserinfo = _repository.GetEmployee();

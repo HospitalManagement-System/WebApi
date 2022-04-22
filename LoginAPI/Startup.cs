@@ -113,6 +113,13 @@ namespace LoginAPI
             services.AddMemoryCache();
 
             services.AddControllers();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = "HMS";
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CosmosMW", Version = "v1" });
@@ -180,6 +187,7 @@ namespace LoginAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication();
             //CORS

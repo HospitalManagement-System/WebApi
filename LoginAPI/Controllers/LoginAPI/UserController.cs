@@ -2,11 +2,14 @@
 using DomainLayer.EntityModels;
 using DomainLayer.EntityModels.ListModels;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using RepositoryLayer.Interfaces.IMasterRepository;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Interfaces.ICommonService;
 using System;
@@ -22,6 +25,7 @@ namespace LoginAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private IMasterRepository _repository;
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationSettings _appSettings;
@@ -30,10 +34,8 @@ namespace LoginAPI.Controllers
         //private IMessageService _messageservice;
         private ILoggerService _loggerservice;
         public IConfiguration _config { get; }
-
-
-
-        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, IConfiguration configuration, IUserService userService, ILoggerService loggerservice, IMessageService messageservice, IEmailSender emailSender)
+        string CurrentUserDetails = "";
+        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, IConfiguration configuration, IUserService userService, ILoggerService loggerservice, IMessageService messageservice, IEmailSender emailSender, IMasterRepository masterRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -42,6 +44,7 @@ namespace LoginAPI.Controllers
             _config = configuration;
             this._loggerservice = loggerservice;
             _emailSender = emailSender;
+            _repository = masterRepository;
             //_messageservice = messageservice;
         }
 
@@ -116,16 +119,32 @@ namespace LoginAPI.Controllers
         {
             try
             {
-                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-                var token1 = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Issuer"],
-                null,
-                expires: DateTime.Now.AddMinutes(120),
-                signingCredentials: credentials);
-                var token = new JwtSecurityTokenHandler().WriteToken(token1);
-                return Ok(new { token});
-              
+                UserDetails userDetails = _userService.Login(objLogin);
+                if (userDetails!=null)
+                {
+                    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                    var token1 = new JwtSecurityToken(_config["Jwt:Issuer"],
+                          _config["Jwt:Issuer"],
+                           null,
+                           expires: DateTime.Now.AddMinutes(120),
+                           signingCredentials: credentials
+                    );
+                    string roleName = _repository.GetRolefromid(userDetails.Id.ToString());
+                    userDetails.Role = roleName;
+                    userDetails.RoleMaster = null;
+                    token1.Payload["user"] = userDetails;
+                    var token = new JwtSecurityTokenHandler().WriteToken(token1);
+                    userDetails = new UserDetails();
+                    userDetails.Token = token;
+                    CurrentUserDetails = JsonConvert.SerializeObject(userDetails);
+                    HttpContext.Session.SetString("userDetails",CurrentUserDetails);
+                    return Ok(userDetails);
+                }
+                else
+                {
+                    return Ok();
+                }
             }
             catch (Exception ex)
             {
@@ -220,6 +239,17 @@ namespace LoginAPI.Controllers
         {
             //_userService.GetEmployee();
             return Ok();
+        }
+        [HttpGet]
+        [Route("getCurrentUserDetails")]
+        public UserDetails getCurrentUserDetails1()
+        {
+            UserDetails detals = null;
+            if (HttpContext.Session.GetString("userDetails") != null)
+            {
+                detals = JsonConvert.DeserializeObject<UserDetails>(HttpContext.Session.GetString("userDetails"));
+            }
+            return detals;
         }
     }
 }
