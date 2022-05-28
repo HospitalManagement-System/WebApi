@@ -136,3 +136,9 @@ VALUES
 'Cold',
 '145'
 );
+
+
+
+Insert into Products (Id,ProductName,Cost) VALUES(NewId(),'BedCost',-1)
+Insert into Products (Id,ProductName,Cost) VALUES(NewId(),'Gulcose',200)
+Insert into Products (Id,ProductName,Cost) VALUES(NewId(),'Appointment',-1)

@@ -96,7 +96,7 @@ namespace CommonAPI.Controllers.Admin
         {
             var Role = _context.RoleMaster.Where(x => x.UserRole ==userDetails.Role).FirstOrDefault();
             var Password = _encryption.EncodePasswordToBase64("Password@123");
-            
+
             var User = new UserDetails
             {
                 UserName = userDetails.EmployeeDetails.Email,
@@ -118,7 +118,7 @@ namespace CommonAPI.Controllers.Admin
                     Designation = userDetails.EmployeeDetails.Designation,
                     Email = userDetails.EmployeeDetails.Email,
                     CreatedOn = new DateTime(),
-
+                    CostPerVisit = userDetails.EmployeeDetails.CostPerVisit,
                 },
 
             };

@@ -48,6 +48,7 @@ namespace DomainLayer.Models
        
         public List<Notes> lstSentNotes { get; set; }
         public List<Notes> lstRecieverNotes { get; set; }
+        public double CostPerVisit { get; set; }
 
         //public List<EmployeeDetails> lstPhysicianEmployee { get; set; }
         //public List<EmployeeDetails> lstNurseEmployee { get; set; }

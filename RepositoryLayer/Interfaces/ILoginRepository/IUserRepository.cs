@@ -17,7 +17,7 @@ namespace RepositoryLayer.Interfaces
         void ChangePassword(ChangePassword changePassword);
         void UpdatePassword(UserDetails user);
         void LockAccount(UserDetails user);
-        
+        UserDetails Login(Login objLogin);
         //List<UserInfo> GetEmployee();
         List<UserInfoDetails> GetUser();
     }

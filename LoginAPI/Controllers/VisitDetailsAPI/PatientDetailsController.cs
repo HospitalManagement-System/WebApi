@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace VisitDetailsAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PatientDetailsController : ControllerBase
@@ -28,30 +27,30 @@ namespace VisitDetailsAPI.Controllers
             _userManager = userManager;
         }
 
-        
+
 
         // GET: api/PatientDetails/5
         [HttpGet]
-        public  PatientVisitDetails GetPatientDetails(string Appointmentid)
+        public PatientVisitDetails GetPatientDetails(string Appointmentid)
         {
             try
             {
                 PatientVisitDetails patientVisitDetails = _VisitService.GetVisitdetailsfromId(Appointmentid);
                 return patientVisitDetails;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
         }
 
-       
+
         [HttpPut("PutPatientDetails")]
         public string PutPatientDetails(string id, PatientVisitDetails patientDetails)
         {
             try
             {
-                return _VisitService.putvisitdetails(id,patientDetails);
+                return _VisitService.putvisitdetails(id, patientDetails);
             }
             catch (Exception ex)
             {
@@ -59,22 +58,22 @@ namespace VisitDetailsAPI.Controllers
             }
         }
 
-        
+
         [HttpPost]
-        public  string PostPatientDetails(PatientVisitDetails patientDetails)
+        public string PostPatientDetails(PatientVisitDetails patientDetails)
         {
             try
             {
                 return _VisitService.Addpatientvisitdetails(patientDetails);
 
-               
+
 
             }
             catch (Exception ex)
             {
                 return null;
             }
-           
+
         }
 
         // DELETE: api/PatientDetails/5
@@ -109,5 +108,20 @@ namespace VisitDetailsAPI.Controllers
         //    {
         //        return _context.PatientDetails.Any(e => e.Id == id);
         //    }
+        [HttpPost("PostAllocatedPatientDetails")]
+        public async Task<ActionResult<BedManagement>> AllocatedPatientDetails(AllocatedPatientDetails allocatedPatient)
+        {
+            try
+            {
+                string patientid = _VisitService.PostAllocatedPatientDetails(allocatedPatient);
+                return Ok(patientid);
+                // return Ok(new string("Registration Success"));
+
+            }
+            catch (Exception ex)
+            {
+                return Ok("Fail");
+            }
         }
     }
+}

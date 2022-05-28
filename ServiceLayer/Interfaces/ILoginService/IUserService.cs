@@ -17,7 +17,7 @@ namespace ServiceLayer.Interfaces
         void UpdatePassword(ChangePassword changePassword);
         void ResetPassword(UserDetails user);
         void LockedAccount(UserDetails user);
-        
+        UserDetails Login(Login objLogin);
         //List<UserInfo> GetEmployee();
         List<UserInfoDetails> GetUserData();
 

@@ -40,10 +40,11 @@ namespace DomainLayer.Models
 
         [NotMapped]
         public string Role { get; set; }
+        [NotMapped]
+        public string Token { get; set; }
 
         public PatientDetails PatientDetails { get; set; }
         public EmployeeDetails EmployeeDetails { get; set; }
-
 
     }   
 }
