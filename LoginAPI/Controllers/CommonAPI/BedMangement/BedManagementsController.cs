@@ -207,6 +207,10 @@ namespace HospitalAPI.Controllers.CommonAPI.BedMangement
             }
             return allDetails;
         }
-
+        [HttpGet("GetTestString")]
+        public ActionResult GetTestString()
+        {
+            return Ok("WebApi Works fine");
+        }
     }
 }
