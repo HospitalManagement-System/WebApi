@@ -1,6 +1,7 @@
 ﻿using DomainLayer.Models;
 using DomainLayer.Models.Master;
 using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer.Interfaces;
 using RepositoryLayer.Interfaces.IVisitdetailsRepository;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,13 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
     public class PatientvisitdetailsRepository : IPatientvisitdetailRepository
     {
         private ApplicationDbContext _context;
-
+        IInMemoryCache _memorycache;
         public int SaveResult { get; private set; }
         public string Result { get; set; }
-        public PatientvisitdetailsRepository(ApplicationDbContext context)
+        public PatientvisitdetailsRepository(IInMemoryCache memorycache, ApplicationDbContext context)
         {
             _context = context;
-
+            _memorycache = memorycache;
         }
 
         public string AddpatientvisitDetails(PatientVisitDetails patientVisitDetails)
@@ -119,6 +120,118 @@ namespace RepositoryLayer.Repository.VisitdetailsRepository
 
 
                 return Result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+
+            }
+        }
+        public string PostAllocatedPatientDetails(AllocatedPatientDetails allocatedPatient)
+        {
+            try
+            {
+                PatientDemographicDetails Existingdetails = _context.PatientDemographicDetails.Where(x => x.Contact == allocatedPatient.Contact.ToString()).FirstOrDefault();
+                bool isNew = true;
+                if (Existingdetails != null)
+                {
+                    isNew = false;
+                }
+                else
+                {
+                    Existingdetails = new PatientDemographicDetails();
+                }
+                if (!isNew)
+                {
+                    // Old Patient                    
+                    _context.PatientDemographicDetails.Update(Existingdetails);
+                    int result = _context.SaveChanges();
+                    return Existingdetails.PatientId.ToString();
+                }
+                else
+                {
+                    List<RoleMaster> lstRoleMaster = (List<RoleMaster>)_memorycache.GetCache<RoleMaster>("Rolemaster");
+                    if (lstRoleMaster == null)
+                    {
+                        lstRoleMaster = _context.RoleMaster.ToList();
+                        _memorycache.SetCache<RoleMaster>("Rolemaster", lstRoleMaster);
+                    }
+                    RoleMaster roleMaster = lstRoleMaster.Where(x => x.UserRole.ToUpper() == "Patient".ToUpper()).FirstOrDefault();
+                    var UserDetails = new UserDetails
+                    {
+                        UserName = allocatedPatient.Contact.ToString(),
+                        Password = allocatedPatient.Password,
+                        Status = true,
+                        IsFirstLogIn = true,
+                        IsActive = true,
+                        PatientDetails = new PatientDetails
+                        {
+                            Title = allocatedPatient.Title,
+                            FirstName = allocatedPatient.FirstName,
+                            LastName = allocatedPatient.LastName,
+                            Contact = allocatedPatient.Contact,
+                            IsActive = true,
+                            PatientDemographicDetails = new PatientDemographicDetails
+                            {
+                                FirstName = allocatedPatient.FirstName,
+                                LastName = allocatedPatient.LastName,
+                                Contact = allocatedPatient.Contact.ToString(),
+                                DateOfBirth = allocatedPatient.DateofBirth,
+                                PatientRelativeDetails = new PatientRelativeDetails
+                                {
+
+                                }
+                            },
+
+                        },
+                        RoleId = roleMaster.Id
+                    };
+                    _context.UserDetails.Add(UserDetails);
+                    var Save = _context.SaveChanges();
+                    PatientDetails patientDetails  = _context.PatientDetails.Where(x => x.UserId == UserDetails.Id).FirstOrDefault();
+                    BedManagement bedDetails = _context.BedManagement.SingleOrDefault(i => i.Floor == allocatedPatient.BedDetails.Floor
+                                    && i.Room == allocatedPatient.BedDetails.Room
+                                    && i.Bed == allocatedPatient.BedDetails.Bed);
+                    bedDetails.PatientId = patientDetails.Id;
+                    _context.BedManagement.Update(bedDetails);
+                    Save = _context.SaveChanges();
+                    List<Products> productList = _context.Products.ToList();
+                    EmployeeDetails physicianDetails = _context.EmployeeDetails.Where(x => x.Id.ToString() == allocatedPatient.physicianId).SingleOrDefault();
+                   
+                    double TotleCost = Convert.ToDouble(allocatedPatient.BedDetails.BedCost) + (double)physicianDetails.CostPerVisit;
+                    BillInfo billInfo = new BillInfo();
+                    billInfo.PatientId = patientDetails.Id;
+                    billInfo.IsPaid = false;
+                    billInfo.StartDateTime = new DateTime();
+                    billInfo.EndDateTime = new DateTime();
+                    billInfo.Balance = TotleCost;
+                    billInfo.UserId = UserDetails.Id;
+                    billInfo.BillPaid = 0;
+                    _context.BillInfo.Add(billInfo);
+                    Save = _context.SaveChanges();
+
+                    // Bed Cost
+                    PatientInOut patientInOut = new PatientInOut();
+                    patientInOut.UserId = UserDetails.Id;
+                    patientInOut.PatientId = patientDetails.Id;
+                    patientInOut.ProductId = productList.SingleOrDefault(x => x.ProductName == "BedCost").Id;
+                    patientInOut.Amount = Convert.ToDouble(allocatedPatient.BedDetails.BedCost);
+                    patientInOut.DateOfProductAdded = new DateTime();
+                    patientInOut.EmployeeId = physicianDetails.Id;
+                    _context.PatientInOut.Add(patientInOut);
+                    Save = _context.SaveChanges();
+                    // Appoinement Charges
+                    patientInOut = new PatientInOut();
+                    patientInOut.UserId = UserDetails.Id;
+                    patientInOut.PatientId = patientDetails.Id;
+                    patientInOut.ProductId = productList.SingleOrDefault(x => x.ProductName == "Appointment").Id;
+                    patientInOut.Amount = (double)physicianDetails.CostPerVisit;
+                    patientInOut.DateOfProductAdded = new DateTime();
+                    patientInOut.EmployeeId = physicianDetails.Id;
+                    _context.PatientInOut.Add(patientInOut);
+                    Save = _context.SaveChanges();                    
+                    return patientDetails.Id.ToString();
+                }
             }
             catch (Exception ex)
             {

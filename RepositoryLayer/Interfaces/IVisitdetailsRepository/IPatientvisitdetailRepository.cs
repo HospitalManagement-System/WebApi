@@ -14,5 +14,6 @@ namespace RepositoryLayer.Interfaces.IVisitdetailsRepository
         PatientVisitDetails Getdetailsfromid(string appointmentid) ;
         string updatepatientvisitdetails(string id, PatientVisitDetails patientDetails);
         IEnumerable<PatientVisitDetails> GetdetailsfromPatientid(string patientid);
+        string PostAllocatedPatientDetails(AllocatedPatientDetails allocatedPatient);
     }
 }

@@ -11,10 +11,11 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Services.VisitdetailsService
 {
-   // private PatientvisitdetailsRepository _repository;
+    // private PatientvisitdetailsRepository _repository;
     
     public class PatientvisitdetailsService : IPatientvisitdetailsService
     {
+        ServiceLayer.Services.Encryption.Encryption _encryption = new ServiceLayer.Services.Encryption.Encryption();
         private IPatientvisitdetailRepository _repository;
         public PatientvisitdetailsService(IPatientvisitdetailRepository repository)
         {
@@ -40,7 +41,11 @@ namespace ServiceLayer.Services.VisitdetailsService
             return _repository.updatepatientvisitdetails(id, patientDetails);
         }
 
-        
+        public string PostAllocatedPatientDetails(AllocatedPatientDetails allocatedPatient)
+        {
+            allocatedPatient.Password = _encryption.EncodePasswordToBase64("Password@123");
+            return _repository.PostAllocatedPatientDetails(allocatedPatient);
+        }
     }
 }
 

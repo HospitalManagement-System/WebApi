@@ -89,7 +89,7 @@ namespace RepositoryLayer
                     var UserDetails = new UserDetails
                     {
                         UserName = registration.UserName,
-                        Password = registration.FirstName + "123",
+                        Password = registration.Password,
                         Status = true,
                         IsFirstLogIn = true,
                         IsActive = false,

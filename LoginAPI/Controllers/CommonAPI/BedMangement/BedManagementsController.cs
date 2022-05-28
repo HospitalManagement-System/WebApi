@@ -82,6 +82,25 @@ namespace HospitalAPI.Controllers.CommonAPI.BedMangement
             await _context.SaveChangesAsync();
             return Ok("done");
         }
+        [HttpPost("TransferBedPatient")]
+        public async Task<ActionResult<BedManagement>> TransferBedPatient(List<BedManagement> bedManagement)
+        {
+            var fromPatient = _context.BedManagement.SingleOrDefault(i => i.Floor == bedManagement.ElementAt(0).Floor
+                && i.Room == bedManagement.ElementAt(0).Room
+                && i.Bed == bedManagement.ElementAt(0).Bed);
+            var toPatient = _context.BedManagement.SingleOrDefault(i => i.Floor == bedManagement.ElementAt(1).Floor
+                && i.Room == bedManagement.ElementAt(1).Room
+                && i.Bed == bedManagement.ElementAt(1).Bed);
+            Guid toPatientid = toPatient.PatientId;
+            if (fromPatient != null)
+            {
+                toPatient.PatientId = fromPatient.PatientId;
+                // Reset From Patient Bed
+                fromPatient.PatientId = toPatientid;
+                await _context.SaveChangesAsync();
+            }
+            return Ok("done");
+        }
         [HttpPost("UpdateBedStatus")]
         public async Task<ActionResult<BedManagement>> UpdateBedStatus(BedManagement bedManagement)
         {
@@ -94,6 +113,7 @@ namespace HospitalAPI.Controllers.CommonAPI.BedMangement
                 result.IsAvilable = bedManagement.IsAvilable;
                 result.FullName = bedManagement.FullName;
                 result.RoomType = bedManagement.RoomType;
+                result.BedCost = bedManagement.BedCost;
                 await _context.SaveChangesAsync();
             }
             return Ok("done");
@@ -145,5 +165,48 @@ namespace HospitalAPI.Controllers.CommonAPI.BedMangement
         {
             return _context.BedManagement.Any(e => e.Id == id);
         }
+        [HttpGet("GetBillPatientDetails/{patientId}")]
+        public PatientAllDetails GetBillPatientDetails(string patientId)
+        {
+            PatientAllDetails allDetails = new PatientAllDetails();
+
+            allDetails.BillInfo = _context.BillInfo.SingleOrDefault(i => i.PatientId.ToString() == patientId);
+            allDetails.PatientInOut = _context.PatientInOut.Where(x=>x.PatientId.ToString() == patientId).ToList();
+            for(int i=0;i< allDetails.PatientInOut.Count; i++)
+            {
+                allDetails.PatientInOut[i].Product = _context.Products.SingleOrDefault(x => x.Id == allDetails.PatientInOut[i].ProductId);
+                allDetails.PatientInOut[i].Product.Cost = allDetails.PatientInOut[i].Amount;
+            }
+            PatientDemographicDetails patientDemographicDetails = _context.PatientDemographicDetails.Include(x => x.PatientRelativeDetails).FirstOrDefault(x => x.PatientId.ToString() == patientId);
+            if (patientDemographicDetails != null)
+            {
+                patientDemographicDetails.PatientRelativeDetails = null;
+                if (patientDemographicDetails.Equals(null))
+                {
+                    patientDemographicDetails.Allergylist = patientDemographicDetails.AllergytypeList.Split(',').ToList();
+                    patientDemographicDetails.AllergyListname = patientDemographicDetails.AllergynameList.Split(',').ToList();
+                }
+            }
+            allDetails.PatientDetails = patientDemographicDetails;
+            return allDetails;
+        }
+
+        [HttpGet("GetBillDetailsFromMailPhone/{MailorPhone}")]
+        public PatientAllDetails GetBillDetailsFromMailPhone(string MailorPhone)
+        {
+            PatientAllDetails allDetails = new PatientAllDetails();
+            PatientDemographicDetails patientDemographicDetails = _context.PatientDemographicDetails.Include(x => x.PatientRelativeDetails).FirstOrDefault(i => i.Email == MailorPhone);
+
+            if (patientDemographicDetails == null)
+            {
+                patientDemographicDetails = _context.PatientDemographicDetails.SingleOrDefault(i => i.Contact == MailorPhone);
+            }
+            if (patientDemographicDetails != null)
+            {
+                allDetails = GetBillPatientDetails(patientDemographicDetails.PatientId.ToString());
+            }
+            return allDetails;
+        }
+
     }
 }

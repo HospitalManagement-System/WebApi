@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepositoryLayer;
 
-namespace LoginAPI.Migrations
+namespace HospitalAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -318,6 +318,9 @@ namespace LoginAPI.Migrations
                     b.Property<int>("Bed")
                         .HasColumnType("int");
 
+                    b.Property<string>("BedCost")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("BedType")
                         .HasColumnType("int");
 
@@ -330,6 +333,9 @@ namespace LoginAPI.Migrations
                     b.Property<bool>("IsAvilable")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Room")
                         .HasColumnType("int");
 
@@ -341,6 +347,41 @@ namespace LoginAPI.Migrations
                     b.ToTable("BedManagement");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.BillInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Balance")
+                        .HasColumnType("float");
+
+                    b.Property<double>("BillPaid")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BillInfo");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.EmployeeDetails", b =>
                 {
                     b.Property<Guid>("Id")
@@ -349,6 +390,9 @@ namespace LoginAPI.Migrations
                         .HasDefaultValueSql("newid()");
 
                     b.Property<double>("Contact")
+                        .HasColumnType("float");
+
+                    b.Property<double>("CostPerVisit")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("CreatedOn")
@@ -610,6 +654,35 @@ namespace LoginAPI.Migrations
                     b.ToTable("PatientDetails");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.PatientInOut", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("DateOfProductAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PatientInOut");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.PatientRelativeDetails", b =>
                 {
                     b.Property<Guid>("Id")
@@ -705,6 +778,23 @@ namespace LoginAPI.Migrations
                     b.HasIndex("AppointmentId");
 
                     b.ToTable("PatientVisitDetails");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Products", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.UserDetails", b =>

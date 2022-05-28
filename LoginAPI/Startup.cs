@@ -78,6 +78,7 @@ namespace LoginAPI
             services.AddTransient<IMessageService, ServiceLayer.MessageService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
+
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<IInMemoryCache, InMemoryCache>();

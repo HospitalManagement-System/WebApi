@@ -15,5 +15,6 @@ namespace ServiceLayer.Interfaces.IVisitDetails
         PatientVisitDetails GetVisitdetailsfromId(string appointmentid);
         string putvisitdetails(string id, PatientVisitDetails patientDetails);
         IEnumerable<PatientVisitDetails> GetdetailsfrompatientId(string patientid);
+        string PostAllocatedPatientDetails(AllocatedPatientDetails allocatedPatient);
     }
 }

@@ -77,6 +77,11 @@ namespace RepositoryLayer
         public DbSet<Gender> Gender { get; set; }
 
         public DbSet<BedManagement> BedManagement { get; set; }
+        public DbSet<BillInfo> BillInfo { get; set; }
+        public DbSet<PatientInOut> PatientInOut { get; set; }
+        public DbSet<Products> Products { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
