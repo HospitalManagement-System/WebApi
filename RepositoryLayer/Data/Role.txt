@@ -1,0 +1,36 @@
+﻿--select id from RoleMaster where UserRole='ADMIN'
+--------------------------------------------------------
+exec sp_executesql N'SET NOCOUNT ON;
+DECLARE @inserted0 TABLE ([Id] uniqueidentifier, [_Position] [int]);
+MERGE [UserDetails] USING (
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, 0)) AS i ([Designation], [IsActive], [IsFirstLogIn], [IsLocked], [NoOfAttempts], [Password], [RoleId], [Status], [UserName], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([Designation], [IsActive], [IsFirstLogIn], [IsLocked], [NoOfAttempts], [Password], [RoleId], [Status], [UserName])
+VALUES (i.[Designation], i.[IsActive], i.[IsFirstLogIn], i.[IsLocked], i.[NoOfAttempts], i.[Password], i.[RoleId], i.[Status], i.[UserName])
+OUTPUT INSERTED.[Id], i._Position
+INTO @inserted0;
+SELECT [t].[Id] FROM [UserDetails] t
+INNER JOIN @inserted0 i ON ([t].[Id] = [i].[Id])
+ORDER BY [i].[_Position];
+',N'@p0 nvarchar(4000),@p1 bit,@p2 bit,@p3 bit,@p4 int,@p5 nvarchar(50),@p6 uniqueidentifier,@p7 bit,@p8 nvarchar(50)',@p0=NULL,@p1=1,@p2=1,@p3=0,@p4=0,@p5=N'UGFzc3dvcmRAMTIz',@p6='E72FF71E-FD4B-487A-BFBE-10F043533E0E',@p7=1,@p8=N'admin@gmail.com'
+
+
+
+
+
+--------------------------------------------------------
+exec sp_executesql N'SET NOCOUNT ON;
+DECLARE @inserted0 TABLE ([Id] uniqueidentifier, [_Position] [int]);
+MERGE [EmployeeDetails] USING (
+VALUES (@p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19,@p20, 0)) AS i ([Contact], [CreatedOn], [DateOfBirth], [Designation], [Email], [FirstName], [IsActive], [LastName], [Specialization], [Title], [UserId],[CostPerVisit], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([Contact], [CreatedOn], [DateOfBirth], [Designation], [Email], [FirstName], [IsActive], [LastName], [Specialization], [Title], [UserId],[CostPerVisit])
+VALUES (i.[Contact], i.[CreatedOn], i.[DateOfBirth], i.[Designation], i.[Email], i.[FirstName], i.[IsActive], i.[LastName], i.[Specialization], i.[Title], i.[UserId],i.[CostPerVisit])
+OUTPUT INSERTED.[Id], i._Position
+INTO @inserted0;
+SELECT [t].[Id] FROM [EmployeeDetails] t
+INNER JOIN @inserted0 i ON ([t].[Id] = [i].[Id])
+ORDER BY [i].[_Position];',N'@p9 float,@p10 datetime2(7),@p11 datetime2(7),@p12 nvarchar(4000),@p13 nvarchar(50),@p14 nvarchar(50),@p15 bit,@p16 nvarchar(50),@p17 nvarchar(50),@p18 nvarchar(5),@p19 uniqueidentifier,@p20 nvarchar(50)',@p9=8767898767,@p10='0001-01-01 00:00:00',@p11='2022-01-17 06:13:36.3230000',@p12=NULL,@p13=N'admin@gmail.com',@p14=N'ADMIN',@p15=0,@p16=N'k',@p17=N'TEST',@p18=N'MR',@p19='C5153B3A-00AF-4C96-BE1A-D394EC1C00F6',@p20=30
+
+
+
